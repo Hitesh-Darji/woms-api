@@ -1,0 +1,21 @@
+### Test WOMS API
+
+# Test Swagger endpoint
+GET https://localhost:7000/swagger/index.html
+
+###
+
+# Test Create User
+POST https://localhost:7000/api/users
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com"
+}
+
+###
+
+# Test Get User (replace {id} with actual user ID)
+GET https://localhost:7000/api/users/{id}
