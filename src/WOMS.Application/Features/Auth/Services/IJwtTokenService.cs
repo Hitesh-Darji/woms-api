@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using WOMS.Domain.Entities;
 
 namespace WOMS.Application.Features.Auth.Services
 {
@@ -11,5 +12,8 @@ namespace WOMS.Application.Features.Auth.Services
             string email,
             Guid userId,
             CancellationToken cancellationToken = default) where TUser : class;
+
+        Task<string> GenerateRefreshTokenAsync();
+        Task<RefreshToken> CreateRefreshTokenAsync(Guid userId, string jwtToken, CancellationToken cancellationToken = default);
     }
 }

@@ -33,11 +33,14 @@ namespace WOMS.Application.Features.Auth.Commands.LoginUser
                 throw new UnauthorizedAccessException("Invalid credentials");
             var roles = await _userManager.GetRolesAsync(user);
             var (token, expiresAt) = await _jwtTokenService.GenerateTokenAsync(user, _userManager, roles, user.Email!, user.Id, cancellationToken);
+            var refreshToken = await _jwtTokenService.CreateRefreshTokenAsync(user.Id, token, cancellationToken);
 
             return new AuthResponseDto
             {
                 Token = token,
                 ExpiresAtUtc = expiresAt,
+                RefreshToken = refreshToken.Refresh_Token,
+                RefreshTokenExpiresAtUtc = refreshToken.RefreshTokenExpirationTime,
                 UserId = user.Id,
                 Email = user.Email!,
                 Roles = roles

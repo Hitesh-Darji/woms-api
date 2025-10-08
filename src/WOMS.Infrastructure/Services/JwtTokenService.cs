@@ -5,16 +5,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using WOMS.Application.Features.Auth.Services;
+using WOMS.Domain.Entities;
+using WOMS.Domain.Repositories;
 
 namespace WOMS.Infrastructure.Services
 {
     public class JwtTokenService : IJwtTokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public JwtTokenService(IConfiguration configuration)
+        public JwtTokenService(IConfiguration configuration, IRefreshTokenRepository refreshTokenRepository)
         {
             _configuration = configuration;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public Task<(string token, DateTime expiresAtUtc)> GenerateTokenAsync<TUser>(
@@ -61,6 +65,25 @@ namespace WOMS.Infrastructure.Services
             var token = tokenHandler.WriteToken(jwt);
             //var token = new JwtSecurityTokenHandler().WriteToken(jwt);
             return Task.FromResult((token, expires));
+        }
+
+        public Task<string> GenerateRefreshTokenAsync()
+        {
+            return Task.FromResult(Guid.NewGuid().ToString());
+        }
+
+        public async Task<RefreshToken> CreateRefreshTokenAsync(Guid userId, string jwtToken, CancellationToken cancellationToken = default)
+        {
+            var refreshToken = new RefreshToken
+            {
+                UserId = userId,
+                Refresh_Token = await GenerateRefreshTokenAsync(),
+                JwtToken = jwtToken,
+                RefreshTokenExpirationTime = DateTime.UtcNow.AddDays(7), // 7 days expiration
+                CreatedOn = DateTime.UtcNow
+            };
+
+            return await _refreshTokenRepository.CreateAsync(refreshToken, cancellationToken);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace WOMS.Infrastructure.Data
         {
         }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +39,22 @@ namespace WOMS.Infrastructure.Data
                 entity.Property(u => u.Address).IsRequired().HasMaxLength(500);
                 entity.Property(u => u.City).IsRequired().HasMaxLength(100);
                 entity.Property(u => u.PostalCode).IsRequired().HasMaxLength(100);
+            });
+
+            // Configure RefreshToken entity
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasKey(rt => rt.Id);
+                entity.Property(rt => rt.UserId).IsRequired();
+                entity.Property(rt => rt.Refresh_Token).IsRequired();
+                entity.Property(rt => rt.JwtToken).IsRequired();
+                entity.Property(rt => rt.RefreshTokenExpirationTime).IsRequired();
+                entity.Property(rt => rt.CreatedOn).IsRequired();
+
+                entity.HasOne(rt => rt.User)
+                      .WithMany()
+                      .HasForeignKey(rt => rt.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

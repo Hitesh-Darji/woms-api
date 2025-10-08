@@ -2,7 +2,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WOMS.Application.Features.Auth.Commands.LoginUser;
+using WOMS.Application.Features.Auth.Commands.RefreshToken;
 using WOMS.Application.Features.Auth.Commands.RegisterUser;
+using WOMS.Application.Features.Auth.Commands.RevokeRefreshToken;
 using WOMS.Application.Features.Auth.Dtos;
 
 namespace WOMS.Api.Controllers
@@ -35,5 +37,25 @@ namespace WOMS.Api.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(RefreshTokenResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        /*[HttpPost("revoke-refresh-token")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RevokeRefreshToken([FromBody] RevokeRefreshTokenCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }*/
     }
 }

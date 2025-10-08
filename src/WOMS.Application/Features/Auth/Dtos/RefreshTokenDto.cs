@@ -1,6 +1,11 @@
 namespace WOMS.Application.Features.Auth.Dtos
 {
-    public class AuthResponseDto
+    public class RefreshTokenDto
+    {
+        public string RefreshToken { get; set; } = string.Empty;
+    }
+
+    public class RefreshTokenResponseDto
     {
         public string Token { get; set; } = string.Empty;
         public DateTime ExpiresAtUtc { get; set; }
