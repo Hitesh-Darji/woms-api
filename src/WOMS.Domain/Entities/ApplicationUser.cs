@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
@@ -14,6 +15,9 @@ namespace WOMS.Domain.Entities
         [MaxLength(100)]
         public string LastName { get; set; } = string.Empty;
 
+        [MaxLength(200)]
+        public string? FullName { get; set; }
+
         [Required]
         [MaxLength(500)]
         public string? Address { get; set; }
@@ -25,6 +29,14 @@ namespace WOMS.Domain.Entities
         [Required]
         [MaxLength(100)]
         public string? PostalCode { get; set; }
+
+        [MaxLength(20)]
+        public string? Phone { get; set; }
+
+        [Column(TypeName = "json")]
+        public string? Skills { get; set; } // JSON array of strings
+
+        public UserStatus? Status { get; set; } = UserStatus.Active;
 
         public DateTime? LastLoginOn { get; set; }
 
@@ -45,5 +57,12 @@ namespace WOMS.Domain.Entities
 
         [ForeignKey(nameof(DeletedBy))]
         public virtual ApplicationUser? DeletedByUser { get; set; }
+
+        // Navigation properties for technician functionality
+        public virtual ICollection<TechnicianSkill> TechnicianSkills { get; set; } = new List<TechnicianSkill>();
+        public virtual ICollection<TechnicianEquipment> TechnicianEquipments { get; set; } = new List<TechnicianEquipment>();
+        public virtual ICollection<TechnicianZone> TechnicianZones { get; set; } = new List<TechnicianZone>();
+        public virtual ICollection<AssignmentTemplateTechnician> AssignmentTemplateTechnicians { get; set; } = new List<AssignmentTemplateTechnician>();
+        public virtual ICollection<Route> Routes { get; set; } = new List<Route>();
     }
 }

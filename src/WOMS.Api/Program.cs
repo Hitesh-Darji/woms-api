@@ -46,7 +46,7 @@ builder.Services.AddHttpContextAccessor();
 //Mapping
 var config = new MapperConfiguration(cfg =>
 {
-    cfg.AddProfile<UserProfile>();
+    cfg.AddProfile<WOMS.Application.Profiles.UserProfile>();
 });
 
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
