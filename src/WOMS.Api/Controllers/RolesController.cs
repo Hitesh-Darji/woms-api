@@ -1,31 +1,34 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WOMS.Application.Features.Users.Commands.CreateUser;
-using WOMS.Application.Features.Users.Commands.UpdateUser;
-using WOMS.Application.Features.Users.Commands.DeleteUser;
-using WOMS.Application.Features.Users.DTOs;
-using WOMS.Application.Features.Users.Queries.GetUserById;
-using WOMS.Application.Features.Users.Queries.GetAllUsers;
+using WOMS.Application.Features.Roles.Commands.CreateRole;
+using WOMS.Application.Features.Roles.Commands.UpdateRole;
+using WOMS.Application.Features.Roles.Commands.DeleteRole;
+using WOMS.Application.Features.Roles.DTOs;
+using WOMS.Application.Features.Roles.Queries.GetRoleById;
+using WOMS.Application.Features.Roles.Queries.GetAllRoles;
 
 namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class RolesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public UsersController(IMediator mediator)
+        public RolesController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [Authorize]
         [HttpPost]
-        [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
-        public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto createUserDto)
+
+        [ProducesResponseType(typeof(RoleDto), StatusCodes.Status201Created)]
+
+        [Authorize]
+        public async Task<ActionResult<RoleDto>> CreateRole([FromBody] CreateRoleDto createRoleDto)
         {
+            Console.WriteLine("CreateRole endpoint called");
             // Get the current user ID from the JWT token
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var createdBy))
@@ -33,42 +36,43 @@ namespace WOMS.Api.Controllers
                 return Unauthorized("User ID not found in token");
             }
 
-            var command = new CreateUserCommand
+            var command = new CreateRoleCommand
             {
-                FullName = createUserDto.FullName,
-                Address = createUserDto.Address,
-                City = createUserDto.City,
-                PostalCode = createUserDto.PostalCode,
-                Phone = createUserDto.Phone,
-                Email = createUserDto.Email,
-                RoleId = createUserDto.RoleId,
+                Name = createRoleDto.Name,
+                Description = createRoleDto.Description,
                 CreatedBy = createdBy
             };
 
-            var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetUser), new { id = result.Id }, result);
+            try
+            {
+                var result = await _mediator.Send(command);
+                return CreatedAtAction(nameof(GetRole), new { id = result.Id }, result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
 
         [Authorize]
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<RoleDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<RoleDto>>> GetAllRoles()
         {
-            var query = new GetAllUsersQuery();
+            var query = new GetAllRolesQuery();
             var result = await _mediator.Send(query);
             return Ok(result);
         }
 
         [Authorize]
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<UserDto>> GetUser(Guid id)
+        public async Task<ActionResult<RoleDto>> GetRole(string id)
         {
-            var query = new GetUserByIdQuery { Id = id };
+            var query = new GetRoleByIdQuery { Id = id };
             var result = await _mediator.Send(query);
 
             if (result == null)
@@ -81,11 +85,11 @@ namespace WOMS.Api.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<UserDto>> UpdateUser(Guid id, [FromBody] UpdateUserDto updateUserDto)
+        public async Task<ActionResult<RoleDto>> UpdateRole(string id, [FromBody] UpdateRoleDto updateRoleDto)
         {
             // Get the current user ID from the JWT token
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -94,16 +98,11 @@ namespace WOMS.Api.Controllers
                 return Unauthorized("User ID not found in token");
             }
 
-            var command = new UpdateUserCommand
+            var command = new UpdateRoleCommand
             {
                 Id = id,
-                FullName = updateUserDto.FullName,
-                Address = updateUserDto.Address,
-                City = updateUserDto.City,
-                PostalCode = updateUserDto.PostalCode,
-                Phone = updateUserDto.Phone,
-                Email = updateUserDto.Email,
-                RoleId = updateUserDto.RoleId,
+                Name = updateRoleDto.Name,
+                Description = updateRoleDto.Description,
                 UpdatedBy = updatedBy
             };
 
@@ -122,10 +121,11 @@ namespace WOMS.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> DeleteUser(Guid id)
+        public async Task<ActionResult> DeleteRole(string id)
         {
-            var command = new DeleteUserCommand
+            var command = new DeleteRoleCommand
             {
                 Id = id
             };
@@ -140,6 +140,10 @@ namespace WOMS.Api.Controllers
                 }
 
                 return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (UnauthorizedAccessException ex)
             {

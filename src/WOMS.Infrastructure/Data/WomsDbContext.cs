@@ -5,7 +5,7 @@ using WOMS.Domain.Entities;
 
 namespace WOMS.Infrastructure.Data
 {
-    public class WomsDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class WomsDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public WomsDbContext(DbContextOptions<WomsDbContext> options) : base(options)
         {

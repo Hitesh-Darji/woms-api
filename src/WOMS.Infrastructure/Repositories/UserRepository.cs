@@ -20,5 +20,31 @@ namespace WOMS.Infrastructure.Repositories
         {
             return await _dbSet.AnyAsync(u => u.Email == email, cancellationToken);
         }
+
+        public async Task<IEnumerable<ApplicationUser>> GetAllActiveAsync(CancellationToken cancellationToken = default)
+        {
+            return await _dbSet
+                .Where(u => !u.IsDeleted)
+                .OrderBy(u => u.FullName)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<ApplicationUser?> GetByIdActiveAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet
+                .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted, cancellationToken);
+        }
+
+        public async Task SoftDeleteAsync(Guid id, Guid deletedBy, CancellationToken cancellationToken = default)
+        {
+            var user = await _dbSet.FindAsync(id);
+            if (user != null)
+            {
+                user.IsDeleted = true;
+                user.DeletedBy = deletedBy;
+                user.DeletedOn = DateTime.UtcNow;
+                _dbSet.Update(user);
+            }
+        }
     }
 }

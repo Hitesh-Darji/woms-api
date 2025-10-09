@@ -19,7 +19,7 @@ namespace WOMS.Application
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
             // Add AutoMapper
-            services.AddAutoMapper(typeof(UserProfile));
+            services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile));
 
             // Add FluentValidation
             services.AddValidatorsFromAssembly(assembly);

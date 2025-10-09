@@ -9,5 +9,8 @@ namespace WOMS.Domain.Repositories
     {
         Task<ApplicationUser?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
         Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
+        Task<IEnumerable<ApplicationUser>> GetAllActiveAsync(CancellationToken cancellationToken = default);
+        Task<ApplicationUser?> GetByIdActiveAsync(Guid id, CancellationToken cancellationToken = default);
+        Task SoftDeleteAsync(Guid id, Guid deletedBy, CancellationToken cancellationToken = default);
     }
 }

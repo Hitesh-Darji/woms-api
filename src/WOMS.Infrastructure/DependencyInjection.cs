@@ -22,9 +22,13 @@ namespace WOMS.Infrastructure
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(WomsDbContext).Assembly.FullName)));
 
-            // Identity
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+            // Identity (Core) - avoid cookie auth overriding JWT defaults
+            var identityBuilder = services.AddIdentityCore<ApplicationUser>();
+            identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(ApplicationRole), services);
+            identityBuilder
+                .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<WomsDbContext>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddDefaultTokenProviders();
 
             // Repositories

@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Text;
+using WOMS.Api.Extension;
 using WOMS.Api.Middleware;
 using WOMS.Application;
 using WOMS.Application.DTOs;
@@ -23,23 +24,6 @@ builder.Host.UseSerilog((context, configuration) =>
 
 // Add services to the container
 builder.Services.AddControllers();
-
-// JWT Authentication
-/*builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false;
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-    options.Lockout.AllowedForNewUsers = false;
-    options.User.RequireUniqueEmail = false;
-}).AddRoles<ApplicationRole>()
-//.AddUserValidator<MultiTenantUserValidator>()
-.AddEntityFrameworkStores<WomsDbContext>()
-.AddDefaultTokenProviders();*/
-
-
-
-//Services - DI
 
 builder.Services.AddHttpContextAccessor();
 
@@ -111,6 +95,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+builder.Services.AddAuthorization();
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Default Password settings.
@@ -129,17 +114,12 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-
-
-// Configure the HTTP request pipeline.
-/*if (app.Environment.IsDevelopment())
-{*/
 app.UseSwagger();
 app.UseSwaggerUI();
-/*}
-*/
-//app.UseHttpsRedirection();
+app.UseExceptionHandlerMiddleware();
+
 app.UseCors("AllowLocalhost");
+//app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

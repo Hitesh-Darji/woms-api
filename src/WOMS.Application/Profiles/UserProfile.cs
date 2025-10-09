@@ -1,5 +1,5 @@
 using AutoMapper;
-using WOMS.Application.DTOs;
+using WOMS.Application.Features.Users.DTOs;
 using WOMS.Domain.Entities;
 
 namespace WOMS.Application.Profiles
@@ -12,7 +12,6 @@ namespace WOMS.Application.Profiles
             
             // Add mapping from ApplicationUser to UserDto
             CreateMap<ApplicationUser, UserDto>()
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedOn));
         }
     }

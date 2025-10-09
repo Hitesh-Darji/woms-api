@@ -42,7 +42,9 @@ namespace WOMS.Infrastructure.Services
             {
                 new(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(JwtRegisteredClaimNames.Email, email)
+                new(JwtRegisteredClaimNames.Email, email),
+                // Ensure ASP.NET Core maps the NameIdentifier claim for [Authorize]
+                new(ClaimTypes.NameIdentifier, userId.ToString())
             };
 
             foreach (var role in roles)
