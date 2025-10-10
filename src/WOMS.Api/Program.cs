@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -113,6 +114,22 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+// Apply database migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<WomsDbContext>();
+    try
+    {
+        context.Database.Migrate();
+        Log.Information("Database migration completed successfully");
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "An error occurred while migrating the database");
+        throw;
+    }
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

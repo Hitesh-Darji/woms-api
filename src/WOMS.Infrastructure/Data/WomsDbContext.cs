@@ -78,6 +78,19 @@ namespace WOMS.Infrastructure.Data
         public DbSet<ValidationIssue> ValidationIssues { get; set; }
         public DbSet<InventoryLocation> InventoryLocations { get; set; }
         public DbSet<ScanLog> ScanLogs { get; set; }
+        
+        // Billing Template entities
+        public DbSet<BillingTemplate> BillingTemplates { get; set; }
+        public DbSet<BillingTemplateFieldOrder> BillingTemplateFieldOrders { get; set; }
+        
+        // Rate Table entities
+        public DbSet<RateTable> RateTables { get; set; }
+        public DbSet<RateTableItem> RateTableItems { get; set; }
+        
+        // Billing Schedule entities
+        public DbSet<BillingSchedule> BillingSchedules { get; set; }
+        public DbSet<BillingScheduleTemplate> BillingScheduleTemplates { get; set; }
+        public DbSet<BillingScheduleRun> BillingScheduleRuns { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -584,6 +597,9 @@ namespace WOMS.Infrastructure.Data
             ConfigureAssignmentTemplateEntity(modelBuilder);
             ConfigureJunctionEntities(modelBuilder);
             ConfigureInventoryManagementEntities(modelBuilder);
+            ConfigureBillingTemplateEntities(modelBuilder);
+            ConfigureRateTableEntities(modelBuilder);
+            ConfigureBillingScheduleEntities(modelBuilder);
         }
 
         private void ConfigureSkillEntity(ModelBuilder modelBuilder)
@@ -1205,6 +1221,164 @@ namespace WOMS.Infrastructure.Data
                 entity.HasIndex(sl => sl.ScannedCode);
                 entity.HasIndex(sl => sl.ScanType);
                 entity.HasIndex(sl => sl.Result);
+            });
+        }
+
+        private void ConfigureBillingTemplateEntities(ModelBuilder modelBuilder)
+        {
+            // BillingTemplate entity configuration
+            modelBuilder.Entity<BillingTemplate>(entity =>
+            {
+                entity.HasKey(bt => bt.Id);
+                entity.Property(bt => bt.TemplateName).IsRequired().HasMaxLength(200);
+                entity.Property(bt => bt.CustomerId).IsRequired().HasMaxLength(50);
+                entity.Property(bt => bt.CustomerName).IsRequired().HasMaxLength(200);
+                entity.Property(bt => bt.OutputFormat).IsRequired().HasMaxLength(20);
+                entity.Property(bt => bt.DeliveryMethod).IsRequired().HasMaxLength(20);
+                entity.Property(bt => bt.InvoiceType).IsRequired().HasMaxLength(50);
+                entity.Property(bt => bt.FileNamingConvention).IsRequired().HasMaxLength(200);
+                entity.Property(bt => bt.Description).HasMaxLength(1000);
+                entity.Property(bt => bt.AdditionalSettings).HasColumnType("nvarchar(max)");
+
+                entity.HasIndex(bt => bt.TemplateName);
+                entity.HasIndex(bt => bt.CustomerId);
+                entity.HasIndex(bt => bt.IsActive);
+            });
+
+            // BillingTemplateFieldOrder entity configuration
+            modelBuilder.Entity<BillingTemplateFieldOrder>(entity =>
+            {
+                entity.HasKey(btfo => btfo.Id);
+                entity.Property(btfo => btfo.FieldName).IsRequired().HasMaxLength(100);
+                entity.Property(btfo => btfo.DisplayLabel).HasMaxLength(200);
+                entity.Property(btfo => btfo.FieldType).HasMaxLength(50);
+                entity.Property(btfo => btfo.FieldSettings).HasColumnType("nvarchar(max)");
+
+                entity.HasOne(btfo => btfo.BillingTemplate)
+                      .WithMany(bt => bt.FieldOrders)
+                      .HasForeignKey(btfo => btfo.BillingTemplateId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(btfo => new { btfo.BillingTemplateId, btfo.DisplayOrder });
+                entity.HasIndex(btfo => btfo.FieldName);
+            });
+        }
+
+        private void ConfigureRateTableEntities(ModelBuilder modelBuilder)
+        {
+            // RateTable entity configuration
+            modelBuilder.Entity<RateTable>(entity =>
+            {
+                entity.HasKey(rt => rt.Id);
+                entity.Property(rt => rt.RateTableName).IsRequired().HasMaxLength(200);
+                entity.Property(rt => rt.RateType).IsRequired().HasMaxLength(50);
+                entity.Property(rt => rt.Description).HasMaxLength(1000);
+                entity.Property(rt => rt.BaseRate).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(rt => rt.EffectiveStartDate).IsRequired();
+                entity.Property(rt => rt.EffectiveEndDate).IsRequired();
+                entity.Property(rt => rt.Currency).HasMaxLength(50);
+                entity.Property(rt => rt.Category).HasMaxLength(100);
+                entity.Property(rt => rt.RateRules).HasColumnType("nvarchar(max)");
+                entity.Property(rt => rt.AdditionalSettings).HasColumnType("nvarchar(max)");
+
+                entity.HasIndex(rt => rt.RateTableName);
+                entity.HasIndex(rt => rt.RateType);
+                entity.HasIndex(rt => rt.IsActive);
+                entity.HasIndex(rt => rt.EffectiveStartDate);
+                entity.HasIndex(rt => rt.EffectiveEndDate);
+            });
+
+            // RateTableItem entity configuration
+            modelBuilder.Entity<RateTableItem>(entity =>
+            {
+                entity.HasKey(rti => rti.Id);
+                entity.Property(rti => rti.ItemName).IsRequired().HasMaxLength(200);
+                entity.Property(rti => rti.Description).HasMaxLength(500);
+                entity.Property(rti => rti.Rate).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(rti => rti.Unit).HasMaxLength(50);
+                entity.Property(rti => rti.Category).HasMaxLength(100);
+                entity.Property(rti => rti.SkillLevel).HasMaxLength(50);
+                entity.Property(rti => rti.WorkType).HasMaxLength(100);
+                entity.Property(rti => rti.Conditions).HasColumnType("nvarchar(max)");
+                entity.Property(rti => rti.AdditionalSettings).HasColumnType("nvarchar(max)");
+
+                entity.HasOne(rti => rti.RateTable)
+                      .WithMany(rt => rt.RateTableItems)
+                      .HasForeignKey(rti => rti.RateTableId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(rti => new { rti.RateTableId, rti.DisplayOrder });
+                entity.HasIndex(rti => rti.ItemName);
+                entity.HasIndex(rti => rti.Category);
+                entity.HasIndex(rti => rti.IsActive);
+            });
+        }
+
+        private void ConfigureBillingScheduleEntities(ModelBuilder modelBuilder)
+        {
+            // BillingSchedule entity configuration
+            modelBuilder.Entity<BillingSchedule>(entity =>
+            {
+                entity.HasKey(bs => bs.Id);
+                entity.Property(bs => bs.ScheduleName).IsRequired().HasMaxLength(200);
+                entity.Property(bs => bs.Frequency).IsRequired().HasMaxLength(50);
+                entity.Property(bs => bs.Time).IsRequired();
+                entity.Property(bs => bs.DayOfWeekName).HasMaxLength(100);
+                entity.Property(bs => bs.Description).HasMaxLength(1000);
+                entity.Property(bs => bs.Status).HasMaxLength(50);
+                entity.Property(bs => bs.LastRunStatus).HasMaxLength(500);
+                entity.Property(bs => bs.LastRunMessage).HasMaxLength(1000);
+                entity.Property(bs => bs.ScheduleSettings).HasColumnType("nvarchar(max)");
+                entity.Property(bs => bs.NotificationSettings).HasColumnType("nvarchar(max)");
+
+                entity.HasIndex(bs => bs.ScheduleName);
+                entity.HasIndex(bs => bs.Frequency);
+                entity.HasIndex(bs => bs.IsActive);
+                entity.HasIndex(bs => bs.Status);
+                entity.HasIndex(bs => bs.NextRunDate);
+            });
+
+            // BillingScheduleTemplate entity configuration
+            modelBuilder.Entity<BillingScheduleTemplate>(entity =>
+            {
+                entity.HasKey(bst => bst.Id);
+                entity.Property(bst => bst.Notes).HasMaxLength(500);
+                entity.Property(bst => bst.TemplateSettings).HasColumnType("nvarchar(max)");
+
+                entity.HasOne(bst => bst.BillingSchedule)
+                      .WithMany(bs => bs.BillingScheduleTemplates)
+                      .HasForeignKey(bst => bst.BillingScheduleId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(bst => bst.BillingTemplate)
+                      .WithMany()
+                      .HasForeignKey(bst => bst.BillingTemplateId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(bst => new { bst.BillingScheduleId, bst.DisplayOrder });
+                entity.HasIndex(bst => bst.IsActive);
+            });
+
+            // BillingScheduleRun entity configuration
+            modelBuilder.Entity<BillingScheduleRun>(entity =>
+            {
+                entity.HasKey(bsr => bsr.Id);
+                entity.Property(bsr => bsr.RunDate).IsRequired();
+                entity.Property(bsr => bsr.ScheduledRunDate).IsRequired();
+                entity.Property(bsr => bsr.Status).IsRequired().HasMaxLength(50);
+                entity.Property(bsr => bsr.ErrorMessage).HasMaxLength(1000);
+                entity.Property(bsr => bsr.Summary).HasMaxLength(2000);
+                entity.Property(bsr => bsr.RunDetails).HasColumnType("nvarchar(max)");
+                entity.Property(bsr => bsr.ErrorDetails).HasColumnType("nvarchar(max)");
+
+                entity.HasOne(bsr => bsr.BillingSchedule)
+                      .WithMany(bs => bs.BillingScheduleRuns)
+                      .HasForeignKey(bsr => bsr.BillingScheduleId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(bsr => bsr.RunDate);
+                entity.HasIndex(bsr => bsr.ScheduledRunDate);
+                entity.HasIndex(bsr => bsr.Status);
             });
         }
     }
