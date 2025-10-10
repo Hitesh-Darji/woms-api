@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WOMS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using WOMS.Infrastructure.Data;
 namespace WOMS.Infrastructure.Migrations
 {
     [DbContext(typeof(WomsDbContext))]
-    partial class WomsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251010060204_AddedBillingTemplate")]
+    partial class AddedBillingTemplate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -422,7 +425,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("Asset");
+                    b.ToTable("Assets");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssetHistory", b =>
@@ -502,7 +505,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("AssetHistory");
+                    b.ToTable("AssetHistories");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplate", b =>
@@ -580,7 +583,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("AssignmentTemplate");
+                    b.ToTable("AssignmentTemplates");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateSkill", b =>
@@ -629,7 +632,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("AssignmentTemplateSkill");
+                    b.ToTable("AssignmentTemplateSkills");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateTechnician", b =>
@@ -680,7 +683,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("AssignmentTemplateTechnician");
+                    b.ToTable("AssignmentTemplateTechnicians");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateWorkType", b =>
@@ -722,7 +725,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderTypeId");
 
-                    b.ToTable("AssignmentTemplateWorkType");
+                    b.ToTable("AssignmentTemplateWorkTypes");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateZone", b =>
@@ -764,255 +767,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("AssignmentTemplateZone");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingSchedule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DayOfMonth")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DayOfWeek")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DayOfWeekName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Frequency")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastRunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastRunMessage")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("LastRunStatus")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("NextRunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NotificationSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RunCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ScheduleName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ScheduleSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Frequency");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("NextRunDate");
-
-                    b.HasIndex("ScheduleName");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("BillingSchedules");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleRun", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BillingScheduleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DurationSeconds")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmailsSent")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ErrorDetails")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("InvoicesGenerated")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("RunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RunDetails")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ScheduledRunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Summary")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int>("TemplatesFailed")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TemplatesProcessed")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TemplatesSuccessful")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BillingScheduleId");
-
-                    b.HasIndex("RunDate");
-
-                    b.HasIndex("ScheduledRunDate");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("BillingScheduleRuns");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleTemplate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BillingScheduleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BillingTemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("TemplateSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BillingTemplateId");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("BillingScheduleId", "DisplayOrder");
-
-                    b.ToTable("BillingScheduleTemplates");
+                    b.ToTable("AssignmentTemplateZones");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplate", b =>
@@ -1232,7 +987,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("CycleCount");
+                    b.ToTable("CycleCounts");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.CycleCountItem", b =>
@@ -1288,7 +1043,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("InventoryId");
 
-                    b.ToTable("CycleCountItem");
+                    b.ToTable("CycleCountItems");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Equipment", b =>
@@ -1411,7 +1166,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Form");
+                    b.ToTable("Forms");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Inventory", b =>
@@ -1671,7 +1426,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("InventoryDisposition");
+                    b.ToTable("InventoryDispositions");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.InventoryLocation", b =>
@@ -1748,7 +1503,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("InventoryId", "LocationId")
                         .IsUnique();
 
-                    b.ToTable("InventoryLocation");
+                    b.ToTable("InventoryLocations");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.InventoryTransaction", b =>
@@ -1834,7 +1589,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("InventoryTransaction");
+                    b.ToTable("InventoryTransactions");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.JobKit", b =>
@@ -1902,7 +1657,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("JobKit");
+                    b.ToTable("JobKits");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.JobKitItem", b =>
@@ -1960,7 +1715,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("JobKitId");
 
-                    b.ToTable("JobKitItem");
+                    b.ToTable("JobKitItems");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Location", b =>
@@ -2041,7 +1796,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.NotificationTemplate", b =>
@@ -2106,172 +1861,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("NotificationTemplate");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RateTable", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdditionalSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("BaseRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Category")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Currency")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("EffectiveEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EffectiveStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RateRules")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RateTableName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("RateType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EffectiveEndDate");
-
-                    b.HasIndex("EffectiveStartDate");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("RateTableName");
-
-                    b.HasIndex("RateType");
-
-                    b.ToTable("RateTables");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RateTableItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdditionalSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Category")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Conditions")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("RateTableId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("SkillLevel")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Unit")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("WorkType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Category");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("ItemName");
-
-                    b.HasIndex("RateTableId", "DisplayOrder");
-
-                    b.ToTable("RateTableItems");
+                    b.ToTable("NotificationTemplates");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.RefreshToken", b =>
@@ -2306,7 +1896,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshToken");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Route", b =>
@@ -2385,7 +1975,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("Route");
+                    b.ToTable("Routes");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.RouteStop", b =>
@@ -2463,7 +2053,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("RouteId", "SequenceNumber");
 
-                    b.ToTable("RouteStop");
+                    b.ToTable("RouteStops");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.ScanLog", b =>
@@ -2544,7 +2134,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ScannedCode");
 
-                    b.ToTable("ScanLog");
+                    b.ToTable("ScanLogs");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.SentNotification", b =>
@@ -2619,7 +2209,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SentNotification");
+                    b.ToTable("SentNotifications");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Skill", b =>
@@ -2675,7 +2265,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Skill");
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.TechnicianEquipment", b =>
@@ -2732,7 +2322,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("TechnicianEquipment");
+                    b.ToTable("TechnicianEquipments");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.TechnicianSkill", b =>
@@ -2792,7 +2382,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("TechnicianId", "SkillId")
                         .IsUnique();
 
-                    b.ToTable("TechnicianSkill");
+                    b.ToTable("TechnicianSkills");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.TechnicianZone", b =>
@@ -2846,7 +2436,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("TechnicianZone");
+                    b.ToTable("TechnicianZones");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.ValidationIssue", b =>
@@ -2928,7 +2518,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("ValidationIssue");
+                    b.ToTable("ValidationIssues");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Vendor", b =>
@@ -3020,7 +2610,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("Vendor");
+                    b.ToTable("Vendors");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.View", b =>
@@ -3041,17 +2631,28 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SelectedColumns")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3063,9 +2664,148 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("Name", "EntityType");
 
                     b.ToTable("Views");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.ViewColumn", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ColumnName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DataType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Format")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFilterable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSortable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ViewId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ViewId", "Order");
+
+                    b.ToTable("ViewColumns");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.ViewFilter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ColumnName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LogicalOperator")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Operator")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Value2")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("ViewId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ViewId", "Order");
+
+                    b.ToTable("ViewFilters");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
@@ -3173,7 +2913,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowStatusId");
 
-                    b.ToTable("WorkOrder");
+                    b.ToTable("WorkOrders");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAssignment", b =>
@@ -3238,7 +2978,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderAssignment");
+                    b.ToTable("WorkOrderAssignments");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAttachment", b =>
@@ -3302,7 +3042,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderAttachment");
+                    b.ToTable("WorkOrderAttachments");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderEquipmentRequirement", b =>
@@ -3354,7 +3094,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderEquipmentRequirement");
+                    b.ToTable("WorkOrderEquipmentRequirements");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderSkillRequirement", b =>
@@ -3403,7 +3143,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderSkillRequirement");
+                    b.ToTable("WorkOrderSkillRequirements");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderType", b =>
@@ -3466,7 +3206,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("WorkOrderType");
+                    b.ToTable("WorkOrderTypes");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeEquipmentRequirement", b =>
@@ -3518,7 +3258,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderTypeId");
 
-                    b.ToTable("WorkOrderTypeEquipmentRequirement");
+                    b.ToTable("WorkOrderTypeEquipmentRequirements");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeSkillRequirement", b =>
@@ -3567,7 +3307,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderTypeId");
 
-                    b.ToTable("WorkOrderTypeSkillRequirement");
+                    b.ToTable("WorkOrderTypeSkillRequirements");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderZone", b =>
@@ -3617,7 +3357,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("WorkOrderZone");
+                    b.ToTable("WorkOrderZones");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Workflow", b =>
@@ -3674,7 +3414,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Workflow");
+                    b.ToTable("Workflows");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowAction", b =>
@@ -3725,7 +3465,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "ActionId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowAction");
+                    b.ToTable("WorkflowActions");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowAssignment", b =>
@@ -3799,7 +3539,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowNodeId");
 
-                    b.ToTable("WorkflowAssignment");
+                    b.ToTable("WorkflowAssignments");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowEdge", b =>
@@ -3870,7 +3610,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "EdgeId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowEdge");
+                    b.ToTable("WorkflowEdges");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowForm", b =>
@@ -3913,7 +3653,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "FormId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowForm");
+                    b.ToTable("WorkflowForms");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstance", b =>
@@ -3974,7 +3714,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowId");
 
-                    b.ToTable("WorkflowInstance");
+                    b.ToTable("WorkflowInstances");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstanceStep", b =>
@@ -4052,7 +3792,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowNodeId");
 
-                    b.ToTable("WorkflowInstanceStep");
+                    b.ToTable("WorkflowInstanceSteps");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowNode", b =>
@@ -4118,7 +3858,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "NodeId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowNode");
+                    b.ToTable("WorkflowNodes");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowProgress", b =>
@@ -4180,7 +3920,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowId");
 
-                    b.ToTable("WorkflowProgress");
+                    b.ToTable("WorkflowProgresses");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRule", b =>
@@ -4240,7 +3980,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "RuleId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowRule");
+                    b.ToTable("WorkflowRules");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleAction", b =>
@@ -4293,7 +4033,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("RuleId");
 
-                    b.ToTable("WorkflowRuleAction");
+                    b.ToTable("WorkflowRuleActions");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleCondition", b =>
@@ -4355,7 +4095,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("RuleId");
 
-                    b.ToTable("WorkflowRuleCondition");
+                    b.ToTable("WorkflowRuleConditions");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowStatus", b =>
@@ -4421,7 +4161,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "StatusId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowStatus");
+                    b.ToTable("WorkflowStatuses");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowTransition", b =>
@@ -4486,7 +4226,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "TransitionId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowTransition");
+                    b.ToTable("WorkflowTransitions");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Zone", b =>
@@ -4552,7 +4292,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("Zone");
+                    b.ToTable("Zones");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -4771,36 +4511,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("Zone");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleRun", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.BillingSchedule", "BillingSchedule")
-                        .WithMany("BillingScheduleRuns")
-                        .HasForeignKey("BillingScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BillingSchedule");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleTemplate", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.BillingSchedule", "BillingSchedule")
-                        .WithMany("BillingScheduleTemplates")
-                        .HasForeignKey("BillingScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.BillingTemplate", "BillingTemplate")
-                        .WithMany()
-                        .HasForeignKey("BillingTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BillingSchedule");
-
-                    b.Navigation("BillingTemplate");
-                });
-
             modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplateFieldOrder", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.BillingTemplate", "BillingTemplate")
@@ -4986,17 +4696,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.RateTableItem", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.RateTable", "RateTable")
-                        .WithMany("RateTableItems")
-                        .HasForeignKey("RateTableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RateTable");
-                });
-
             modelBuilder.Entity("WOMS.Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", "User")
@@ -5165,6 +4864,28 @@ namespace WOMS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("CreatedByUser");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.ViewColumn", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.View", "View")
+                        .WithMany("Columns")
+                        .HasForeignKey("ViewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("View");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.ViewFilter", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.View", "View")
+                        .WithMany("Filters")
+                        .HasForeignKey("ViewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("View");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
@@ -5572,13 +5293,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("AssignmentTemplateZones");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingSchedule", b =>
-                {
-                    b.Navigation("BillingScheduleRuns");
-
-                    b.Navigation("BillingScheduleTemplates");
-                });
-
             modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplate", b =>
                 {
                     b.Navigation("FieldOrders");
@@ -5637,11 +5351,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("SentNotifications");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.RateTable", b =>
-                {
-                    b.Navigation("RateTableItems");
-                });
-
             modelBuilder.Entity("WOMS.Domain.Entities.Route", b =>
                 {
                     b.Navigation("RouteStops");
@@ -5657,6 +5366,13 @@ namespace WOMS.Infrastructure.Migrations
             modelBuilder.Entity("WOMS.Domain.Entities.Vendor", b =>
                 {
                     b.Navigation("InventoryDispositions");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.View", b =>
+                {
+                    b.Navigation("Columns");
+
+                    b.Navigation("Filters");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
