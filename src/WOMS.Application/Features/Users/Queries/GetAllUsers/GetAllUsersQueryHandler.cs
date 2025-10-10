@@ -8,9 +8,9 @@ namespace WOMS.Application.Features.Users.Queries.GetAllUsers
     public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, IEnumerable<UserDto>>
     {
         private readonly IUserRepository _userRepository;
-        private readonly AutoMapper.IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        public GetAllUsersQueryHandler(IUserRepository userRepository, AutoMapper.IMapper mapper)
+        public GetAllUsersQueryHandler(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _mapper = mapper;

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Expressions;
 using WOMS.Domain.Entities;
 using WOMS.Domain.Repositories;
@@ -15,6 +16,11 @@ namespace WOMS.Infrastructure.Repositories
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
+        }
+
+        public virtual IQueryable<TEntity> GetQueryable()
+        {
+            return _dbSet.AsQueryable();
         }
 
         public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

@@ -163,9 +163,41 @@ namespace WOMS.Infrastructure.Data
                       .HasForeignKey(wo => wo.CreatedBy)
                       .OnDelete(DeleteBehavior.NoAction);
 
+                // Single column indexes for filtering and sorting
                 entity.HasIndex(wo => wo.WorkOrderNumber).IsUnique();
                 entity.HasIndex(wo => wo.Status);
                 entity.HasIndex(wo => wo.Priority);
+                entity.HasIndex(wo => wo.AssignedTechnicianId);
+                entity.HasIndex(wo => wo.WorkOrderTypeId);
+                entity.HasIndex(wo => wo.ScheduledDate);
+                entity.HasIndex(wo => wo.CreatedOn);
+                entity.HasIndex(wo => wo.IsDeleted);
+                
+                // Composite indexes for common query patterns
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.Status })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Status");
+                      
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.Priority })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority");
+                      
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.AssignedTechnicianId })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_AssignedTechnicianId");
+                      
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.WorkOrderTypeId })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_WorkOrderTypeId");
+                      
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.ScheduledDate })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_ScheduledDate");
+                      
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.CreatedOn })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_CreatedOn");
+                      
+                // Composite index for sorting and filtering
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.Status, wo.CreatedOn })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Status_CreatedOn");
+                      
+                entity.HasIndex(wo => new { wo.IsDeleted, wo.Priority, wo.CreatedOn })
+                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority_CreatedOn");
             });
 
             // Configure Workflow entity
