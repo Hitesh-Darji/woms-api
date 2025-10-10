@@ -14,6 +14,7 @@ namespace WOMS.Infrastructure.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<View> Views { get; set; }
+        public DbSet<Department> Departments { get; set; }
         
         // Workflow entities
         public DbSet<Workflow> Workflows { get; set; }
@@ -583,6 +584,37 @@ namespace WOMS.Infrastructure.Data
                       .OnDelete(DeleteBehavior.NoAction);
 
                 entity.HasIndex(v => v.Name);
+            });
+
+            // Configure Department entity
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.HasKey(d => d.Id);
+                entity.Property(d => d.Name).IsRequired().HasMaxLength(100);
+                entity.Property(d => d.Description).HasMaxLength(500);
+                entity.Property(d => d.Code).HasMaxLength(50);
+                entity.Property(d => d.Status).IsRequired().HasMaxLength(20).HasDefaultValue("Active");
+                entity.Property(d => d.IsActive).IsRequired().HasDefaultValue(true);
+
+                entity.HasOne(d => d.CreatedByUser)
+                      .WithMany()
+                      .HasForeignKey(d => d.CreatedBy)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(d => d.UpdatedByUser)
+                      .WithMany()
+                      .HasForeignKey(d => d.UpdatedBy)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(d => d.DeletedByUser)
+                      .WithMany()
+                      .HasForeignKey(d => d.DeletedBy)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(d => d.Name);
+                entity.HasIndex(d => d.Code).IsUnique();
+                entity.HasIndex(d => d.Status);
+                entity.HasIndex(d => d.IsActive);
             });
 
 

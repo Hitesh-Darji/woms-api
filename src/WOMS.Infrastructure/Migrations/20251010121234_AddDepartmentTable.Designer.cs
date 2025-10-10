@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WOMS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using WOMS.Infrastructure.Data;
 namespace WOMS.Infrastructure.Migrations
 {
     [DbContext(typeof(WomsDbContext))]
-    partial class WomsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251010121234_AddDepartmentTable")]
+    partial class AddDepartmentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3238,13 +3241,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("CreatedOn");
-
-                    b.HasIndex("IsDeleted");
-
                     b.HasIndex("Priority");
-
-                    b.HasIndex("ScheduledDate");
 
                     b.HasIndex("Status");
 
@@ -3256,30 +3253,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId");
 
                     b.HasIndex("WorkflowStatusId");
-
-                    b.HasIndex("IsDeleted", "AssignedTechnicianId")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_AssignedTechnicianId");
-
-                    b.HasIndex("IsDeleted", "CreatedOn")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_CreatedOn");
-
-                    b.HasIndex("IsDeleted", "Priority")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority");
-
-                    b.HasIndex("IsDeleted", "ScheduledDate")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_ScheduledDate");
-
-                    b.HasIndex("IsDeleted", "Status")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Status");
-
-                    b.HasIndex("IsDeleted", "WorkOrderTypeId")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_WorkOrderTypeId");
-
-                    b.HasIndex("IsDeleted", "Priority", "CreatedOn")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority_CreatedOn");
-
-                    b.HasIndex("IsDeleted", "Status", "CreatedOn")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Status_CreatedOn");
 
                     b.ToTable("WorkOrder");
                 });
