@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("NotificationTemplate")]
     public class NotificationTemplate : BaseEntity
     {
         public bool Active { get; set; } = true;

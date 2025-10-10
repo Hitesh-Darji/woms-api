@@ -422,7 +422,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("Assets");
+                    b.ToTable("Asset");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssetHistory", b =>
@@ -502,7 +502,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("AssetHistories");
+                    b.ToTable("AssetHistory");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplate", b =>
@@ -580,7 +580,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("AssignmentTemplates");
+                    b.ToTable("AssignmentTemplate");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateSkill", b =>
@@ -629,7 +629,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("AssignmentTemplateSkills");
+                    b.ToTable("AssignmentTemplateSkill");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateTechnician", b =>
@@ -680,7 +680,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("AssignmentTemplateTechnicians");
+                    b.ToTable("AssignmentTemplateTechnician");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateWorkType", b =>
@@ -722,7 +722,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderTypeId");
 
-                    b.ToTable("AssignmentTemplateWorkTypes");
+                    b.ToTable("AssignmentTemplateWorkType");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateZone", b =>
@@ -764,7 +764,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("AssignmentTemplateZones");
+                    b.ToTable("AssignmentTemplateZone");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.CycleCount", b =>
@@ -840,7 +840,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("CycleCounts");
+                    b.ToTable("CycleCount");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.CycleCountItem", b =>
@@ -896,7 +896,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("InventoryId");
 
-                    b.ToTable("CycleCountItems");
+                    b.ToTable("CycleCountItem");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Equipment", b =>
@@ -1019,7 +1019,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Forms");
+                    b.ToTable("Form");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Inventory", b =>
@@ -1279,7 +1279,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("VendorId");
 
-                    b.ToTable("InventoryDispositions");
+                    b.ToTable("InventoryDisposition");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.InventoryLocation", b =>
@@ -1356,7 +1356,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("InventoryId", "LocationId")
                         .IsUnique();
 
-                    b.ToTable("InventoryLocations");
+                    b.ToTable("InventoryLocation");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.InventoryTransaction", b =>
@@ -1442,7 +1442,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("InventoryTransactions");
+                    b.ToTable("InventoryTransaction");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.JobKit", b =>
@@ -1510,7 +1510,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("JobKits");
+                    b.ToTable("JobKit");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.JobKitItem", b =>
@@ -1568,7 +1568,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("JobKitId");
 
-                    b.ToTable("JobKitItems");
+                    b.ToTable("JobKitItem");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Location", b =>
@@ -1649,7 +1649,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.NotificationTemplate", b =>
@@ -1714,7 +1714,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("NotificationTemplates");
+                    b.ToTable("NotificationTemplate");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.RefreshToken", b =>
@@ -1749,7 +1749,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Route", b =>
@@ -1828,7 +1828,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("Routes");
+                    b.ToTable("Route");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.RouteStop", b =>
@@ -1906,7 +1906,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("RouteId", "SequenceNumber");
 
-                    b.ToTable("RouteStops");
+                    b.ToTable("RouteStop");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.ScanLog", b =>
@@ -1987,7 +1987,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ScannedCode");
 
-                    b.ToTable("ScanLogs");
+                    b.ToTable("ScanLog");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.SentNotification", b =>
@@ -2062,7 +2062,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SentNotifications");
+                    b.ToTable("SentNotification");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Skill", b =>
@@ -2118,7 +2118,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Skills");
+                    b.ToTable("Skill");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.TechnicianEquipment", b =>
@@ -2175,7 +2175,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("TechnicianEquipments");
+                    b.ToTable("TechnicianEquipment");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.TechnicianSkill", b =>
@@ -2235,7 +2235,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("TechnicianId", "SkillId")
                         .IsUnique();
 
-                    b.ToTable("TechnicianSkills");
+                    b.ToTable("TechnicianSkill");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.TechnicianZone", b =>
@@ -2289,7 +2289,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("TechnicianZones");
+                    b.ToTable("TechnicianZone");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.ValidationIssue", b =>
@@ -2371,7 +2371,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("ValidationIssues");
+                    b.ToTable("ValidationIssue");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Vendor", b =>
@@ -2463,7 +2463,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("Vendors");
+                    b.ToTable("Vendor");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.View", b =>
@@ -2484,28 +2484,17 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SelectedColumns")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -2517,148 +2506,9 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("Name", "EntityType");
+                    b.HasIndex("Name");
 
                     b.ToTable("Views");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.ViewColumn", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ColumnName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DataType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Format")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsFilterable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSortable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ViewId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Width")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ViewId", "Order");
-
-                    b.ToTable("ViewColumns");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.ViewFilter", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ColumnName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LogicalOperator")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Operator")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Value")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Value2")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("ViewId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ViewId", "Order");
-
-                    b.ToTable("ViewFilters");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
@@ -2766,7 +2616,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowStatusId");
 
-                    b.ToTable("WorkOrders");
+                    b.ToTable("WorkOrder");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAssignment", b =>
@@ -2831,7 +2681,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderAssignments");
+                    b.ToTable("WorkOrderAssignment");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAttachment", b =>
@@ -2895,7 +2745,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderAttachments");
+                    b.ToTable("WorkOrderAttachment");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderEquipmentRequirement", b =>
@@ -2947,7 +2797,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderEquipmentRequirements");
+                    b.ToTable("WorkOrderEquipmentRequirement");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderSkillRequirement", b =>
@@ -2996,7 +2846,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderSkillRequirements");
+                    b.ToTable("WorkOrderSkillRequirement");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderType", b =>
@@ -3059,7 +2909,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("WorkOrderTypes");
+                    b.ToTable("WorkOrderType");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeEquipmentRequirement", b =>
@@ -3111,7 +2961,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderTypeId");
 
-                    b.ToTable("WorkOrderTypeEquipmentRequirements");
+                    b.ToTable("WorkOrderTypeEquipmentRequirement");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeSkillRequirement", b =>
@@ -3160,7 +3010,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkOrderTypeId");
 
-                    b.ToTable("WorkOrderTypeSkillRequirements");
+                    b.ToTable("WorkOrderTypeSkillRequirement");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderZone", b =>
@@ -3210,7 +3060,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("WorkOrderZones");
+                    b.ToTable("WorkOrderZone");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Workflow", b =>
@@ -3267,7 +3117,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Workflows");
+                    b.ToTable("Workflow");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowAction", b =>
@@ -3318,7 +3168,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "ActionId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowActions");
+                    b.ToTable("WorkflowAction");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowAssignment", b =>
@@ -3392,7 +3242,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowNodeId");
 
-                    b.ToTable("WorkflowAssignments");
+                    b.ToTable("WorkflowAssignment");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowEdge", b =>
@@ -3463,7 +3313,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "EdgeId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowEdges");
+                    b.ToTable("WorkflowEdge");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowForm", b =>
@@ -3506,7 +3356,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "FormId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowForms");
+                    b.ToTable("WorkflowForm");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstance", b =>
@@ -3567,7 +3417,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowId");
 
-                    b.ToTable("WorkflowInstances");
+                    b.ToTable("WorkflowInstance");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstanceStep", b =>
@@ -3645,7 +3495,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowNodeId");
 
-                    b.ToTable("WorkflowInstanceSteps");
+                    b.ToTable("WorkflowInstanceStep");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowNode", b =>
@@ -3711,7 +3561,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "NodeId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowNodes");
+                    b.ToTable("WorkflowNode");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowProgress", b =>
@@ -3773,7 +3623,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("WorkflowId");
 
-                    b.ToTable("WorkflowProgresses");
+                    b.ToTable("WorkflowProgress");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRule", b =>
@@ -3833,7 +3683,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "RuleId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowRules");
+                    b.ToTable("WorkflowRule");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleAction", b =>
@@ -3886,7 +3736,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("RuleId");
 
-                    b.ToTable("WorkflowRuleActions");
+                    b.ToTable("WorkflowRuleAction");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleCondition", b =>
@@ -3948,7 +3798,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("RuleId");
 
-                    b.ToTable("WorkflowRuleConditions");
+                    b.ToTable("WorkflowRuleCondition");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowStatus", b =>
@@ -4014,7 +3864,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "StatusId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowStatuses");
+                    b.ToTable("WorkflowStatus");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowTransition", b =>
@@ -4079,7 +3929,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasIndex("WorkflowId", "TransitionId")
                         .IsUnique();
 
-                    b.ToTable("WorkflowTransitions");
+                    b.ToTable("WorkflowTransition");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Zone", b =>
@@ -4145,7 +3995,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("Zones");
+                    b.ToTable("Zone");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -4708,28 +4558,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("CreatedByUser");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.ViewColumn", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.View", "View")
-                        .WithMany("Columns")
-                        .HasForeignKey("ViewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("View");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.ViewFilter", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.View", "View")
-                        .WithMany("Filters")
-                        .HasForeignKey("ViewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("View");
-                });
-
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", "AssignedTechnician")
@@ -5203,13 +5031,6 @@ namespace WOMS.Infrastructure.Migrations
             modelBuilder.Entity("WOMS.Domain.Entities.Vendor", b =>
                 {
                     b.Navigation("InventoryDispositions");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.View", b =>
-                {
-                    b.Navigation("Columns");
-
-                    b.Navigation("Filters");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>

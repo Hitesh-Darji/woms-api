@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("TechnicianZone")]
     public class TechnicianZone : BaseEntity
     {
         [Required]

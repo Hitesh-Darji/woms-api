@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("ApplicationRole")]
     public class ApplicationRole : IdentityRole<Guid>
     {
         [Required]

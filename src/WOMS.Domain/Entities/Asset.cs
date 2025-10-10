@@ -4,6 +4,7 @@ using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("Asset")]
     public class Asset : BaseEntity
     {
         [Required]

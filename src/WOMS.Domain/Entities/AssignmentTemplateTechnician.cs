@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("AssignmentTemplateTechnician")]
     public class AssignmentTemplateTechnician : BaseEntity
     {
         [Required]

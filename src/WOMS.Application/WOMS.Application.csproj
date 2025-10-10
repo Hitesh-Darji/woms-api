@@ -24,4 +24,10 @@
     <ProjectReference Include="..\WOMS.Domain\WOMS.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\View\Commands\CreateView\" />
+    <Folder Include="Features\View\Queries\" />
+    <Folder Include="Features\WorkOrder\Commands\" />
+  </ItemGroup>
+
 </Project>

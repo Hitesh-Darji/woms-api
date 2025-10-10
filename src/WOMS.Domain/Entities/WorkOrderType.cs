@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("WorkOrderType")]
     public class WorkOrderType : BaseEntity
     {
         [Required]

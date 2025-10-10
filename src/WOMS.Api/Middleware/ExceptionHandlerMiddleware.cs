@@ -2,7 +2,6 @@
 using FluentValidation;
 using Newtonsoft.Json;
 using System.Net;
-using System.Text.Json;
 using WOMS.Application.Features.Auth.Dtos;
 
 namespace WOMS.Api.Middleware
@@ -10,11 +9,9 @@ namespace WOMS.Api.Middleware
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IServiceScopeFactory _scopeFactory;
-        public ExceptionHandlerMiddleware(RequestDelegate next, IServiceScopeFactory scopeFactory)
+        public ExceptionHandlerMiddleware(RequestDelegate next)
         {
             _next = next;
-            _scopeFactory = scopeFactory;
         }
         public async Task InvokeAsync(HttpContext context)
         {
@@ -63,8 +60,7 @@ namespace WOMS.Api.Middleware
                 await context.Response.WriteAsync(json);
             }
             catch (Exception ex)
-            {
-                
+            {               
                 await HandleExceptionMessageAsync(context, ex).ConfigureAwait(false);
             }
         }
@@ -117,9 +113,7 @@ namespace WOMS.Api.Middleware
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     exModel.Message = ex.Message;
                     break;
-
-               
-
+              
                 default:
                     exModel.StatusCode = (int)HttpStatusCode.InternalServerError;
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -129,9 +123,7 @@ namespace WOMS.Api.Middleware
             }
 
             var exResult = JsonConvert.SerializeObject(exModel);
-
             await context.Response.WriteAsync(exResult).ConfigureAwait(false);
         }
-
     }
 }

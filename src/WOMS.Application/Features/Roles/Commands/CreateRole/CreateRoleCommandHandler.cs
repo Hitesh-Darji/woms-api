@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using WOMS.Application.Features.Roles.DTOs;

@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore.Storage;
-using WOMS.Application.Interfaces;
-using WOMS.Domain.Common;
 using WOMS.Infrastructure.Data;
 
 namespace WOMS.Infrastructure.Services
 {
-    public class UnitOfWork : WOMS.Application.Interfaces.IUnitOfWork
+    public class UnitOfWork : Application.Interfaces.IUnitOfWork
     {
         private readonly WomsDbContext _context;
         private IDbContextTransaction? _transaction;

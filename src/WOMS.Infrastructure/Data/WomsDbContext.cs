@@ -14,8 +14,6 @@ namespace WOMS.Infrastructure.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<View> Views { get; set; }
-        public DbSet<ViewColumn> ViewColumns { get; set; }
-        public DbSet<ViewFilter> ViewFilters { get; set; }
         
         // Workflow entities
         public DbSet<Workflow> Workflows { get; set; }
@@ -532,47 +530,16 @@ namespace WOMS.Infrastructure.Data
             {
                 entity.HasKey(v => v.Id);
                 entity.Property(v => v.Name).IsRequired().HasMaxLength(100);
-                entity.Property(v => v.EntityType).IsRequired().HasMaxLength(50);
+                entity.Property(v => v.SelectedColumns).IsRequired().HasColumnType("nvarchar(max)");
 
                 entity.HasOne(v => v.CreatedByUser)
                       .WithMany()
                       .HasForeignKey(v => v.CreatedBy)
                       .OnDelete(DeleteBehavior.NoAction);
 
-                entity.HasIndex(v => new { v.Name, v.EntityType });
+                entity.HasIndex(v => v.Name);
             });
 
-            // Configure ViewColumn entity
-            modelBuilder.Entity<ViewColumn>(entity =>
-            {
-                entity.HasKey(vc => vc.Id);
-                entity.Property(vc => vc.ColumnName).IsRequired().HasMaxLength(100);
-                entity.Property(vc => vc.DisplayName).IsRequired().HasMaxLength(200);
-                entity.Property(vc => vc.Order).IsRequired();
-
-                entity.HasOne(vc => vc.View)
-                      .WithMany(v => v.Columns)
-                      .HasForeignKey(vc => vc.ViewId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(vc => new { vc.ViewId, vc.Order });
-            });
-
-            // Configure ViewFilter entity
-            modelBuilder.Entity<ViewFilter>(entity =>
-            {
-                entity.HasKey(vf => vf.Id);
-                entity.Property(vf => vf.ColumnName).IsRequired().HasMaxLength(100);
-                entity.Property(vf => vf.Operator).IsRequired().HasMaxLength(50);
-                entity.Property(vf => vf.Order).IsRequired();
-
-                entity.HasOne(vf => vf.View)
-                      .WithMany(v => v.Filters)
-                      .HasForeignKey(vf => vf.ViewId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(vf => new { vf.ViewId, vf.Order });
-            });
 
             // Configure new entities
             ConfigureSkillEntity(modelBuilder);

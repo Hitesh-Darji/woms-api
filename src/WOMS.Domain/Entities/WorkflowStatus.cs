@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("WorkflowStatus")]
     public class WorkflowStatus : BaseEntity
     {
         [Required]

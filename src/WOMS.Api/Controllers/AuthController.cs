@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using WOMS.Application.Features.Auth.Commands.LoginUser;
 using WOMS.Application.Features.Auth.Commands.RefreshToken;
 using WOMS.Application.Features.Auth.Commands.RegisterUser;
-using WOMS.Application.Features.Auth.Commands.RevokeRefreshToken;
 using WOMS.Application.Features.Auth.Dtos;
 
 namespace WOMS.Api.Controllers

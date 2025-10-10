@@ -32,6 +32,16 @@ namespace WOMS.Infrastructure.Repositories
             return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
         }
 
+        public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
+        }
+
         public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             var entry = await _dbSet.AddAsync(entity, cancellationToken);

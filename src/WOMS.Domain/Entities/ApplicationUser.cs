@@ -5,6 +5,7 @@ using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("ApplicationUser")]
     public class ApplicationUser : IdentityUser<Guid>
     {
         [Required]

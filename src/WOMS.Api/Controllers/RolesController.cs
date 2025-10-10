@@ -22,9 +22,7 @@ namespace WOMS.Api.Controllers
         }
 
         [HttpPost]
-
         [ProducesResponseType(typeof(RoleDto), StatusCodes.Status201Created)]
-
         [Authorize]
         public async Task<ActionResult<RoleDto>> CreateRole([FromBody] CreateRoleDto createRoleDto)
         {

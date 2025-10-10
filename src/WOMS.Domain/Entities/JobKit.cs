@@ -4,6 +4,7 @@ using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("JobKit")]
     public class JobKit : BaseEntity
     {
         [Required]

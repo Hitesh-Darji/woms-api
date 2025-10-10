@@ -4,6 +4,7 @@ using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("ValidationIssue")]
     public class ValidationIssue : BaseEntity
     {
         [Required]

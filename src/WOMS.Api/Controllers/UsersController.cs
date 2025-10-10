@@ -15,7 +15,6 @@ namespace WOMS.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
-
         public UsersController(IMediator mediator)
         {
             _mediator = mediator;
@@ -32,7 +31,6 @@ namespace WOMS.Api.Controllers
             {
                 return Unauthorized("User ID not found in token");
             }
-
             var command = new CreateUserCommand
             {
                 FullName = createUserDto.FullName,
@@ -48,7 +46,6 @@ namespace WOMS.Api.Controllers
             var result = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetUser), new { id = result.Id }, result);
         }
-
 
         [Authorize]
         [HttpGet]
