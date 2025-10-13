@@ -28,7 +28,7 @@ namespace WOMS.Domain.Entities
         public virtual Asset? Asset { get; set; }
 
         [Required]
-        public Guid ScannedByUserId { get; set; }
+        public string ScannedByUserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(ScannedByUserId))]
         public virtual ApplicationUser ScannedByUser { get; set; } = null!;
@@ -42,7 +42,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(500)]
         public string? Notes { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Metadata { get; set; } // JSON for additional scan data
     }
 }

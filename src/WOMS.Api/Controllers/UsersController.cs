@@ -63,7 +63,7 @@ namespace WOMS.Api.Controllers
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<UserDto>> GetUser(Guid id)
+        public async Task<ActionResult<UserDto>> GetUser(string id)
         {
             var query = new GetUserByIdQuery { Id = id };
             var result = await _mediator.Send(query);
@@ -77,31 +77,16 @@ namespace WOMS.Api.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<UserDto>> UpdateUser(Guid id, [FromBody] UpdateUserDto updateUserDto)
+        public async Task<ActionResult<UserDto>> UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
-            // Get the current user ID from the JWT token
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var updatedBy))
-            {
-                return Unauthorized("User ID not found in token");
-            }
-
             var command = new UpdateUserCommand
             {
-                Id = id,
-                FullName = updateUserDto.FullName,
-                Address = updateUserDto.Address,
-                City = updateUserDto.City,
-                PostalCode = updateUserDto.PostalCode,
-                Phone = updateUserDto.Phone,
-                Email = updateUserDto.Email,
-                RoleId = updateUserDto.RoleId,
-                UpdatedBy = updatedBy
+                UpdateUserDto = updateUserDto
             };
 
             try
@@ -113,6 +98,10 @@ namespace WOMS.Api.Controllers
             {
                 return NotFound(ex.Message);
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [Authorize]
@@ -120,7 +109,7 @@ namespace WOMS.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> DeleteUser(Guid id)
+        public async Task<ActionResult> DeleteUser(string id)
         {
             var command = new DeleteUserCommand
             {

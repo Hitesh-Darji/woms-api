@@ -62,7 +62,7 @@ namespace WOMS.Application.Features.Users.Commands.CreateUser
                 Phone = request.Phone,
                 Email = request.Email,
                 UserName = request.Email, // Set UserName to Email for Identity
-                CreatedBy = request.CreatedBy,
+                CreatedBy = request.CreatedBy.ToString(),
                 CreatedOn = DateTime.UtcNow
             };
 

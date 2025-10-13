@@ -30,7 +30,7 @@ namespace WOMS.Api.Controllers
         {
             // Get the current user ID from the JWT token
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var createdBy))
+            if (userIdClaim == null)
             {
                 return Unauthorized("User ID not found in token");
             }
@@ -42,7 +42,7 @@ namespace WOMS.Api.Controllers
                 Code = createDepartmentDto.Code,
                 Status = createDepartmentDto.Status,
                 IsActive = createDepartmentDto.IsActive,
-                CreatedBy = createdBy
+                CreatedBy = userIdClaim
             };
 
             try
@@ -95,7 +95,7 @@ namespace WOMS.Api.Controllers
         {
             // Get the current user ID from the JWT token
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var updatedBy))
+            if (userIdClaim == null)
             {
                 return Unauthorized("User ID not found in token");
             }
@@ -108,7 +108,7 @@ namespace WOMS.Api.Controllers
                 Code = updateDepartmentDto.Code,
                 Status = updateDepartmentDto.Status,
                 IsActive = updateDepartmentDto.IsActive,
-                UpdatedBy = updatedBy
+                UpdatedBy = userIdClaim
             };
 
             try
@@ -131,7 +131,7 @@ namespace WOMS.Api.Controllers
         {
             // Get the current user ID from the JWT token
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var deletedBy))
+            if (userIdClaim == null)
             {
                 return Unauthorized("User ID not found in token");
             }
@@ -139,7 +139,7 @@ namespace WOMS.Api.Controllers
             var command = new DeleteDepartmentCommand
             {
                 Id = id,
-                DeletedBy = deletedBy
+                DeletedBy = userIdClaim
             };
 
             var result = await _mediator.Send(command);

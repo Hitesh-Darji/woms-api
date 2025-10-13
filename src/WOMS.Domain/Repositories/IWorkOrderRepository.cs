@@ -1,4 +1,5 @@
 using WOMS.Domain.Entities;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Repositories
 {
@@ -6,17 +7,17 @@ namespace WOMS.Domain.Repositories
     {
         Task<IEnumerable<WorkOrder>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default);
         Task<WorkOrder?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<IEnumerable<WorkOrder>> GetByStatusAsync(string status, CancellationToken cancellationToken = default);
-        Task<IEnumerable<WorkOrder>> GetByPriorityAsync(string priority, CancellationToken cancellationToken = default);
-        Task<IEnumerable<WorkOrder>> GetByAssignedTechnicianAsync(Guid technicianId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<WorkOrder>> GetByStatusAsync(WorkOrderStatus status, CancellationToken cancellationToken = default);
+        Task<IEnumerable<WorkOrder>> GetByPriorityAsync(WorkOrderPriority priority, CancellationToken cancellationToken = default);
+        Task<IEnumerable<WorkOrder>> GetByAssignedTechnicianAsync(string technicianId, CancellationToken cancellationToken = default);
         
         Task<(IEnumerable<WorkOrder> WorkOrders, int TotalCount)> GetPaginatedWithProjectionAsync(
             int pageNumber, 
             int pageSize, 
             string? searchTerm = null,
-            string? status = null,
-            string? priority = null,
-            Guid? assignedTechnicianId = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
+            string? assignedTechnicianId = null,
             Guid? workOrderTypeId = null,
             DateTime? scheduledDateFrom = null,
             DateTime? scheduledDateTo = null,
@@ -27,17 +28,17 @@ namespace WOMS.Domain.Repositories
         Task<IEnumerable<dynamic>> GetWorkOrderSummaryAsync(
             int pageNumber = 1,
             int pageSize = 10,
-            string? status = null,
-            string? priority = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
             CancellationToken cancellationToken = default);
             
         Task<(IEnumerable<dynamic> WorkOrders, int TotalCount)> GetWorkOrderDtosWithProjectionAsync(
             int pageNumber,
             int pageSize,
             string? searchTerm = null,
-            string? status = null,
-            string? priority = null,
-            Guid? assignedTechnicianId = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
+            string? assignedTechnicianId = null,
             Guid? workOrderTypeId = null,
             DateTime? scheduledDateFrom = null,
             DateTime? scheduledDateTo = null,
@@ -49,9 +50,9 @@ namespace WOMS.Domain.Repositories
             int pageNumber = 1,
             int pageSize = 20,
             string? searchTerm = null,
-            string? status = null,
-            string? priority = null,
-            Guid? assignedTechnicianId = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
+            string? assignedTechnicianId = null,
             bool? isOverdue = null,
             bool? isToday = null,
             string? sortBy = "CreatedOn",

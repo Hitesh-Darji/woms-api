@@ -10,6 +10,6 @@ namespace WOMS.Application.Features.Departments.Commands.CreateDepartment
         public string? Code { get; init; }
         public string Status { get; init; } = "Active";
         public bool IsActive { get; init; } = true;
-        public Guid CreatedBy { get; init; }
+        public string CreatedBy { get; init; } = string.Empty;
     }
 }

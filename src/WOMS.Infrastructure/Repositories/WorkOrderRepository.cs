@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WOMS.Domain.Entities;
 using WOMS.Domain.Repositories;
+using WOMS.Domain.Enums;
 using WOMS.Infrastructure.Data;
 
 namespace WOMS.Infrastructure.Repositories
@@ -26,7 +27,7 @@ namespace WOMS.Infrastructure.Repositories
                 .FirstOrDefaultAsync(wo => wo.Id == id && !wo.IsDeleted, cancellationToken);
         }
 
-        public async Task<IEnumerable<WorkOrder>> GetByStatusAsync(string status, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<WorkOrder>> GetByStatusAsync(WorkOrderStatus status, CancellationToken cancellationToken = default)
         {
             return await _dbSet
                 .AsNoTracking() 
@@ -35,7 +36,7 @@ namespace WOMS.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<WorkOrder>> GetByPriorityAsync(string priority, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<WorkOrder>> GetByPriorityAsync(WorkOrderPriority priority, CancellationToken cancellationToken = default)
         {
             return await _dbSet
                 .AsNoTracking() 
@@ -44,11 +45,11 @@ namespace WOMS.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<WorkOrder>> GetByAssignedTechnicianAsync(Guid technicianId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<WorkOrder>> GetByAssignedTechnicianAsync(string technicianId, CancellationToken cancellationToken = default)
         {
             return await _dbSet
                 .AsNoTracking() 
-                .Where(wo => !wo.IsDeleted && wo.AssignedTechnicianId == technicianId)
+                .Where(wo => !wo.IsDeleted && wo.Assignee == technicianId)
                 .OrderByDescending(wo => wo.CreatedOn)
                 .ToListAsync(cancellationToken);
         }
@@ -57,9 +58,9 @@ namespace WOMS.Infrastructure.Repositories
             int pageNumber, 
             int pageSize, 
             string? searchTerm = null,
-            string? status = null,
-            string? priority = null,
-            Guid? assignedTechnicianId = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
+            string? assignedTechnicianId = null,
             Guid? workOrderTypeId = null,
             DateTime? scheduledDateFrom = null,
             DateTime? scheduledDateTo = null,
@@ -70,43 +71,39 @@ namespace WOMS.Infrastructure.Repositories
             var query = _dbSet
                 .AsNoTracking() 
                 .Where(wo => !wo.IsDeleted);
+
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 query = query.Where(wo => 
                     EF.Functions.Like(wo.WorkOrderNumber, $"%{searchTerm}%") ||
-                    EF.Functions.Like(wo.ServiceAddress, $"%{searchTerm}%") ||
-                    (wo.MeterNumber != null && EF.Functions.Like(wo.MeterNumber, $"%{searchTerm}%")) ||
-                    (wo.AssignedTechnicianName != null && EF.Functions.Like(wo.AssignedTechnicianName, $"%{searchTerm}%")));
+                    EF.Functions.Like(wo.Address, $"%{searchTerm}%") ||
+                    EF.Functions.Like(wo.Description, $"%{searchTerm}%") ||
+                    (wo.Assignee != null && EF.Functions.Like(wo.Assignee, $"%{searchTerm}%")));
             }
 
-            if (!string.IsNullOrEmpty(status))
+            if (status.HasValue)
             {
-                query = query.Where(wo => wo.Status == status);
+                query = query.Where(wo => wo.Status == status.Value);
             }
 
-            if (!string.IsNullOrEmpty(priority))
+            if (priority.HasValue)
             {
-                query = query.Where(wo => wo.Priority == priority);
+                query = query.Where(wo => wo.Priority == priority.Value);
             }
 
-            if (assignedTechnicianId.HasValue)
+            if (!string.IsNullOrEmpty(assignedTechnicianId))
             {
-                query = query.Where(wo => wo.AssignedTechnicianId == assignedTechnicianId.Value);
-            }
-
-            if (workOrderTypeId.HasValue)
-            {
-                query = query.Where(wo => wo.WorkOrderTypeId == workOrderTypeId.Value);
+                query = query.Where(wo => wo.Assignee == assignedTechnicianId);
             }
 
             if (scheduledDateFrom.HasValue)
             {
-                query = query.Where(wo => wo.ScheduledDate >= scheduledDateFrom.Value);
+                query = query.Where(wo => wo.DueDate >= scheduledDateFrom.Value);
             }
 
             if (scheduledDateTo.HasValue)
             {
-                query = query.Where(wo => wo.ScheduledDate <= scheduledDateTo.Value);
+                query = query.Where(wo => wo.DueDate <= scheduledDateTo.Value);
             }
 
             // Apply sorting efficiently
@@ -121,12 +118,12 @@ namespace WOMS.Infrastructure.Repositories
                 "status" => sortDescending 
                     ? query.OrderByDescending(wo => wo.Status)
                     : query.OrderBy(wo => wo.Status),
-                "scheduleddate" => sortDescending 
-                    ? query.OrderByDescending(wo => wo.ScheduledDate)
-                    : query.OrderBy(wo => wo.ScheduledDate),
-                "assignedtechnicianname" => sortDescending 
-                    ? query.OrderByDescending(wo => wo.AssignedTechnicianName)
-                    : query.OrderBy(wo => wo.AssignedTechnicianName),
+                "duedate" => sortDescending 
+                    ? query.OrderByDescending(wo => wo.DueDate)
+                    : query.OrderBy(wo => wo.DueDate),
+                "assignee" => sortDescending 
+                    ? query.OrderByDescending(wo => wo.Assignee)
+                    : query.OrderBy(wo => wo.Assignee),
                 _ => sortDescending 
                     ? query.OrderByDescending(wo => wo.CreatedOn)
                     : query.OrderBy(wo => wo.CreatedOn)
@@ -147,19 +144,19 @@ namespace WOMS.Infrastructure.Repositories
         public async Task<IEnumerable<dynamic>> GetWorkOrderSummaryAsync(
             int pageNumber = 1,
             int pageSize = 10,
-            string? status = null,
-            string? priority = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
             CancellationToken cancellationToken = default)
         {
             var query = _dbSet
                 .AsNoTracking()
                 .Where(wo => !wo.IsDeleted);
 
-            if (!string.IsNullOrEmpty(status))
-                query = query.Where(wo => wo.Status == status);
+            if (status.HasValue)
+                query = query.Where(wo => wo.Status == status.Value);
 
-            if (!string.IsNullOrEmpty(priority))
-                query = query.Where(wo => wo.Priority == priority);
+            if (priority.HasValue)
+                query = query.Where(wo => wo.Priority == priority.Value);
 
             return await query
                 .Select(wo => new
@@ -168,14 +165,10 @@ namespace WOMS.Infrastructure.Repositories
                     wo.WorkOrderNumber,
                     wo.Status,
                     wo.Priority,
-                    wo.ServiceAddress,
-                    wo.ScheduledDate,
-                    wo.CreatedOn,
-                    WorkOrderTypeName = wo.WorkOrderType != null ? wo.WorkOrderType.Name : null,
-                    AssignedTechnicianName = wo.AssignedTechnicianName ?? 
-                        (wo.AssignedTechnician != null ? wo.AssignedTechnician.FirstName + " " + wo.AssignedTechnician.LastName : null)
+                    wo.Assignee,
+                    wo.DueDate,
+                    wo.CreatedOn
                 })
-                .OrderByDescending(wo => wo.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
@@ -185,9 +178,9 @@ namespace WOMS.Infrastructure.Repositories
             int pageNumber,
             int pageSize,
             string? searchTerm = null,
-            string? status = null,
-            string? priority = null,
-            Guid? assignedTechnicianId = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
+            string? assignedTechnicianId = null,
             Guid? workOrderTypeId = null,
             DateTime? scheduledDateFrom = null,
             DateTime? scheduledDateTo = null,
@@ -204,28 +197,25 @@ namespace WOMS.Infrastructure.Repositories
             {
                 query = query.Where(wo => 
                     EF.Functions.Like(wo.WorkOrderNumber, $"%{searchTerm}%") ||
-                    EF.Functions.Like(wo.ServiceAddress, $"%{searchTerm}%") ||
-                    (wo.MeterNumber != null && EF.Functions.Like(wo.MeterNumber, $"%{searchTerm}%")) ||
-                    (wo.AssignedTechnicianName != null && EF.Functions.Like(wo.AssignedTechnicianName, $"%{searchTerm}%")));
+                    EF.Functions.Like(wo.Address, $"%{searchTerm}%") ||
+                    EF.Functions.Like(wo.Description, $"%{searchTerm}%") ||
+                    (wo.Assignee != null && EF.Functions.Like(wo.Assignee, $"%{searchTerm}%")));
             }
 
-            if (!string.IsNullOrEmpty(status))
-                query = query.Where(wo => wo.Status == status);
+            if (status.HasValue)
+                query = query.Where(wo => wo.Status == status.Value);
 
-            if (!string.IsNullOrEmpty(priority))
-                query = query.Where(wo => wo.Priority == priority);
+            if (priority.HasValue)
+                query = query.Where(wo => wo.Priority == priority.Value);
 
-            if (assignedTechnicianId.HasValue)
-                query = query.Where(wo => wo.AssignedTechnicianId == assignedTechnicianId.Value);
-
-            if (workOrderTypeId.HasValue)
-                query = query.Where(wo => wo.WorkOrderTypeId == workOrderTypeId.Value);
+            if (!string.IsNullOrEmpty(assignedTechnicianId))
+                query = query.Where(wo => wo.Assignee == assignedTechnicianId);
 
             if (scheduledDateFrom.HasValue)
-                query = query.Where(wo => wo.ScheduledDate >= scheduledDateFrom.Value);
+                query = query.Where(wo => wo.DueDate >= scheduledDateFrom.Value);
 
             if (scheduledDateTo.HasValue)
-                query = query.Where(wo => wo.ScheduledDate <= scheduledDateTo.Value);
+                query = query.Where(wo => wo.DueDate <= scheduledDateTo.Value);
 
             // Apply sorting efficiently
             query = (sortBy?.ToLower() ?? "createdon") switch
@@ -239,49 +229,35 @@ namespace WOMS.Infrastructure.Repositories
                 "status" => sortDescending 
                     ? query.OrderByDescending(wo => wo.Status)
                     : query.OrderBy(wo => wo.Status),
-                "scheduleddate" => sortDescending 
-                    ? query.OrderByDescending(wo => wo.ScheduledDate)
-                    : query.OrderBy(wo => wo.ScheduledDate),
-                "assignedtechnicianname" => sortDescending 
-                    ? query.OrderByDescending(wo => wo.AssignedTechnicianName)
-                    : query.OrderBy(wo => wo.AssignedTechnicianName),
+                "duedate" => sortDescending 
+                    ? query.OrderByDescending(wo => wo.DueDate)
+                    : query.OrderBy(wo => wo.DueDate),
+                "assignee" => sortDescending 
+                    ? query.OrderByDescending(wo => wo.Assignee)
+                    : query.OrderBy(wo => wo.Assignee),
                 _ => sortDescending 
                     ? query.OrderByDescending(wo => wo.CreatedOn)
                     : query.OrderBy(wo => wo.CreatedOn)
             };
 
-            // Get total count efficiently
+            // Get total count 
             var totalCount = await query.CountAsync(cancellationToken);
 
-            // Project directly to anonymous objects - single query approach
+            // Apply pagination and projection
             var workOrderDtos = await query
                 .Select(wo => new
                 {
                     wo.Id,
                     wo.WorkOrderNumber,
-                    WorkflowId = wo.WorkflowId,
-                    WorkOrderTypeId = wo.WorkOrderTypeId,
-                    WorkOrderTypeName = wo.WorkOrderType != null ? wo.WorkOrderType.Name : null,
-                    Priority = wo.Priority,
-                    Status = wo.Status,
-                    ServiceAddress = wo.ServiceAddress,
-                    MeterNumber = wo.MeterNumber,
-                    CurrentReading = wo.CurrentReading,
-                    wo.AssignedTechnicianId,
-                    AssignedTechnicianName = wo.AssignedTechnicianName ?? 
-                        (wo.AssignedTechnician != null ? wo.AssignedTechnician.FirstName + " " + wo.AssignedTechnician.LastName : null),
-                    wo.Notes,
-                    ScheduledDate = wo.ScheduledDate,
-                    StartedAt = wo.StartedAt,
-                    CompletedAt = wo.CompletedAt,
-                    CreatedAt = wo.CreatedOn,
-                    UpdatedAt = wo.UpdatedOn,
-                    DueDate = wo.ScheduledDate,
-                    Utility = (string?)null, 
-                    Make = (string?)null,
-                    Model = (string?)null,
-                    Size = (string?)null,
-                    Location = (string?)null
+                    wo.Type,
+                    wo.Priority,
+                    wo.Status,
+                    wo.Assignee,
+                    wo.Address,
+                    wo.Description,
+                    wo.DueDate,
+                    wo.CreatedOn,
+                    wo.UpdatedOn
                 })
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -295,9 +271,9 @@ namespace WOMS.Infrastructure.Repositories
             int pageNumber = 1,
             int pageSize = 20,
             string? searchTerm = null,
-            string? status = null,
-            string? priority = null,
-            Guid? assignedTechnicianId = null,
+            WorkOrderStatus? status = null,
+            WorkOrderPriority? priority = null,
+            string? assignedTechnicianId = null,
             bool? isOverdue = null,
             bool? isToday = null,
             string? sortBy = "CreatedOn",
@@ -313,32 +289,31 @@ namespace WOMS.Infrastructure.Repositories
             {
                 query = query.Where(wo => 
                     EF.Functions.Like(wo.WorkOrderNumber, $"%{searchTerm}%") ||
-                    EF.Functions.Like(wo.ServiceAddress, $"%{searchTerm}%") ||
-                    (wo.AssignedTechnicianName != null && EF.Functions.Like(wo.AssignedTechnicianName, $"%{searchTerm}%")));
+                    EF.Functions.Like(wo.Address, $"%{searchTerm}%") ||
+                    (wo.Assignee != null && EF.Functions.Like(wo.Assignee, $"%{searchTerm}%")));
             }
 
-            if (!string.IsNullOrEmpty(status))
-                query = query.Where(wo => wo.Status == status);
+            if (status.HasValue)
+                query = query.Where(wo => wo.Status == status.Value);
 
-            if (!string.IsNullOrEmpty(priority))
-                query = query.Where(wo => wo.Priority == priority);
+            if (priority.HasValue)
+                query = query.Where(wo => wo.Priority == priority.Value);
 
-            if (assignedTechnicianId.HasValue)
-                query = query.Where(wo => wo.AssignedTechnicianId == assignedTechnicianId.Value);
+            if (!string.IsNullOrEmpty(assignedTechnicianId))
+                query = query.Where(wo => wo.Assignee == assignedTechnicianId);
 
             // Special filters for view/list
             if (isOverdue.HasValue && isOverdue.Value)
             {
                 var today = DateTime.Today;
-                query = query.Where(wo => wo.ScheduledDate.HasValue && wo.ScheduledDate < today && 
-                    wo.Status != "completed" && wo.Status != "cancelled");
+                query = query.Where(wo => wo.DueDate.HasValue && wo.DueDate < today && 
+                    wo.Status != WorkOrderStatus.Completed && wo.Status != WorkOrderStatus.Cancelled);
             }
 
             if (isToday.HasValue && isToday.Value)
             {
                 var today = DateTime.Today;
-                query = query.Where(wo => wo.ScheduledDate.HasValue && 
-                    wo.ScheduledDate.Value.Date == today);
+                query = query.Where(wo => wo.DueDate.HasValue && wo.DueDate.Value.Date == today);
             }
 
             // Apply sorting efficiently
@@ -353,47 +328,33 @@ namespace WOMS.Infrastructure.Repositories
                 "status" => sortDescending 
                     ? query.OrderByDescending(wo => wo.Status)
                     : query.OrderBy(wo => wo.Status),
-                "scheduleddate" => sortDescending 
-                    ? query.OrderByDescending(wo => wo.ScheduledDate)
-                    : query.OrderBy(wo => wo.ScheduledDate),
-                "assignedtechnicianname" => sortDescending 
-                    ? query.OrderByDescending(wo => wo.AssignedTechnicianName)
-                    : query.OrderBy(wo => wo.AssignedTechnicianName),
+                "duedate" => sortDescending 
+                    ? query.OrderByDescending(wo => wo.DueDate)
+                    : query.OrderBy(wo => wo.DueDate),
+                "assignee" => sortDescending 
+                    ? query.OrderByDescending(wo => wo.Assignee)
+                    : query.OrderBy(wo => wo.Assignee),
                 _ => sortDescending 
                     ? query.OrderByDescending(wo => wo.CreatedOn)
                     : query.OrderBy(wo => wo.CreatedOn)
             };
 
-            // Get total count efficiently
+            // Get total count 
             var totalCount = await query.CountAsync(cancellationToken);
 
-            // Project to lightweight view objects
+            // Apply pagination and projection
             var workOrderViews = await query
                 .Select(wo => new
                 {
                     wo.Id,
                     wo.WorkOrderNumber,
-                    wo.Status,
+                    wo.Type,
                     wo.Priority,
-                    wo.ServiceAddress,
-                    AssignedTechnicianName = wo.AssignedTechnicianName ?? 
-                        (wo.AssignedTechnician != null ? wo.AssignedTechnician.FirstName + " " + wo.AssignedTechnician.LastName : null),
-                    wo.ScheduledDate,
-                    CreatedAt = wo.CreatedOn,
-                    WorkOrderTypeName = wo.WorkOrderType != null ? wo.WorkOrderType.Name : null,
-                    CustomerName = (string?)null, // Will be populated from metadata if available
-                    CustomerPhone = (string?)null,
-                    IsOverdue = wo.ScheduledDate.HasValue && wo.ScheduledDate < DateTime.Today && 
-                        wo.Status != "completed" && wo.Status != "cancelled",
-                    DaysSinceCreated = (int)(DateTime.Today - wo.CreatedOn.Date).TotalDays,
-                    StatusColor = wo.Status.ToLower() == "pending" ? "orange" :
-                        wo.Status.ToLower() == "assigned" ? "blue" :
-                        wo.Status.ToLower() == "in_progress" ? "purple" :
-                        wo.Status.ToLower() == "completed" ? "green" :
-                        wo.Status.ToLower() == "cancelled" ? "red" : "gray",
-                    PriorityColor = wo.Priority.ToLower() == "high" ? "red" :
-                        wo.Priority.ToLower() == "medium" ? "orange" :
-                        wo.Priority.ToLower() == "low" ? "green" : "gray"
+                    wo.Status,
+                    wo.Assignee,
+                    wo.Address,
+                    wo.DueDate,
+                    wo.CreatedOn
                 })
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -402,70 +363,28 @@ namespace WOMS.Infrastructure.Repositories
             return (workOrderViews, totalCount);
         }
 
-        // Get summary statistics for view/list
         public async Task<Dictionary<string, object>> GetWorkOrderViewSummaryAsync(
             CancellationToken cancellationToken = default)
         {
             var today = DateTime.Today;
-            
-            var summary = await _dbSet
-                .AsNoTracking()
-                .Where(wo => !wo.IsDeleted)
-                .GroupBy(wo => 1)
-                .Select(g => new
-                {
-                    TotalCount = g.Count(),
-                    PendingCount = g.Count(wo => wo.Status == "pending"),
-                    AssignedCount = g.Count(wo => wo.Status == "assigned"),
-                    InProgressCount = g.Count(wo => wo.Status == "in_progress"),
-                    CompletedCount = g.Count(wo => wo.Status == "completed"),
-                    CancelledCount = g.Count(wo => wo.Status == "cancelled"),
-                    HighPriorityCount = g.Count(wo => wo.Priority == "high"),
-                    MediumPriorityCount = g.Count(wo => wo.Priority == "medium"),
-                    LowPriorityCount = g.Count(wo => wo.Priority == "low"),
-                    OverdueCount = g.Count(wo => wo.ScheduledDate.HasValue && wo.ScheduledDate < today && 
-                        wo.Status != "completed" && wo.Status != "cancelled"),
-                    TodayCount = g.Count(wo => wo.ScheduledDate.HasValue && wo.ScheduledDate.Value.Date == today),
-                    ThisWeekCount = g.Count(wo => wo.ScheduledDate.HasValue && 
-                        wo.ScheduledDate.Value.Date >= today.AddDays(-(int)today.DayOfWeek) && 
-                        wo.ScheduledDate.Value.Date <= today.AddDays(6 - (int)today.DayOfWeek))
-                })
-                .FirstOrDefaultAsync(cancellationToken);
+            var query = _dbSet.AsNoTracking().Where(wo => !wo.IsDeleted);
 
-            if (summary == null)
+            var summary = new Dictionary<string, object>
             {
-                return new Dictionary<string, object>
-                {
-                    ["TotalCount"] = 0,
-                    ["PendingCount"] = 0,
-                    ["AssignedCount"] = 0,
-                    ["InProgressCount"] = 0,
-                    ["CompletedCount"] = 0,
-                    ["CancelledCount"] = 0,
-                    ["HighPriorityCount"] = 0,
-                    ["MediumPriorityCount"] = 0,
-                    ["LowPriorityCount"] = 0,
-                    ["OverdueCount"] = 0,
-                    ["TodayCount"] = 0,
-                    ["ThisWeekCount"] = 0
-                };
-            }
-
-            return new Dictionary<string, object>
-            {
-                ["TotalCount"] = summary.TotalCount,
-                ["PendingCount"] = summary.PendingCount,
-                ["AssignedCount"] = summary.AssignedCount,
-                ["InProgressCount"] = summary.InProgressCount,
-                ["CompletedCount"] = summary.CompletedCount,
-                ["CancelledCount"] = summary.CancelledCount,
-                ["HighPriorityCount"] = summary.HighPriorityCount,
-                ["MediumPriorityCount"] = summary.MediumPriorityCount,
-                ["LowPriorityCount"] = summary.LowPriorityCount,
-                ["OverdueCount"] = summary.OverdueCount,
-                ["TodayCount"] = summary.TodayCount,
-                ["ThisWeekCount"] = summary.ThisWeekCount
+                ["TotalCount"] = await query.CountAsync(cancellationToken),
+                ["PendingCount"] = await query.CountAsync(wo => wo.Status == WorkOrderStatus.Pending, cancellationToken),
+                ["AssignedCount"] = await query.CountAsync(wo => wo.Status == WorkOrderStatus.Assigned, cancellationToken),
+                ["InProgressCount"] = await query.CountAsync(wo => wo.Status == WorkOrderStatus.InProgress, cancellationToken),
+                ["CompletedCount"] = await query.CountAsync(wo => wo.Status == WorkOrderStatus.Completed, cancellationToken),
+                ["CancelledCount"] = await query.CountAsync(wo => wo.Status == WorkOrderStatus.Cancelled, cancellationToken),
+                ["HighPriorityCount"] = await query.CountAsync(wo => wo.Priority == WorkOrderPriority.High, cancellationToken),
+                ["MediumPriorityCount"] = await query.CountAsync(wo => wo.Priority == WorkOrderPriority.Medium, cancellationToken),
+                ["LowPriorityCount"] = await query.CountAsync(wo => wo.Priority == WorkOrderPriority.Low, cancellationToken),
+                ["OverdueCount"] = await query.CountAsync(wo => wo.DueDate.HasValue && wo.DueDate < today && wo.Status != WorkOrderStatus.Completed && wo.Status != WorkOrderStatus.Cancelled, cancellationToken),
+                ["TodayCount"] = await query.CountAsync(wo => wo.DueDate.HasValue && wo.DueDate.Value.Date == today, cancellationToken)
             };
+
+            return summary;
         }
     }
 }

@@ -11,7 +11,8 @@ namespace WOMS.Domain.Entities
         public int Id { get; set; }
         
         [Required]
-        public Guid UserId { get; set; }
+        [MaxLength(450)]
+        public string UserId { get; set; } = string.Empty;
         
         [Required]
         public string Refresh_Token { get; set; } = string.Empty;

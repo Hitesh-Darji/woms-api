@@ -37,7 +37,7 @@ namespace WOMS.Application.Features.Users.Commands.DeleteUser
                 return false;
             }
 
-            await _userRepository.SoftDeleteAsync(request.Id, deletedBy, cancellationToken);
+            await _userRepository.SoftDeleteAsync(request.Id, deletedBy.ToString(), cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;

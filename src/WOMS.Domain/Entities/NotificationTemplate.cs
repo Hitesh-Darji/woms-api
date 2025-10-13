@@ -16,7 +16,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(200)]
         public string Name { get; set; } = string.Empty;
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Placeholders { get; set; } // JSON array of strings
 
         [MaxLength(200)]
@@ -27,7 +27,7 @@ namespace WOMS.Domain.Entities
         public string Type { get; set; } = string.Empty;
 
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; } = null!;

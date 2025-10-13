@@ -10,10 +10,10 @@ namespace WOMS.Application.Features.Auth.Services
             UserManager<TUser> userManager,
             IList<string> roles,
             string email,
-            Guid userId,
+            string userId,
             CancellationToken cancellationToken = default) where TUser : class;
 
         Task<string> GenerateRefreshTokenAsync();
-        Task<RefreshToken> CreateRefreshTokenAsync(Guid userId, string jwtToken, CancellationToken cancellationToken = default);
+        Task<RefreshToken> CreateRefreshTokenAsync(string userId, string jwtToken, CancellationToken cancellationToken = default);
     }
 }

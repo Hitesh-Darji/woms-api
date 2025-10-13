@@ -12,7 +12,7 @@
         public string ServiceAddress { get; set; } = string.Empty;
         public string? MeterNumber { get; set; }
         public int? CurrentReading { get; set; }
-        public Guid? AssignedTechnicianId { get; set; }
+        public string? AssignedTechnicianId { get; set; }
         public string? AssignedTechnicianName { get; set; }
         public string? Notes { get; set; }
         public DateTime? ScheduledDate { get; set; }

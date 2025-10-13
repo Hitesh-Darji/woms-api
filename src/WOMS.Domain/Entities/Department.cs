@@ -14,12 +14,13 @@ namespace WOMS.Domain.Entities
         public string? Description { get; set; }
 
         [MaxLength(50)]
-        public string? Code { get; set; } // Department code for easy reference
-
-        [MaxLength(20)]
-        public string Status { get; set; } = "Active"; // Active, Inactive
-
+        public string? Code { get; set; }
         public bool IsActive { get; set; } = true;
+
+        // Override BaseEntity properties to use string for ApplicationUser references
+        public new string? CreatedBy { get; set; }
+        public new string? UpdatedBy { get; set; }
+        public new string? DeletedBy { get; set; }
 
         // Navigation properties for audit fields
         [ForeignKey(nameof(CreatedBy))]

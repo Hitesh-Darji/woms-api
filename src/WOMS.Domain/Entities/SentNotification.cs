@@ -10,7 +10,7 @@ namespace WOMS.Domain.Entities
         [Column(TypeName = "nvarchar(max)")]
         public string Content { get; set; } = string.Empty;
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Metadata { get; set; }
 
         [Required]
@@ -37,7 +37,7 @@ namespace WOMS.Domain.Entities
         public string Type { get; set; } = string.Empty;
 
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; } = null!;

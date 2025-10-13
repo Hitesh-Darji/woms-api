@@ -43,10 +43,10 @@ namespace WOMS.Domain.Entities
         [MaxLength(2000)]
         public string? Summary { get; set; } // Summary of the run results
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? RunDetails { get; set; } // JSON for detailed run information
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? ErrorDetails { get; set; } // JSON for detailed error information
     }
 }

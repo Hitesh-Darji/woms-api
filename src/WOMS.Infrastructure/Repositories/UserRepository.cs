@@ -29,13 +29,13 @@ namespace WOMS.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<ApplicationUser?> GetByIdActiveAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<ApplicationUser?> GetByIdActiveAsync(string id, CancellationToken cancellationToken = default)
         {
             return await _dbSet
                 .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted, cancellationToken);
         }
 
-        public async Task SoftDeleteAsync(Guid id, Guid deletedBy, CancellationToken cancellationToken = default)
+        public async Task SoftDeleteAsync(string id, string deletedBy, CancellationToken cancellationToken = default)
         {
             var user = await _dbSet.FindAsync(id);
             if (user != null)

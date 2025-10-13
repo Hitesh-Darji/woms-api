@@ -27,9 +27,8 @@ namespace WOMS.Application.Features.Roles.Commands.CreateRole
             var role = new ApplicationRole
             {
                 Name = request.Name,
-                Id = Guid.NewGuid(),
                 Description = request.Description,
-                CreatedBy = request.CreatedBy,
+                CreatedBy = request.CreatedBy.ToString(),
                 CreatedOn = DateTime.UtcNow,
                 IsClient = false,
                 IsDeleted = false

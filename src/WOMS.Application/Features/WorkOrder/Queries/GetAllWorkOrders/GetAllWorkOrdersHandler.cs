@@ -67,24 +67,34 @@ namespace WOMS.Application.Features.WorkOrder.Queries.GetAllWorkOrders
                 Location = item.Location
             }).ToList();
 
-            // Get metadata for all work orders in a single query
+            // Get additional work order data for fields not in projection
             var workOrderIds = workOrderDtosList.Select(dto => dto.Id).ToList();
-            var metadataDict = await _workOrderRepository.GetQueryable()
+            var additionalDataDict = await _workOrderRepository.GetQueryable()
                 .AsNoTracking()
                 .Where(wo => workOrderIds.Contains(wo.Id))
-                .Select(wo => new { wo.Id, wo.Metadata })
-                .ToDictionaryAsync(wo => wo.Id, wo => wo.Metadata, cancellationToken);
+                .Select(wo => new { 
+                    wo.Id, 
+                    wo.Utility, 
+                    wo.Make, 
+                    wo.Model, 
+                    wo.Size, 
+                    wo.Location,
+                    wo.Assignee
+                })
+                .ToDictionaryAsync(wo => wo.Id, cancellationToken);
 
-            // Populate metadata fields in parallel
+            // Populate additional fields
             workOrderDtosList.AsParallel().ForAll(dto =>
             {
-                if (metadataDict.TryGetValue(dto.Id, out var metadata) && !string.IsNullOrEmpty(metadata))
+                if (additionalDataDict.TryGetValue(dto.Id, out var data))
                 {
-                    dto.Utility = ExtractFromMetadata(metadata, "utility");
-                    dto.Make = ExtractFromMetadata(metadata, "make");
-                    dto.Model = ExtractFromMetadata(metadata, "model");
-                    dto.Size = ExtractFromMetadata(metadata, "size");
-                    dto.Location = ExtractFromMetadata(metadata, "location");
+                    dto.Utility = data.Utility;
+                    dto.Make = data.Make;
+                    dto.Model = data.Model;
+                    dto.Size = data.Size;
+                    dto.Location = data.Location;
+                    dto.AssignedTechnicianName = data.Assignee;
+                    dto.AssignedTechnicianId = data.Assignee;
                 }
             });
 
@@ -95,56 +105,6 @@ namespace WOMS.Application.Features.WorkOrder.Queries.GetAllWorkOrders
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
             };
-        }
-
-        // Optimized method to get assigned technician name
-        private static string? GetAssignedTechnicianName(WOMS.Domain.Entities.WorkOrder wo)
-        {
-            if (!string.IsNullOrEmpty(wo.AssignedTechnicianName))
-                return wo.AssignedTechnicianName;
-
-            if (wo.AssignedTechnician != null)
-                return $"{wo.AssignedTechnician.FirstName} {wo.AssignedTechnician.LastName}";
-
-            return null;
-        }
-
-        // Optimized metadata extraction with caching
-        private static readonly Dictionary<string, Dictionary<string, string?>> _metadataCache = new();
-        
-        private static string? ExtractFromMetadata(string? metadata, string key)
-        {
-            if (string.IsNullOrEmpty(metadata))
-                return null;
-
-            // Use caching for frequently accessed metadata
-            if (_metadataCache.TryGetValue(metadata, out var cachedDict))
-            {
-                return cachedDict.TryGetValue(key, out var cachedValue) ? cachedValue : null;
-            }
-
-            try
-            {
-                var metadataDict = JsonSerializer.Deserialize<Dictionary<string, object>>(metadata);
-                var resultDict = new Dictionary<string, string?>();
-                
-                if (metadataDict != null)
-                {
-                    foreach (var kvp in metadataDict)
-                    {
-                        resultDict[kvp.Key] = kvp.Value?.ToString();
-                    }
-                }
-
-                // Cache the result
-                _metadataCache[metadata] = resultDict;
-                
-                return resultDict.TryGetValue(key, out var value) ? value : null;
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 }

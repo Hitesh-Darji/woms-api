@@ -27,15 +27,16 @@ namespace WOMS.Application.Features.Auth.Commands.RegisterUser
 
             var user = new ApplicationUser
             {
-                Id = Guid.NewGuid(),
                 UserName = request.Email,
                 Email = request.Email,
                 EmailConfirmed = true,
                 FirstName = string.Empty,
                 LastName = string.Empty,
+                FullName = string.Empty,
+                Address = string.Empty,
                 City = string.Empty,
                 PostalCode = string.Empty,
-                Address = string.Empty
+                Phone = string.Empty
             };
 
             var createResult = await _userManager.CreateAsync(user, request.Password);

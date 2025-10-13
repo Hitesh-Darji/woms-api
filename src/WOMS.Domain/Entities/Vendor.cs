@@ -47,7 +47,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(100)]
         public string? TaxId { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Terms { get; set; } // JSON for payment terms, delivery terms, etc.
 
         // Navigation properties

@@ -7,6 +7,6 @@ namespace WOMS.Application.Features.Roles.Commands.CreateRole
     {
         public string Name { get; init; } = string.Empty;
         public string? Description { get; init; }
-        public Guid CreatedBy { get; init; }
+        public string CreatedBy { get; init; } = string.Empty;
     }
 }

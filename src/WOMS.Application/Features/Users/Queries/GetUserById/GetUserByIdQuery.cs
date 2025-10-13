@@ -5,6 +5,6 @@ namespace WOMS.Application.Features.Users.Queries.GetUserById
 {
     public record GetUserByIdQuery : IRequest<UserDto?>
     {
-        public Guid Id { get; init; }
+        public string Id { get; init; } = string.Empty;
     }
 }

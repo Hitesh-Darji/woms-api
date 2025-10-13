@@ -6,7 +6,7 @@ namespace WOMS.Application.Features.Auth.Dtos
         public DateTime ExpiresAtUtc { get; set; }
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime RefreshTokenExpiresAtUtc { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public IList<string> Roles { get; set; } = new List<string>();
     }

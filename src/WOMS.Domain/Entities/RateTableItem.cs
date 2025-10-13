@@ -38,10 +38,10 @@ namespace WOMS.Domain.Entities
 
         public bool IsActive { get; set; } = true;
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Conditions { get; set; } // JSON for rate conditions (minimum hours, location-based, etc.)
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? AdditionalSettings { get; set; } // JSON for item-specific settings
     }
 }

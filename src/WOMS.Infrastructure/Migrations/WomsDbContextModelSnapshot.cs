@@ -22,7 +22,7 @@ namespace WOMS.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,8 +36,9 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -46,7 +47,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,8 +61,9 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -70,7 +72,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -81,8 +83,9 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -91,13 +94,13 @@ namespace WOMS.Infrastructure.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -106,10 +109,10 @@ namespace WOMS.Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -125,15 +128,93 @@ namespace WOMS.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.ApplicationRole", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Coordinates")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Street1")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Street2")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Address");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.AggregationRule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AggregateBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -143,6 +224,60 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GroupBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateId");
+
+                    b.ToTable("AggregationRule");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.ApplicationRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
@@ -164,31 +299,26 @@ namespace WOMS.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeletedBy");
-
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -207,14 +337,21 @@ namespace WOMS.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
@@ -238,8 +375,16 @@ namespace WOMS.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LastLoginOn")
                         .HasColumnType("datetime2");
@@ -254,6 +399,9 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -276,6 +424,10 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Position")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -287,14 +439,15 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
@@ -309,6 +462,8 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("DepartmentId");
 
+                    b.HasIndex("ManagerId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -322,21 +477,19 @@ namespace WOMS.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Asset", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.ApprovalRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Attributes")
-                        .HasColumnType("json");
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Barcode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -344,61 +497,20 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CurrentLocationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("DispositionStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("InstallDate")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("InvoiceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Manufacturer")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ModelCode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PartNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("QRCode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("RemovalDate")
+                    b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -406,28 +518,21 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("WarrantyExpirationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid?>("WorkOrderId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Category");
+                    b.HasIndex("InvoiceId");
 
-                    b.HasIndex("CurrentLocationId");
-
-                    b.HasIndex("Model");
-
-                    b.HasIndex("SerialNumber")
-                        .IsUnique();
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("WorkOrderId");
-
-                    b.ToTable("Asset");
+                    b.ToTable("ApprovalRecord");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssetHistory", b =>
@@ -438,7 +543,8 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.Property<string>("Action")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uniqueidentifier");
@@ -455,29 +561,22 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("Details")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FromLocationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("FromLocation")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Metadata")
-                        .HasColumnType("json");
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("ToLocationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ToLocation")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -485,291 +584,21 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid?>("WorkOrderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Action");
-
                     b.HasIndex("AssetId");
-
-                    b.HasIndex("FromLocationId");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("ToLocationId");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkOrderId");
 
                     b.ToTable("AssetHistory");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("AvailabilityCheck")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DaysOfWeek")
-                        .HasColumnType("json");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUsedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("LocationProximity")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Settings")
-                        .HasColumnType("json");
-
-                    b.Property<bool>("SkillMatchRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UsageCount")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("WorkloadBalance")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("AssignmentTemplate");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateSkill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssignmentTemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMandatory")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RequiredLevel")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<Guid>("SkillId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignmentTemplateId");
-
-                    b.HasIndex("SkillId");
-
-                    b.ToTable("AssignmentTemplateSkill");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateTechnician", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssignmentTemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("TechnicianId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignmentTemplateId");
-
-                    b.HasIndex("TechnicianId");
-
-                    b.ToTable("AssignmentTemplateTechnician");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateWorkType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssignmentTemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkOrderTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignmentTemplateId");
-
-                    b.HasIndex("WorkOrderTypeId");
-
-                    b.ToTable("AssignmentTemplateWorkType");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateZone", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssignmentTemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ZoneId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignmentTemplateId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("AssignmentTemplateZone");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.BillingSchedule", b =>
@@ -790,204 +619,13 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<int?>("DayOfWeek")
                         .HasColumnType("int");
 
-                    b.Property<string>("DayOfWeekName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Frequency")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastRunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastRunMessage")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("LastRunStatus")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("NextRunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NotificationSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RunCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ScheduleName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ScheduleSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Frequency");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("NextRunDate");
-
-                    b.HasIndex("ScheduleName");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("BillingSchedules");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleRun", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BillingScheduleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DurationSeconds")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmailsSent")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ErrorDetails")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("InvoicesGenerated")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("RunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RunDetails")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ScheduledRunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Summary")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int>("TemplatesFailed")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TemplatesProcessed")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TemplatesSuccessful")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BillingScheduleId");
-
-                    b.HasIndex("RunDate");
-
-                    b.HasIndex("ScheduledRunDate");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("BillingScheduleRuns");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleTemplate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BillingScheduleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BillingTemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DisplayOrder")
+                    b.Property<int>("Frequency")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -996,12 +634,18 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("TemplateSettings")
+                    b.Property<string>("TemplateIds")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -1011,13 +655,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BillingTemplateId");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("BillingScheduleId", "DisplayOrder");
-
-                    b.ToTable("BillingScheduleTemplates");
+                    b.ToTable("BillingSchedule");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplate", b =>
@@ -1026,24 +664,27 @@ namespace WOMS.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AdditionalSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("CustomerId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
@@ -1056,19 +697,144 @@ namespace WOMS.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                    b.Property<string>("FieldFormats")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FieldOrder")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileNamingConvention")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("InvoiceType")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("OutputFormat")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId1");
+
+                    b.ToTable("BillingTemplate");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.ConditionalRate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Condition")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ConditionValue")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid>("RateTableId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RateTableId");
+
+                    b.ToTable("ConditionalRate");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Contact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Department")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Fax")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1076,15 +842,28 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("OutputFormat")
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Mobile")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("TemplateName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -1096,151 +875,10 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("TemplateName");
-
-                    b.ToTable("BillingTemplates");
+                    b.ToTable("Contact");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplateFieldOrder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BillingTemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayLabel")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FieldName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("FieldSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FieldType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FieldName");
-
-                    b.HasIndex("BillingTemplateId", "DisplayOrder");
-
-                    b.ToTable("BillingTemplateFieldOrders");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.CycleCount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CompletedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CountType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CountedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CountedItems")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("PlannedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TotalItems")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VarianceItems")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountedByUserId");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("PlannedDate");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("CycleCount");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.CycleCountItem", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.CountItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1264,18 +902,19 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("InventoryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("Justification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SerialNumbers")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SystemQuantity")
@@ -1287,13 +926,225 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Variance")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CycleCountId");
 
-                    b.HasIndex("InventoryId");
+                    b.HasIndex("ItemId");
 
-                    b.ToTable("CycleCountItem");
+                    b.ToTable("CountItem");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AccountManagerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<decimal?>("CreditLimit")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Industry")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentTerms")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("PrimaryContactId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Size")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaxId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Type")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.CycleCount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CountedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PlannedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StartedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<string>("SupervisorApproval")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Type")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("CycleCount");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.DeliverySetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApiSettings")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmailRecipients")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("InvoiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("SftpSettings")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("DeliverySetting");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Department", b =>
@@ -1306,14 +1157,18 @@ namespace WOMS.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("DeletedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
@@ -1335,18 +1190,14 @@ namespace WOMS.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("UpdatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasDefaultValue("Active");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("Id");
 
@@ -1362,21 +1213,16 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.HasIndex("Status");
-
                     b.HasIndex("UpdatedBy");
 
                     b.ToTable("Department");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Equipment", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.DynamicField", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -1390,1966 +1236,48 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<string>("Field")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Format")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastMaintenanceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("NextMaintenanceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SerialNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Category");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("SerialNumber");
-
-                    b.ToTable("Equipment");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Form", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Fields")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Locked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Settings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Form");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Inventory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AccountNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("AdditionalId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Allocated")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Attributes")
-                        .HasColumnType("json");
-
-                    b.Property<int?>("AvailableQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Barcode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CurrentStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Date")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("DispositionStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("FileName")
+                    b.Property<string>("Label")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<long?>("FileSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FileType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("FinalValue")
+                    b.Property<int>("OrderIndex")
                         .HasColumnType("int");
 
-                    b.Property<string>("Identifier")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("InstallDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LocationCode")
+                    b.Property<string>("Source")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Manufacturer")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("MaximumStockLevel")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MinimumStockLevel")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModelCode")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ModelName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PartNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("QRCode")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("RemovalDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ReorderPoint")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SystemId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal?>("TotalValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("UnitCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UnitOfMeasure")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UploadStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UploadedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Value1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Value2")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("WarrantyExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountNumber");
-
-                    b.HasIndex("Identifier");
-
-                    b.HasIndex("SystemId");
-
-                    b.ToTable("Inventory");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.InventoryDisposition", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CompletedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CompletionNotes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("DisposedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DispositionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DispositionType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("InventoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Reference")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("VendorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DisposedByUserId");
-
-                    b.HasIndex("DispositionType");
-
-                    b.HasIndex("InventoryId");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("VendorId");
-
-                    b.ToTable("InventoryDisposition");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.InventoryLocation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("AllocatedQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AvailableQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("InventoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastCountedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastMovementDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("LocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("MaximumStockLevel")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MinimumStockLevel")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("ReorderPoint")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReservedQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("InventoryId", "LocationId")
-                        .IsUnique();
-
-                    b.ToTable("InventoryLocation");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.InventoryTransaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("FromLocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InventoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Reference")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("ToLocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal?>("TotalCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TransactionType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal?>("UnitCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FromLocationId");
-
-                    b.HasIndex("InventoryId");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("ToLocationId");
-
-                    b.HasIndex("TransactionDate");
-
-                    b.HasIndex("TransactionType");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("InventoryTransaction");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.JobKit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Availability")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("JobType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("OptionalItems")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TotalItems")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JobType");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("JobKit");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.JobKitItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("InventoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsOptional")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("JobKitId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InventoryId");
-
-                    b.HasIndex("IsOptional");
-
-                    b.HasIndex("JobKitId");
-
-                    b.ToTable("JobKitItem");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Location", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double?>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("Longitude")
-                        .HasColumnType("float");
-
-                    b.Property<Guid?>("ManagerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("ParentLocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("[Code] IS NOT NULL");
-
-                    b.HasIndex("ManagerId");
-
-                    b.HasIndex("ParentLocationId");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("Type");
-
-                    b.ToTable("Location");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.NotificationTemplate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Placeholders")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Subject")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("Type");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("NotificationTemplate");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RateTable", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdditionalSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("BaseRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Category")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Currency")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("EffectiveEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EffectiveStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RateRules")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RateTableName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("RateType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EffectiveEndDate");
-
-                    b.HasIndex("EffectiveStartDate");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("RateTableName");
-
-                    b.HasIndex("RateType");
-
-                    b.ToTable("RateTables");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RateTableItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdditionalSettings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Category")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Conditions")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("RateTableId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("SkillLevel")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Unit")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("WorkType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Category");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("ItemName");
-
-                    b.HasIndex("RateTableId", "DisplayOrder");
-
-                    b.ToTable("RateTableItems");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RefreshToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("JwtToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Refresh_Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RefreshToken");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Route", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Constraints")
-                        .HasColumnType("json");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DispatchedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("DriverId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Efficiency")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("OptimizationSettings")
-                        .HasColumnType("json");
-
-                    b.Property<DateTime>("RouteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("TotalDistance")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int>("TotalStops")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalTime")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DriverId");
-
-                    b.HasIndex("RouteDate");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("Route");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RouteStop", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ActualEndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ActualStartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("Distance")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("EstimatedDuration")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("RouteId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ScheduledEndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ScheduledStartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SequenceNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal?>("TravelTime")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkOrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkOrderId");
-
-                    b.HasIndex("RouteId", "SequenceNumber");
-
-                    b.ToTable("RouteStop");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.ScanLog", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeviceInfo")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("InventoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("json");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Result")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ScanType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("ScannedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ScannedCode")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssetId");
-
-                    b.HasIndex("InventoryId");
-
-                    b.HasIndex("Result");
-
-                    b.HasIndex("ScanType");
-
-                    b.HasIndex("ScannedByUserId");
-
-                    b.HasIndex("ScannedCode");
-
-                    b.ToTable("ScanLog");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.SentNotification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Recipient")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Subject")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("Recipient");
-
-                    b.HasIndex("Status");
 
                     b.HasIndex("TemplateId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("SentNotification");
+                    b.ToTable("DynamicField");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Skill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Level")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Category");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Skill");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.TechnicianEquipment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("AssignedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EquipmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("ReturnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("TechnicianId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EquipmentId");
-
-                    b.HasIndex("TechnicianId");
-
-                    b.ToTable("TechnicianEquipment");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.TechnicianSkill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CertificationNumber")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime?>("CertifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Level")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<Guid>("SkillId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TechnicianId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SkillId");
-
-                    b.HasIndex("TechnicianId", "SkillId")
-                        .IsUnique();
-
-                    b.ToTable("TechnicianSkill");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.TechnicianZone", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("TechnicianId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ZoneId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TechnicianId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("TechnicianZone");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.ValidationIssue", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssetId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsResolved")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("json");
-
-                    b.Property<DateTime>("OccurredOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ResolutionNotes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<Guid?>("ResolvedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ResolvedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Severity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssetId");
-
-                    b.HasIndex("IsResolved");
-
-                    b.HasIndex("ResolvedByUserId");
-
-                    b.HasIndex("Severity");
-
-                    b.HasIndex("Type");
-
-                    b.ToTable("ValidationIssue");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Vendor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("City")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ContactPerson")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("PostalCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("State")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TaxId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Terms")
-                        .HasColumnType("json");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Website")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("Vendor");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.View", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SelectedColumns")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Views");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AssignedTechnicianId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AssignedTechnicianName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CurrentReading")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MeterNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime?>("ScheduledDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ServiceAddress")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("StartedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("WorkOrderNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("WorkOrderTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("WorkflowId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("WorkflowStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignedTechnicianId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("CreatedOn");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("Priority");
-
-                    b.HasIndex("ScheduledDate");
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("WorkOrderNumber")
-                        .IsUnique();
-
-                    b.HasIndex("WorkOrderTypeId");
-
-                    b.HasIndex("WorkflowId");
-
-                    b.HasIndex("WorkflowStatusId");
-
-                    b.HasIndex("IsDeleted", "AssignedTechnicianId")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_AssignedTechnicianId");
-
-                    b.HasIndex("IsDeleted", "CreatedOn")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_CreatedOn");
-
-                    b.HasIndex("IsDeleted", "Priority")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority");
-
-                    b.HasIndex("IsDeleted", "ScheduledDate")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_ScheduledDate");
-
-                    b.HasIndex("IsDeleted", "Status")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Status");
-
-                    b.HasIndex("IsDeleted", "WorkOrderTypeId")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_WorkOrderTypeId");
-
-                    b.HasIndex("IsDeleted", "Priority", "CreatedOn")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority_CreatedOn");
-
-                    b.HasIndex("IsDeleted", "Status", "CreatedOn")
-                        .HasDatabaseName("IX_WorkOrder_IsDeleted_Status_CreatedOn");
-
-                    b.ToTable("WorkOrder");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAssignment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AccountNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("AllocatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ConsumedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Identifier")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SystemId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkOrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountNumber");
-
-                    b.HasIndex("Identifier");
-
-                    b.HasIndex("WorkOrderId");
-
-                    b.ToTable("WorkOrderAssignment");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAttachment", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormAttachment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3384,8 +1312,18 @@ namespace WOMS.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid?>("FormFieldId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FormSubmissionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("MimeType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3396,24 +1334,184 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UploadedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("WorkOrderId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UploadedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileName");
+                    b.HasIndex("FormFieldId");
 
-                    b.HasIndex("UploadedBy");
+                    b.HasIndex("FormSubmissionId");
 
-                    b.HasIndex("WorkOrderId");
-
-                    b.ToTable("WorkOrderAttachment");
+                    b.ToTable("FormAttachment");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderEquipmentRequirement", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormField", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Columns")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DefaultValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FieldType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid>("FormSectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("HelpText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReadOnly")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("MaxLength")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("MaxValue")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<int?>("MinLength")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("MinValue")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<string>("Options")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pattern")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Placeholder")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("Rows")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Step")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ValidationRules")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormSectionId");
+
+                    b.ToTable("FormField");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.FormGeolocation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Accuracy")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Altitude")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<DateTime>("CapturedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("FormFieldId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FormSubmissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsManual")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(10, 8)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(11, 8)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormFieldId");
+
+                    b.HasIndex("FormSubmissionId");
+
+                    b.ToTable("FormGeolocation");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3431,18 +1529,601 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EquipmentId")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("FormTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsCollapsed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCollapsible")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormTemplateId");
+
+                    b.ToTable("FormSection");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSignature", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("FormFieldId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FormSubmissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SignatureData")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SignatureType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("SignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SignerEmail")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("SignerName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormFieldId");
+
+                    b.HasIndex("FormSubmissionId");
+
+                    b.ToTable("FormSignature");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSubmission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeviceInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("FormTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOffline")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastSyncAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LocationData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SubmittedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("SyncStatus")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("WorkOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormTemplateId");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("FormSubmission");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.FormTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<int>("Version")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("FormTemplate");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.InventoryItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSerializedAsset")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("PartNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("QrCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("UnitCost")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PartNumber")
+                        .IsUnique();
+
+                    b.ToTable("InventoryItem");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("CustomerId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("InvoiceType")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<decimal>("Tax")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("TemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("CustomerId1");
+
+                    b.HasIndex("DueDate");
+
+                    b.HasIndex("InvoiceNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("TemplateId");
+
+                    b.ToTable("Invoice");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.InvoiceLineItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsMandatory")
+                    b.Property<string>("Location")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("RateTableId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("WorkOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WorkType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("RateTableId");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("InvoiceLineItem");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.JobKit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobKit");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.KitItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOptional")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("JobKitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -3453,19 +2134,574 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("WorkOrderId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("JobKitId");
+
+                    b.ToTable("KitItem");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Location", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Manager")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("ParentLocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentLocationId");
+
+                    b.ToTable("Location");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.RateTable", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("BaseRate")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EffectiveEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EffectiveStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("RateType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RateTable");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("JwtToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Refresh_Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshToken");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.RequestItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("ApprovedQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("FulfilledQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RequestedQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("RequestId");
+
+                    b.ToTable("RequestItem");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.SerializedAsset", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CalibrationDue")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("CurrentLocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DispositionStatus")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("InstallationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("LastServiceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("RemovalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SerialNumber")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime?>("WarrantyExpiration")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrentLocationId");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("SerialNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("SerializedAsset");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Stock", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InTransit")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("MaxThreshold")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("MinThreshold")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("OnHand")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("Quantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("Reserved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ItemId", "LocationId")
+                        .IsUnique();
+
+                    b.ToTable("Stock");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.StockRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ApprovalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("FromLocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RequestDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("RequesterId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ToLocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("WorkOrderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EquipmentId");
+                    b.HasIndex("FromLocationId");
+
+                    b.HasIndex("RequestDate");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("ToLocationId");
 
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderEquipmentRequirement");
+                    b.ToTable("StockRequest");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderSkillRequirement", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.StockTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("FromLocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("SerialNumbers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid?>("ToLocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitCost")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("WorkOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromLocationId");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("Timestamp");
+
+                    b.HasIndex("ToLocationId");
+
+                    b.HasIndex("Type");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("StockTransaction");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.TieredRate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3486,15 +2722,286 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsMandatory")
+                    b.Property<int?>("MaxQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid>("RateTableId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RateTableId");
+
+                    b.ToTable("TieredRate");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.ValidationRule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ErrorMessage")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("FormFieldId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RequiredLevel")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RuleType")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<Guid>("SkillId")
+                    b.Property<string>("RuleValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormFieldId");
+
+                    b.ToTable("ValidationRule");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("ActualHours")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Assignee")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("BillingTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Cost")
+                        .HasColumnType("decimal(15,2)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Customer")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CustomerContact")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Equipment")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("FormTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Make")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ManagerTechnician")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Model")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<string>("Size")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Utility")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("WorkOrderNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("WorkflowId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("WorkflowStatusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Assignee");
+
+                    b.HasIndex("BillingTemplateId");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("Customer");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DueDate");
+
+                    b.HasIndex("FormTemplateId");
+
+                    b.HasIndex("Priority");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("WorkflowStatusId");
+
+                    b.ToTable("WorkOrder");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AssignedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("TechnicianId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3507,22 +3014,21 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SkillId");
-
                     b.HasIndex("WorkOrderId");
 
-                    b.ToTable("WorkOrderSkillRequirement");
+                    b.ToTable("WorkOrderAssignment");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderType", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderColumn", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("ColumnId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3530,8 +3036,131 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DefaultSettings")
-                        .HasColumnType("json");
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Filterable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Sortable")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Width")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("WorkOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("WorkOrderColumn");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderView", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Filters")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("SortBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SortOrder")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkOrderView");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Workflow", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CurrentVersion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3540,27 +3169,25 @@ namespace WOMS.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstimatedDurationMinutes")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<bool>("RequiresApproval")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3572,215 +3199,7 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("Category");
 
-                    b.HasIndex("Name");
-
-                    b.ToTable("WorkOrderType");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeEquipmentRequirement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EquipmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMandatory")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkOrderTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EquipmentId");
-
-                    b.HasIndex("WorkOrderTypeId");
-
-                    b.ToTable("WorkOrderTypeEquipmentRequirement");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeSkillRequirement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMandatory")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RequiredLevel")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<Guid>("SkillId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkOrderTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SkillId");
-
-                    b.HasIndex("WorkOrderTypeId");
-
-                    b.ToTable("WorkOrderTypeSkillRequirement");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderZone", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkOrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ZoneId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkOrderId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("WorkOrderZone");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Workflow", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsLocked")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("Name");
+                    b.HasIndex("IsActive");
 
                     b.ToTable("Workflow");
                 });
@@ -3830,29 +3249,76 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkflowId", "ActionId")
-                        .IsUnique();
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("WorkflowAction");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowAssignment", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowApproval", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ApproverRoles")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("AssigneeId")
-                        .HasMaxLength(100)
+                    b.Property<string>("ApproverUsers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AssigneeName")
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Deadline")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsParallel")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSequential")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkflowId");
+
+                    b.ToTable("WorkflowApproval");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowCondition", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3866,26 +3332,28 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NodeId")
+                    b.Property<string>("Field")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Priority")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LogicalOperator")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<Guid>("NodeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Operator")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3893,27 +3361,31 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("WorkflowId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("WorkflowNodeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssigneeId");
+                    b.HasIndex("NodeId");
 
-                    b.HasIndex("WorkflowId");
-
-                    b.HasIndex("WorkflowNodeId");
-
-                    b.ToTable("WorkflowAssignment");
+                    b.ToTable("WorkflowCondition");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowEdge", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowEscalation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ActionConfig")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ApprovalId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedBy")
@@ -3928,31 +3400,19 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EdgeId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("EdgeType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Label")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SourceNodeId")
+                    b.Property<string>("Trigger")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("TargetNodeId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<string>("TriggerValue")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3960,32 +3420,23 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("WorkflowId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("WorkflowNodeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("WorkflowNodeId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkflowNodeId");
+                    b.HasIndex("ApprovalId");
 
-                    b.HasIndex("WorkflowNodeId1");
-
-                    b.HasIndex("WorkflowId", "EdgeId")
-                        .IsUnique();
-
-                    b.ToTable("WorkflowEdge");
+                    b.ToTable("WorkflowEscalation");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowForm", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowExecutionLog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3993,17 +3444,34 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("FormId")
+                    b.Property<Guid>("InstanceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("NodeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -4011,17 +3479,17 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("WorkflowId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FormId");
+                    b.HasIndex("InstanceId");
 
-                    b.HasIndex("WorkflowId", "FormId")
-                        .IsUnique();
+                    b.HasIndex("NodeId");
 
-                    b.ToTable("WorkflowForm");
+                    b.ToTable("WorkflowExecutionLog");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstance", b =>
@@ -4033,15 +3501,22 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CurrentNodeId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<Guid?>("CurrentNodeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
@@ -4049,118 +3524,51 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("InstanceName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("StartedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<int>("Status")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("WorkOrderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("WorkflowId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("WorkflowId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("CurrentNodeId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("WorkOrderId");
 
                     b.HasIndex("WorkflowId");
 
+                    b.HasIndex("WorkflowId1");
+
                     b.ToTable("WorkflowInstance");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstanceStep", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AssigneeId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("AssigneeName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<Guid>("InstanceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NodeId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ResultData")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StartedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("StepName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("WorkflowNodeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InstanceId");
-
-                    b.HasIndex("WorkflowNodeId");
-
-                    b.ToTable("WorkflowInstanceStep");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowNode", b =>
@@ -4169,8 +3577,72 @@ namespace WOMS.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Config")
+                    b.Property<string>("Connections")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Position")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("WorkflowId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkflowId");
+
+                    b.HasIndex("WorkflowId1");
+
+                    b.ToTable("WorkflowNode");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowNotification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -4184,33 +3656,34 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Label")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("NodeId")
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Recipients")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Template")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("PositionX")
-                        .HasColumnType("float");
-
-                    b.Property<double>("PositionY")
-                        .HasColumnType("float");
+                    b.Property<string>("Triggers")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -4223,10 +3696,9 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkflowId", "NodeId")
-                        .IsUnique();
+                    b.HasIndex("WorkflowId");
 
-                    b.ToTable("WorkflowNode");
+                    b.ToTable("WorkflowNotification");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowProgress", b =>
@@ -4265,7 +3737,9 @@ namespace WOMS.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Metadata")
                         .HasColumnType("nvarchar(max)");
@@ -4282,188 +3756,18 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<Guid>("WorkflowId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("WorkflowStatusId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentStatusId");
 
                     b.HasIndex("WorkflowId");
 
+                    b.HasIndex("WorkflowStatusId");
+
                     b.ToTable("WorkflowProgress");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("RuleId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkflowId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkflowId", "RuleId")
-                        .IsUnique();
-
-                    b.ToTable("WorkflowRule");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleAction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ActionId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Config")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("RuleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RuleId");
-
-                    b.ToTable("WorkflowRuleAction");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleCondition", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConditionId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Field")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LogicalOperator")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("Operator")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("RuleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RuleId");
-
-                    b.ToTable("WorkflowRuleCondition");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowStatus", b =>
@@ -4526,10 +3830,67 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkflowId", "StatusId")
-                        .IsUnique();
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("WorkflowStatus");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WorkflowData")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkflowTemplate");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowTransition", b =>
@@ -4591,21 +3952,22 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.HasIndex("ToStatusId");
 
-                    b.HasIndex("WorkflowId", "TransitionId")
-                        .IsUnique();
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("WorkflowTransition");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Zone", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowVersion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<string>("Changelog")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -4620,33 +3982,18 @@ namespace WOMS.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<double?>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("Longitude")
-                        .HasColumnType("float");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<double?>("Radius")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -4654,16 +4001,20 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("WorkflowId");
 
-                    b.HasIndex("Type");
-
-                    b.ToTable("Zone");
+                    b.ToTable("WorkflowVersion");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.ApplicationRole", null)
                         .WithMany()
@@ -4672,7 +4023,7 @@ namespace WOMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", null)
                         .WithMany()
@@ -4681,7 +4032,7 @@ namespace WOMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", null)
                         .WithMany()
@@ -4690,7 +4041,7 @@ namespace WOMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.ApplicationRole", null)
                         .WithMany()
@@ -4705,7 +4056,7 @@ namespace WOMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", null)
                         .WithMany()
@@ -4714,19 +4065,26 @@ namespace WOMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.ApplicationRole", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.Address", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "DeletedByUser")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy");
+                    b.HasOne("WOMS.Domain.Entities.Customer", "Customer")
+                        .WithMany("Addresses")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "UpdatedByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy");
+                    b.Navigation("Customer");
+                });
 
-                    b.Navigation("DeletedByUser");
+            modelBuilder.Entity("WOMS.Domain.Entities.AggregationRule", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.BillingTemplate", "Template")
+                        .WithMany("AggregationRules")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("UpdatedByUser");
+                    b.Navigation("Template");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.ApplicationUser", b =>
@@ -4736,9 +4094,15 @@ namespace WOMS.Infrastructure.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("WOMS.Domain.Entities.Department", null)
+                    b.HasOne("WOMS.Domain.Entities.Department", "DepartmentNavigation")
                         .WithMany("Users")
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", null)
+                        .WithMany("Subordinates")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", "UpdatedByUser")
                         .WithMany()
@@ -4747,219 +4111,107 @@ namespace WOMS.Infrastructure.Migrations
 
                     b.Navigation("DeletedByUser");
 
+                    b.Navigation("DepartmentNavigation");
+
                     b.Navigation("UpdatedByUser");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Asset", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.ApprovalRecord", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.Location", "CurrentLocation")
-                        .WithMany("Assets")
-                        .HasForeignKey("CurrentLocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("WOMS.Domain.Entities.Invoice", "Invoice")
+                        .WithMany("ApprovalRecords")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
-                        .WithMany()
-                        .HasForeignKey("WorkOrderId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("CurrentLocation");
-
-                    b.Navigation("WorkOrder");
+                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.AssetHistory", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.Asset", "Asset")
+                    b.HasOne("WOMS.Domain.Entities.SerializedAsset", "Asset")
                         .WithMany("AssetHistories")
                         .HasForeignKey("AssetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.Location", "FromLocation")
-                        .WithMany()
-                        .HasForeignKey("FromLocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("WOMS.Domain.Entities.Location", "ToLocation")
-                        .WithMany()
-                        .HasForeignKey("ToLocationId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
-                        .WithMany()
-                        .HasForeignKey("WorkOrderId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .WithMany("AssetHistories")
+                        .HasForeignKey("WorkOrderId");
 
                     b.Navigation("Asset");
-
-                    b.Navigation("FromLocation");
-
-                    b.Navigation("ToLocation");
-
-                    b.Navigation("User");
 
                     b.Navigation("WorkOrder");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateSkill", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplate", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.AssignmentTemplate", "AssignmentTemplate")
-                        .WithMany("AssignmentTemplateSkills")
-                        .HasForeignKey("AssignmentTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.Skill", "Skill")
-                        .WithMany()
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssignmentTemplate");
-
-                    b.Navigation("Skill");
+                    b.HasOne("WOMS.Domain.Entities.Customer", null)
+                        .WithMany("BillingTemplates")
+                        .HasForeignKey("CustomerId1");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateTechnician", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.ConditionalRate", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.AssignmentTemplate", "AssignmentTemplate")
-                        .WithMany("AssignmentTemplateTechnicians")
-                        .HasForeignKey("AssignmentTemplateId")
+                    b.HasOne("WOMS.Domain.Entities.RateTable", "RateTable")
+                        .WithMany("ConditionalRates")
+                        .HasForeignKey("RateTableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "Technician")
-                        .WithMany("AssignmentTemplateTechnicians")
-                        .HasForeignKey("TechnicianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssignmentTemplate");
-
-                    b.Navigation("Technician");
+                    b.Navigation("RateTable");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateWorkType", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.Contact", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.AssignmentTemplate", "AssignmentTemplate")
-                        .WithMany("AssignmentTemplateWorkTypes")
-                        .HasForeignKey("AssignmentTemplateId")
+                    b.HasOne("WOMS.Domain.Entities.Customer", "Customer")
+                        .WithMany("Contacts")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.WorkOrderType", "WorkOrderType")
-                        .WithMany()
-                        .HasForeignKey("WorkOrderTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssignmentTemplate");
-
-                    b.Navigation("WorkOrderType");
+                    b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplateZone", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.AssignmentTemplate", "AssignmentTemplate")
-                        .WithMany("AssignmentTemplateZones")
-                        .HasForeignKey("AssignmentTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.Zone", "Zone")
-                        .WithMany()
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssignmentTemplate");
-
-                    b.Navigation("Zone");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleRun", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.BillingSchedule", "BillingSchedule")
-                        .WithMany("BillingScheduleRuns")
-                        .HasForeignKey("BillingScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BillingSchedule");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingScheduleTemplate", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.BillingSchedule", "BillingSchedule")
-                        .WithMany("BillingScheduleTemplates")
-                        .HasForeignKey("BillingScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.BillingTemplate", "BillingTemplate")
-                        .WithMany()
-                        .HasForeignKey("BillingTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BillingSchedule");
-
-                    b.Navigation("BillingTemplate");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplateFieldOrder", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.BillingTemplate", "BillingTemplate")
-                        .WithMany("FieldOrders")
-                        .HasForeignKey("BillingTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BillingTemplate");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.CycleCount", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "CountedByUser")
-                        .WithMany()
-                        .HasForeignKey("CountedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CountedByUser");
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.CycleCountItem", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.CountItem", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.CycleCount", "CycleCount")
-                        .WithMany("CycleCountItems")
+                        .WithMany("CountItems")
                         .HasForeignKey("CycleCountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.Inventory", "Inventory")
-                        .WithMany("CycleCountItems")
-                        .HasForeignKey("InventoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("WOMS.Domain.Entities.InventoryItem", "Item")
+                        .WithMany("CountItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CycleCount");
 
-                    b.Navigation("Inventory");
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.CycleCount", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Location", "Location")
+                        .WithMany("CycleCounts")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.DeliverySetting", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Invoice", "Invoice")
+                        .WithMany("DeliverySettings")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Department", b =>
@@ -4967,7 +4219,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("WOMS.Domain.Entities.ApplicationUser", "DeletedByUser")
                         .WithMany()
@@ -4986,151 +4238,170 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("UpdatedByUser");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Form", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.DynamicField", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("WOMS.Domain.Entities.BillingTemplate", "Template")
+                        .WithMany("DynamicFields")
+                        .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Template");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.InventoryDisposition", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormAttachment", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "DisposedByUser")
-                        .WithMany()
-                        .HasForeignKey("DisposedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasOne("WOMS.Domain.Entities.FormField", "FormField")
+                        .WithMany("FormAttachments")
+                        .HasForeignKey("FormFieldId");
 
-                    b.HasOne("WOMS.Domain.Entities.Inventory", "Inventory")
-                        .WithMany("InventoryDispositions")
-                        .HasForeignKey("InventoryId")
+                    b.HasOne("WOMS.Domain.Entities.FormSubmission", "FormSubmission")
+                        .WithMany("FormAttachments")
+                        .HasForeignKey("FormSubmissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.Vendor", "Vendor")
-                        .WithMany("InventoryDispositions")
-                        .HasForeignKey("VendorId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.Navigation("FormField");
 
-                    b.Navigation("DisposedByUser");
-
-                    b.Navigation("Inventory");
-
-                    b.Navigation("Vendor");
+                    b.Navigation("FormSubmission");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.InventoryLocation", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormField", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.Inventory", "Inventory")
-                        .WithMany("InventoryLocations")
-                        .HasForeignKey("InventoryId")
+                    b.HasOne("WOMS.Domain.Entities.FormSection", "FormSection")
+                        .WithMany("FormFields")
+                        .HasForeignKey("FormSectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.Location", "Location")
-                        .WithMany("InventoryLocations")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Inventory");
-
-                    b.Navigation("Location");
+                    b.Navigation("FormSection");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.InventoryTransaction", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormGeolocation", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.Location", "FromLocation")
-                        .WithMany("FromTransactions")
-                        .HasForeignKey("FromLocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("WOMS.Domain.Entities.FormField", "FormField")
+                        .WithMany("FormGeolocations")
+                        .HasForeignKey("FormFieldId");
 
-                    b.HasOne("WOMS.Domain.Entities.Inventory", "Inventory")
-                        .WithMany("InventoryTransactions")
-                        .HasForeignKey("InventoryId")
+                    b.HasOne("WOMS.Domain.Entities.FormSubmission", "FormSubmission")
+                        .WithMany("FormGeolocations")
+                        .HasForeignKey("FormSubmissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.Location", "ToLocation")
-                        .WithMany("ToTransactions")
-                        .HasForeignKey("ToLocationId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                    b.Navigation("FormField");
 
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FromLocation");
-
-                    b.Navigation("Inventory");
-
-                    b.Navigation("ToLocation");
-
-                    b.Navigation("User");
+                    b.Navigation("FormSubmission");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.JobKitItem", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSection", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.Inventory", "Inventory")
-                        .WithMany("JobKitItems")
-                        .HasForeignKey("InventoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("WOMS.Domain.Entities.FormTemplate", "FormTemplate")
+                        .WithMany("FormSections")
+                        .HasForeignKey("FormTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FormTemplate");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSignature", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.FormField", "FormField")
+                        .WithMany("FormSignatures")
+                        .HasForeignKey("FormFieldId");
+
+                    b.HasOne("WOMS.Domain.Entities.FormSubmission", "FormSubmission")
+                        .WithMany("FormSignatures")
+                        .HasForeignKey("FormSubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FormField");
+
+                    b.Navigation("FormSubmission");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSubmission", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.FormTemplate", "FormTemplate")
+                        .WithMany("FormSubmissions")
+                        .HasForeignKey("FormTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("FormSubmissions")
+                        .HasForeignKey("WorkOrderId");
+
+                    b.Navigation("FormTemplate");
+
+                    b.Navigation("WorkOrder");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Invoice", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Customer", null)
+                        .WithMany("Invoices")
+                        .HasForeignKey("CustomerId1");
+
+                    b.HasOne("WOMS.Domain.Entities.BillingTemplate", "Template")
+                        .WithMany("Invoices")
+                        .HasForeignKey("TemplateId");
+
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.InvoiceLineItem", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Invoice", "Invoice")
+                        .WithMany("InvoiceLineItems")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WOMS.Domain.Entities.RateTable", "RateTable")
+                        .WithMany("InvoiceLineItems")
+                        .HasForeignKey("RateTableId");
+
+                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("InvoiceLineItems")
+                        .HasForeignKey("WorkOrderId");
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("RateTable");
+
+                    b.Navigation("WorkOrder");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.KitItem", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.InventoryItem", "Item")
+                        .WithMany("KitItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WOMS.Domain.Entities.JobKit", "JobKit")
-                        .WithMany("JobKitItems")
+                        .WithMany("KitItems")
                         .HasForeignKey("JobKitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Inventory");
+                    b.Navigation("Item");
 
                     b.Navigation("JobKit");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Location", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("WOMS.Domain.Entities.Location", "ParentLocation")
                         .WithMany("SubLocations")
                         .HasForeignKey("ParentLocationId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Manager");
-
                     b.Navigation("ParentLocation");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.NotificationTemplate", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RateTableItem", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.RateTable", "RateTable")
-                        .WithMany("RateTableItems")
-                        .HasForeignKey("RateTableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RateTable");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.RefreshToken", b =>
@@ -5144,197 +4415,156 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Route", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.RequestItem", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "Driver")
-                        .WithMany("Routes")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Driver");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.RouteStop", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Route", "Route")
-                        .WithMany("RouteStops")
-                        .HasForeignKey("RouteId")
+                    b.HasOne("WOMS.Domain.Entities.InventoryItem", "Item")
+                        .WithMany("RequestItems")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
-                        .WithMany("RouteStops")
-                        .HasForeignKey("WorkOrderId")
+                    b.HasOne("WOMS.Domain.Entities.StockRequest", "Request")
+                        .WithMany("RequestItems")
+                        .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Request");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.SerializedAsset", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Location", "CurrentLocation")
+                        .WithMany("SerializedAssets")
+                        .HasForeignKey("CurrentLocationId");
+
+                    b.HasOne("WOMS.Domain.Entities.InventoryItem", "Item")
+                        .WithMany("SerializedAssets")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentLocation");
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Stock", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.InventoryItem", "Item")
+                        .WithMany("Stocks")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WOMS.Domain.Entities.Location", "Location")
+                        .WithMany("Stocks")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.StockRequest", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Location", "FromLocation")
+                        .WithMany("FromRequests")
+                        .HasForeignKey("FromLocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Route");
+                    b.HasOne("WOMS.Domain.Entities.Location", "ToLocation")
+                        .WithMany("ToRequests")
+                        .HasForeignKey("ToLocationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("StockRequests")
+                        .HasForeignKey("WorkOrderId");
+
+                    b.Navigation("FromLocation");
+
+                    b.Navigation("ToLocation");
 
                     b.Navigation("WorkOrder");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.ScanLog", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.StockTransaction", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.Asset", "Asset")
-                        .WithMany()
-                        .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("WOMS.Domain.Entities.Location", "FromLocation")
+                        .WithMany("FromTransactions")
+                        .HasForeignKey("FromLocationId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("WOMS.Domain.Entities.Inventory", "Inventory")
-                        .WithMany()
-                        .HasForeignKey("InventoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "ScannedByUser")
-                        .WithMany()
-                        .HasForeignKey("ScannedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("WOMS.Domain.Entities.InventoryItem", "Item")
+                        .WithMany("StockTransactions")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Asset");
+                    b.HasOne("WOMS.Domain.Entities.Location", "ToLocation")
+                        .WithMany("ToTransactions")
+                        .HasForeignKey("ToLocationId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Inventory");
+                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("StockTransactions")
+                        .HasForeignKey("WorkOrderId");
 
-                    b.Navigation("ScannedByUser");
+                    b.Navigation("FromLocation");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("ToLocation");
+
+                    b.Navigation("WorkOrder");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.SentNotification", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.TieredRate", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.NotificationTemplate", "Template")
-                        .WithMany("SentNotifications")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("WOMS.Domain.Entities.RateTable", "RateTable")
+                        .WithMany("TieredRates")
+                        .HasForeignKey("RateTableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Template");
-
-                    b.Navigation("User");
+                    b.Navigation("RateTable");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.TechnicianEquipment", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.ValidationRule", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.Equipment", "Equipment")
-                        .WithMany("TechnicianEquipments")
-                        .HasForeignKey("EquipmentId")
+                    b.HasOne("WOMS.Domain.Entities.FormField", "FormField")
+                        .WithMany("ValidationRulesList")
+                        .HasForeignKey("FormFieldId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "Technician")
-                        .WithMany("TechnicianEquipments")
-                        .HasForeignKey("TechnicianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Equipment");
-
-                    b.Navigation("Technician");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.TechnicianSkill", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Skill", "Skill")
-                        .WithMany("TechnicianSkills")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "Technician")
-                        .WithMany("TechnicianSkills")
-                        .HasForeignKey("TechnicianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Skill");
-
-                    b.Navigation("Technician");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.TechnicianZone", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "Technician")
-                        .WithMany("TechnicianZones")
-                        .HasForeignKey("TechnicianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.Zone", "Zone")
-                        .WithMany("TechnicianZones")
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Technician");
-
-                    b.Navigation("Zone");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.ValidationIssue", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Asset", "Asset")
-                        .WithMany("ValidationIssues")
-                        .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "ResolvedByUser")
-                        .WithMany()
-                        .HasForeignKey("ResolvedByUserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Asset");
-
-                    b.Navigation("ResolvedByUser");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.View", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("FormField");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "AssignedTechnician")
-                        .WithMany()
-                        .HasForeignKey("AssignedTechnicianId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("WOMS.Domain.Entities.WorkOrderType", "WorkOrderType")
+                    b.HasOne("WOMS.Domain.Entities.BillingTemplate", null)
                         .WithMany("WorkOrders")
-                        .HasForeignKey("WorkOrderTypeId");
+                        .HasForeignKey("BillingTemplateId");
 
-                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
-                        .WithMany()
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("WOMS.Domain.Entities.Customer", null)
+                        .WithMany("WorkOrders")
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("WOMS.Domain.Entities.FormTemplate", null)
+                        .WithMany("WorkOrders")
+                        .HasForeignKey("FormTemplateId");
 
                     b.HasOne("WOMS.Domain.Entities.WorkflowStatus", null)
                         .WithMany("WorkOrders")
                         .HasForeignKey("WorkflowStatusId");
-
-                    b.Navigation("AssignedTechnician");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("WorkOrderType");
-
-                    b.Navigation("Workflow");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAssignment", b =>
@@ -5348,127 +4578,15 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("WorkOrder");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderAttachment", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderColumn", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "UploadedByUser")
-                        .WithMany()
-                        .HasForeignKey("UploadedBy")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
-                        .WithMany("WorkOrderAttachments")
+                        .WithMany("WorkOrderColumns")
                         .HasForeignKey("WorkOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("UploadedByUser");
-
                     b.Navigation("WorkOrder");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderEquipmentRequirement", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Equipment", "Equipment")
-                        .WithMany("WorkOrderEquipmentRequirements")
-                        .HasForeignKey("EquipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
-                        .WithMany("WorkOrderEquipmentRequirements")
-                        .HasForeignKey("WorkOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Equipment");
-
-                    b.Navigation("WorkOrder");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderSkillRequirement", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Skill", "Skill")
-                        .WithMany("WorkOrderSkillRequirements")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
-                        .WithMany("WorkOrderSkillRequirements")
-                        .HasForeignKey("WorkOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Skill");
-
-                    b.Navigation("WorkOrder");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeEquipmentRequirement", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Equipment", "Equipment")
-                        .WithMany()
-                        .HasForeignKey("EquipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.WorkOrderType", "WorkOrderType")
-                        .WithMany("WorkOrderTypeEquipmentRequirements")
-                        .HasForeignKey("WorkOrderTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Equipment");
-
-                    b.Navigation("WorkOrderType");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderTypeSkillRequirement", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Skill", "Skill")
-                        .WithMany()
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.WorkOrderType", "WorkOrderType")
-                        .WithMany("WorkOrderTypeSkillRequirements")
-                        .HasForeignKey("WorkOrderTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Skill");
-
-                    b.Navigation("WorkOrderType");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderZone", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
-                        .WithMany("WorkOrderZones")
-                        .HasForeignKey("WorkOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.Zone", "Zone")
-                        .WithMany("WorkOrderZones")
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WorkOrder");
-
-                    b.Navigation("Zone");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Workflow", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowAction", b =>
@@ -5482,104 +4600,103 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("Workflow");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowAssignment", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowApproval", b =>
                 {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "Assignee")
+                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
+                        .WithMany("Approvals")
+                        .HasForeignKey("WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workflow");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowCondition", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.WorkflowNode", "Node")
+                        .WithMany("Conditions")
+                        .HasForeignKey("NodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Node");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowEscalation", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.WorkflowApproval", "Approval")
                         .WithMany()
-                        .HasForeignKey("AssigneeId")
+                        .HasForeignKey("ApprovalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
-                        .WithMany()
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.WorkflowNode", null)
-                        .WithMany("Assignments")
-                        .HasForeignKey("WorkflowNodeId");
-
-                    b.Navigation("Assignee");
-
-                    b.Navigation("Workflow");
+                    b.Navigation("Approval");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowEdge", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
-                        .WithMany("Edges")
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.WorkflowNode", null)
-                        .WithMany("IncomingEdges")
-                        .HasForeignKey("WorkflowNodeId");
-
-                    b.HasOne("WOMS.Domain.Entities.WorkflowNode", null)
-                        .WithMany("OutgoingEdges")
-                        .HasForeignKey("WorkflowNodeId1");
-
-                    b.Navigation("Workflow");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowForm", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Form", "Form")
-                        .WithMany("WorkflowForms")
-                        .HasForeignKey("FormId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
-                        .WithMany("WorkflowForms")
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Form");
-
-                    b.Navigation("Workflow");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstance", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
-                        .WithMany("Instances")
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("Workflow");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstanceStep", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowExecutionLog", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.WorkflowInstance", "Instance")
-                        .WithMany("Steps")
+                        .WithMany("ExecutionLogs")
                         .HasForeignKey("InstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WOMS.Domain.Entities.WorkflowNode", null)
-                        .WithMany("InstanceSteps")
-                        .HasForeignKey("WorkflowNodeId");
+                    b.HasOne("WOMS.Domain.Entities.WorkflowNode", "Node")
+                        .WithMany("ExecutionLogs")
+                        .HasForeignKey("NodeId");
 
                     b.Navigation("Instance");
+
+                    b.Navigation("Node");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstance", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.WorkflowNode", "CurrentNode")
+                        .WithMany()
+                        .HasForeignKey("CurrentNodeId");
+
+                    b.HasOne("WOMS.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("WorkflowInstances")
+                        .HasForeignKey("WorkOrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
+                        .WithMany()
+                        .HasForeignKey("WorkflowId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WOMS.Domain.Entities.Workflow", null)
+                        .WithMany("Instances")
+                        .HasForeignKey("WorkflowId1");
+
+                    b.Navigation("CurrentNode");
+
+                    b.Navigation("WorkOrder");
+
+                    b.Navigation("Workflow");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowNode", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
+                        .WithMany()
+                        .HasForeignKey("WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WOMS.Domain.Entities.Workflow", null)
                         .WithMany("Nodes")
+                        .HasForeignKey("WorkflowId1");
+
+                    b.Navigation("Workflow");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowNotification", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
+                        .WithMany("Notifications")
                         .HasForeignKey("WorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5590,53 +4707,24 @@ namespace WOMS.Infrastructure.Migrations
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowProgress", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.WorkflowStatus", "CurrentStatus")
-                        .WithMany("WorkflowProgresses")
+                        .WithMany()
                         .HasForeignKey("CurrentStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
                         .WithMany()
                         .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("WOMS.Domain.Entities.WorkflowStatus", null)
+                        .WithMany("WorkflowProgresses")
+                        .HasForeignKey("WorkflowStatusId");
 
                     b.Navigation("CurrentStatus");
 
                     b.Navigation("Workflow");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRule", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
-                        .WithMany("Rules")
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Workflow");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleAction", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.WorkflowRule", "Rule")
-                        .WithMany("Actions")
-                        .HasForeignKey("RuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Rule");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRuleCondition", b =>
-                {
-                    b.HasOne("WOMS.Domain.Entities.WorkflowRule", "Rule")
-                        .WithMany("Conditions")
-                        .HasForeignKey("RuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Rule");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowStatus", b =>
@@ -5644,7 +4732,7 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
                         .WithMany("Statuses")
                         .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Workflow");
@@ -5655,17 +4743,17 @@ namespace WOMS.Infrastructure.Migrations
                     b.HasOne("WOMS.Domain.Entities.WorkflowStatus", "FromStatus")
                         .WithMany("OutgoingTransitions")
                         .HasForeignKey("FromStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WOMS.Domain.Entities.WorkflowStatus", "ToStatus")
                         .WithMany("IncomingTransitions")
                         .HasForeignKey("ToStatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
-                        .WithMany("Transitions")
+                        .WithMany()
                         .HasForeignKey("WorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5677,52 +4765,49 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("Workflow");
                 });
 
+            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowVersion", b =>
+                {
+                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
+                        .WithMany("Versions")
+                        .HasForeignKey("WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workflow");
+                });
+
             modelBuilder.Entity("WOMS.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("AssignmentTemplateTechnicians");
-
-                    b.Navigation("Routes");
-
-                    b.Navigation("TechnicianEquipments");
-
-                    b.Navigation("TechnicianSkills");
-
-                    b.Navigation("TechnicianZones");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Asset", b =>
-                {
-                    b.Navigation("AssetHistories");
-
-                    b.Navigation("ValidationIssues");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.AssignmentTemplate", b =>
-                {
-                    b.Navigation("AssignmentTemplateSkills");
-
-                    b.Navigation("AssignmentTemplateTechnicians");
-
-                    b.Navigation("AssignmentTemplateWorkTypes");
-
-                    b.Navigation("AssignmentTemplateZones");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.BillingSchedule", b =>
-                {
-                    b.Navigation("BillingScheduleRuns");
-
-                    b.Navigation("BillingScheduleTemplates");
+                    b.Navigation("Subordinates");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.BillingTemplate", b =>
                 {
-                    b.Navigation("FieldOrders");
+                    b.Navigation("AggregationRules");
+
+                    b.Navigation("DynamicFields");
+
+                    b.Navigation("Invoices");
+
+                    b.Navigation("WorkOrders");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Customer", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("BillingTemplates");
+
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Invoices");
+
+                    b.Navigation("WorkOrders");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.CycleCount", b =>
                 {
-                    b.Navigation("CycleCountItems");
+                    b.Navigation("CountItems");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Department", b =>
@@ -5730,140 +4815,153 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Equipment", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormField", b =>
                 {
-                    b.Navigation("TechnicianEquipments");
+                    b.Navigation("FormAttachments");
 
-                    b.Navigation("WorkOrderEquipmentRequirements");
+                    b.Navigation("FormGeolocations");
+
+                    b.Navigation("FormSignatures");
+
+                    b.Navigation("ValidationRulesList");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Form", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSection", b =>
                 {
-                    b.Navigation("WorkflowForms");
+                    b.Navigation("FormFields");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Inventory", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.FormSubmission", b =>
                 {
-                    b.Navigation("CycleCountItems");
+                    b.Navigation("FormAttachments");
 
-                    b.Navigation("InventoryDispositions");
+                    b.Navigation("FormGeolocations");
 
-                    b.Navigation("InventoryLocations");
+                    b.Navigation("FormSignatures");
+                });
 
-                    b.Navigation("InventoryTransactions");
+            modelBuilder.Entity("WOMS.Domain.Entities.FormTemplate", b =>
+                {
+                    b.Navigation("FormSections");
 
-                    b.Navigation("JobKitItems");
+                    b.Navigation("FormSubmissions");
+
+                    b.Navigation("WorkOrders");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.InventoryItem", b =>
+                {
+                    b.Navigation("CountItems");
+
+                    b.Navigation("KitItems");
+
+                    b.Navigation("RequestItems");
+
+                    b.Navigation("SerializedAssets");
+
+                    b.Navigation("StockTransactions");
+
+                    b.Navigation("Stocks");
+                });
+
+            modelBuilder.Entity("WOMS.Domain.Entities.Invoice", b =>
+                {
+                    b.Navigation("ApprovalRecords");
+
+                    b.Navigation("DeliverySettings");
+
+                    b.Navigation("InvoiceLineItems");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.JobKit", b =>
                 {
-                    b.Navigation("JobKitItems");
+                    b.Navigation("KitItems");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Location", b =>
                 {
-                    b.Navigation("Assets");
+                    b.Navigation("CycleCounts");
+
+                    b.Navigation("FromRequests");
 
                     b.Navigation("FromTransactions");
 
-                    b.Navigation("InventoryLocations");
+                    b.Navigation("SerializedAssets");
+
+                    b.Navigation("Stocks");
 
                     b.Navigation("SubLocations");
+
+                    b.Navigation("ToRequests");
 
                     b.Navigation("ToTransactions");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.NotificationTemplate", b =>
-                {
-                    b.Navigation("SentNotifications");
-                });
-
             modelBuilder.Entity("WOMS.Domain.Entities.RateTable", b =>
                 {
-                    b.Navigation("RateTableItems");
+                    b.Navigation("ConditionalRates");
+
+                    b.Navigation("InvoiceLineItems");
+
+                    b.Navigation("TieredRates");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Route", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.SerializedAsset", b =>
                 {
-                    b.Navigation("RouteStops");
+                    b.Navigation("AssetHistories");
                 });
 
-            modelBuilder.Entity("WOMS.Domain.Entities.Skill", b =>
+            modelBuilder.Entity("WOMS.Domain.Entities.StockRequest", b =>
                 {
-                    b.Navigation("TechnicianSkills");
-
-                    b.Navigation("WorkOrderSkillRequirements");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Vendor", b =>
-                {
-                    b.Navigation("InventoryDispositions");
+                    b.Navigation("RequestItems");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkOrder", b =>
                 {
-                    b.Navigation("RouteStops");
+                    b.Navigation("AssetHistories");
+
+                    b.Navigation("FormSubmissions");
+
+                    b.Navigation("InvoiceLineItems");
+
+                    b.Navigation("StockRequests");
+
+                    b.Navigation("StockTransactions");
 
                     b.Navigation("WorkOrderAssignments");
 
-                    b.Navigation("WorkOrderAttachments");
+                    b.Navigation("WorkOrderColumns");
 
-                    b.Navigation("WorkOrderEquipmentRequirements");
-
-                    b.Navigation("WorkOrderSkillRequirements");
-
-                    b.Navigation("WorkOrderZones");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkOrderType", b =>
-                {
-                    b.Navigation("WorkOrderTypeEquipmentRequirements");
-
-                    b.Navigation("WorkOrderTypeSkillRequirements");
-
-                    b.Navigation("WorkOrders");
+                    b.Navigation("WorkflowInstances");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.Workflow", b =>
                 {
                     b.Navigation("Actions");
 
-                    b.Navigation("Edges");
+                    b.Navigation("Approvals");
 
                     b.Navigation("Instances");
 
                     b.Navigation("Nodes");
 
-                    b.Navigation("Rules");
+                    b.Navigation("Notifications");
 
                     b.Navigation("Statuses");
 
-                    b.Navigation("Transitions");
-
-                    b.Navigation("WorkflowForms");
+                    b.Navigation("Versions");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowInstance", b =>
                 {
-                    b.Navigation("Steps");
+                    b.Navigation("ExecutionLogs");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowNode", b =>
                 {
-                    b.Navigation("Assignments");
-
-                    b.Navigation("IncomingEdges");
-
-                    b.Navigation("InstanceSteps");
-
-                    b.Navigation("OutgoingEdges");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowRule", b =>
-                {
-                    b.Navigation("Actions");
-
                     b.Navigation("Conditions");
+
+                    b.Navigation("ExecutionLogs");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowStatus", b =>
@@ -5875,13 +4973,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("WorkOrders");
 
                     b.Navigation("WorkflowProgresses");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.Zone", b =>
-                {
-                    b.Navigation("TechnicianZones");
-
-                    b.Navigation("WorkOrderZones");
                 });
 #pragma warning restore 612, 618
         }

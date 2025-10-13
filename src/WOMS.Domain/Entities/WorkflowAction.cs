@@ -20,7 +20,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(50)]
         public string Type { get; set; } = string.Empty; // timestamp, assignment, notification, validation, status_change
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Config { get; set; } // JSON configuration for the action
     }
 }

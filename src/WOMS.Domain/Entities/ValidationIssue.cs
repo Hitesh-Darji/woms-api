@@ -26,7 +26,7 @@ namespace WOMS.Domain.Entities
 
         public bool IsResolved { get; set; } = false;
 
-        public Guid? ResolvedByUserId { get; set; }
+        public string? ResolvedByUserId { get; set; }
 
         [ForeignKey(nameof(ResolvedByUserId))]
         public virtual ApplicationUser? ResolvedByUser { get; set; }
@@ -42,7 +42,7 @@ namespace WOMS.Domain.Entities
         [Required]
         public ValidationIssueSeverity Severity { get; set; } = ValidationIssueSeverity.Medium;
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Metadata { get; set; } // JSON for additional issue-specific data
     }
 }

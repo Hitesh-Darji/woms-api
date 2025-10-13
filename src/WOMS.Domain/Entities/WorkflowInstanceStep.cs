@@ -34,7 +34,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(200)]
         public string? AssigneeName { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? ResultData { get; set; } // JSON result data
 
         [MaxLength(1000)]

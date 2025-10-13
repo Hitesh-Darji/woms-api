@@ -14,7 +14,12 @@ namespace WOMS.Domain.Entities
         public virtual Location Location { get; set; } = null!;
 
         [Required]
-        public CycleCountType CountType { get; set; } = CycleCountType.FullCount;
+        [MaxLength(20)]
+        public CycleCountType Type { get; set; } = CycleCountType.FullCount; // full, partial
+
+        [Required]
+        [MaxLength(20)]
+        public CycleCountStatus Status { get; set; } = CycleCountStatus.Planned; // planned, in-progress, completed, cancelled
 
         [Required]
         public DateTime PlannedDate { get; set; }
@@ -24,24 +29,16 @@ namespace WOMS.Domain.Entities
         public DateTime? CompletedDate { get; set; }
 
         [Required]
-        public CycleCountStatus Status { get; set; } = CycleCountStatus.Planned;
+        [MaxLength(255)]
+        public string CountedBy { get; set; } = string.Empty;
 
-        [MaxLength(1000)]
+        [MaxLength(255)]
+        public string? SupervisorApproval { get; set; }
+
+        [Column(TypeName = "nvarchar(max)")]
         public string? Notes { get; set; }
 
-        [Required]
-        public Guid CountedByUserId { get; set; }
-
-        [ForeignKey(nameof(CountedByUserId))]
-        public virtual ApplicationUser CountedByUser { get; set; } = null!;
-
-        public int TotalItems { get; set; } = 0;
-
-        public int CountedItems { get; set; } = 0;
-
-        public int VarianceItems { get; set; } = 0;
-
         // Navigation properties
-        public virtual ICollection<CycleCountItem> CycleCountItems { get; set; } = new List<CycleCountItem>();
+        public virtual ICollection<CountItem> CountItems { get; set; } = new List<CountItem>();
     }
 }

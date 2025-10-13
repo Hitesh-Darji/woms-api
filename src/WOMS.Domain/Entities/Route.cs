@@ -27,10 +27,10 @@ namespace WOMS.Domain.Entities
         [MaxLength(50)]
         public string Status { get; set; } = "Planned"; // Planned, Optimized, Dispatched, In Progress, Completed, Cancelled
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Constraints { get; set; } // JSON for route constraints
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? OptimizationSettings { get; set; } // JSON for optimization settings
 
         public DateTime? DispatchedAt { get; set; }

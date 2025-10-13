@@ -52,7 +52,6 @@ namespace WOMS.Application.Features.Departments.Commands.CreateDepartment
                 Name = request.Name,
                 Description = request.Description,
                 Code = request.Code,
-                Status = request.Status,
                 IsActive = request.IsActive,
                 CreatedBy = request.CreatedBy,
                 CreatedOn = DateTime.UtcNow

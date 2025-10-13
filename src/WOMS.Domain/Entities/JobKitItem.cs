@@ -23,11 +23,5 @@ namespace WOMS.Domain.Entities
         public int Quantity { get; set; } = 1;
 
         public bool IsOptional { get; set; } = false;
-
-        [MaxLength(500)]
-        public string? Notes { get; set; }
-
-        [Required]
-        public JobKitItemStatus Status { get; set; } = JobKitItemStatus.Required;
     }
 }

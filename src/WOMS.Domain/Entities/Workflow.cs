@@ -7,32 +7,35 @@ namespace WOMS.Domain.Entities
     public class Workflow : BaseEntity
     {
         [Required]
-        [MaxLength(200)]
+        [MaxLength(255)]
         public string Name { get; set; } = string.Empty;
 
-        [MaxLength(1000)]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
 
-        public bool IsPublished { get; set; } = false;
+        [Required]
+        [MaxLength(100)]
+        public string Category { get; set; } = string.Empty;
 
-        public bool IsLocked { get; set; } = false;
+        [Required]
+        public int CurrentVersion { get; set; } = 1;
 
-        public int Version { get; set; } = 1;
+        [Required]
+        public bool IsActive { get; set; } = true;
 
-        [Column(TypeName = "json")]
-        public string? Metadata { get; set; } // JSON string for additional data
+        [Required]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [ForeignKey(nameof(CreatedBy))]
-        public virtual ApplicationUser? CreatedByUser { get; set; }
+        [Required]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
         public virtual ICollection<WorkflowNode> Nodes { get; set; } = new List<WorkflowNode>();
-        public virtual ICollection<WorkflowEdge> Edges { get; set; } = new List<WorkflowEdge>();
         public virtual ICollection<WorkflowStatus> Statuses { get; set; } = new List<WorkflowStatus>();
-        public virtual ICollection<WorkflowTransition> Transitions { get; set; } = new List<WorkflowTransition>();
-        public virtual ICollection<WorkflowRule> Rules { get; set; } = new List<WorkflowRule>();
         public virtual ICollection<WorkflowAction> Actions { get; set; } = new List<WorkflowAction>();
+        public virtual ICollection<WorkflowApproval> Approvals { get; set; } = new List<WorkflowApproval>();
+        public virtual ICollection<WorkflowNotification> Notifications { get; set; } = new List<WorkflowNotification>();
+        public virtual ICollection<WorkflowVersion> Versions { get; set; } = new List<WorkflowVersion>();
         public virtual ICollection<WorkflowInstance> Instances { get; set; } = new List<WorkflowInstance>();
-        public virtual ICollection<WorkflowForm> WorkflowForms { get; set; } = new List<WorkflowForm>();
     }
 }

@@ -24,7 +24,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(500)]
         public string? Notes { get; set; } // Additional notes for this template in this schedule
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? TemplateSettings { get; set; } // JSON for template-specific settings in this schedule
     }
 }

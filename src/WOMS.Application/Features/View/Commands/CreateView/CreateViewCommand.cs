@@ -7,6 +7,6 @@ namespace WOMS.Application.Features.View.Commands.CreateView
     {
         public string Name { get; init; } = string.Empty;
         public List<string> SelectedColumns { get; init; } = new List<string>();
-        public Guid CreatedBy { get; init; }
+        public string CreatedBy { get; init; } = string.Empty;
     }
 }

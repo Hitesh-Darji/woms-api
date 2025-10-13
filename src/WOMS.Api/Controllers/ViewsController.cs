@@ -26,7 +26,7 @@ namespace WOMS.Api.Controllers
         {
             // Get the current user ID from the JWT token
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var createdBy))
+            if (userIdClaim == null)
             {
                 return Unauthorized("User ID not found in token");
             }
@@ -35,7 +35,7 @@ namespace WOMS.Api.Controllers
             {
                 Name = createViewDto.Name,
                 SelectedColumns = createViewDto.SelectedColumns,
-                CreatedBy = createdBy
+                CreatedBy = userIdClaim
             };
 
             try

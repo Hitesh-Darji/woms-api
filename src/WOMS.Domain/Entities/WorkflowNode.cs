@@ -13,31 +13,30 @@ namespace WOMS.Domain.Entities
         public virtual Workflow Workflow { get; set; } = null!;
 
         [Required]
-        [MaxLength(100)]
-        public string NodeId { get; set; } = string.Empty; // Unique identifier within the workflow
+        [MaxLength(20)]
+        public string Type { get; set; } = string.Empty; // start, status, condition, approval, notification, escalation, end
 
         [Required]
-        [MaxLength(50)]
-        public string Type { get; set; } = string.Empty; // trigger, action, condition, end, status, assignment, timer
+        [MaxLength(255)]
+        public string Title { get; set; } = string.Empty;
 
-        public double PositionX { get; set; }
-
-        public double PositionY { get; set; }
-
-        [Required]
-        [MaxLength(200)]
-        public string Label { get; set; } = string.Empty;
-
-        [MaxLength(500)]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
 
-        [Column(TypeName = "json")]
-        public string? Config { get; set; } // JSON configuration for the node
+        [Column(TypeName = "nvarchar(max)")]
+        public string? Position { get; set; } // JSON as string
+
+        [Column(TypeName = "nvarchar(max)")]
+        public string? Data { get; set; } // JSON as string
+
+        [Column(TypeName = "nvarchar(max)")]
+        public string? Connections { get; set; } // JSON array as string
+
+        [Required]
+        public int OrderIndex { get; set; }
 
         // Navigation properties
-        public virtual ICollection<WorkflowEdge> OutgoingEdges { get; set; } = new List<WorkflowEdge>();
-        public virtual ICollection<WorkflowEdge> IncomingEdges { get; set; } = new List<WorkflowEdge>();
-        public virtual ICollection<WorkflowAssignment> Assignments { get; set; } = new List<WorkflowAssignment>();
-        public virtual ICollection<WorkflowInstanceStep> InstanceSteps { get; set; } = new List<WorkflowInstanceStep>();
+        public virtual ICollection<WorkflowCondition> Conditions { get; set; } = new List<WorkflowCondition>();
+        public virtual ICollection<WorkflowExecutionLog> ExecutionLogs { get; set; } = new List<WorkflowExecutionLog>();
     }
 }

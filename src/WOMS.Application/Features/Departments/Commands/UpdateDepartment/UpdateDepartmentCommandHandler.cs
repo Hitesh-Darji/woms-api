@@ -57,7 +57,6 @@ namespace WOMS.Application.Features.Departments.Commands.UpdateDepartment
             department.Name = request.Name;
             department.Description = request.Description;
             department.Code = request.Code;
-            department.Status = request.Status;
             department.IsActive = request.IsActive;
             department.UpdatedBy = request.UpdatedBy;
             department.UpdatedOn = DateTime.UtcNow;

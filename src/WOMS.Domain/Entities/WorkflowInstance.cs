@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
@@ -12,27 +13,34 @@ namespace WOMS.Domain.Entities
         [ForeignKey(nameof(WorkflowId))]
         public virtual Workflow Workflow { get; set; } = null!;
 
-        [MaxLength(200)]
-        public string? InstanceName { get; set; }
+        public Guid? WorkOrderId { get; set; }
+
+        [ForeignKey(nameof(WorkOrderId))]
+        public virtual WorkOrder? WorkOrder { get; set; }
+
+        public Guid? CurrentNodeId { get; set; }
+
+        [ForeignKey(nameof(CurrentNodeId))]
+        public virtual WorkflowNode? CurrentNode { get; set; }
 
         [Required]
-        [MaxLength(20)]
-        public string Status { get; set; } = "running"; // running, completed, failed, paused, cancelled
+        public WorkflowInstanceStatus Status { get; set; } = WorkflowInstanceStatus.Running;
 
-        [MaxLength(100)]
-        public string? CurrentNodeId { get; set; }
-
+        [Required]
         public DateTime StartedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? CompletedAt { get; set; }
 
-        [ForeignKey(nameof(CreatedBy))]
-        public virtual ApplicationUser? CreatedByUser { get; set; }
+        [Column(TypeName = "nvarchar(max)")]
+        public string? Data { get; set; } // JSON as string
 
-        [Column(TypeName = "json")]
-        public string? Metadata { get; set; } // JSON metadata for additional data
+        [Required]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
-        public virtual ICollection<WorkflowInstanceStep> Steps { get; set; } = new List<WorkflowInstanceStep>();
+        public virtual ICollection<WorkflowExecutionLog> ExecutionLogs { get; set; } = new List<WorkflowExecutionLog>();
     }
 }

@@ -3,45 +3,49 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("BillingTemplate")]
     public class BillingTemplate : BaseEntity
     {
         [Required]
-        [MaxLength(200)]
-        public string TemplateName { get; set; } = string.Empty;
+        [MaxLength(255)]
+        public string Name { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string CustomerId { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(200)]
+        [MaxLength(255)]
         public string CustomerName { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(20)]
-        public string OutputFormat { get; set; } = "PDF"; // PDF, Excel, CSV, etc.
+        public string OutputFormat { get; set; } = "PDF"; // PDF, CSV, Excel, XML, EDI
+
+        [Column(TypeName = "nvarchar(max)")]
+        public string? FieldOrder { get; set; } // JSON array as string
+
+        [Column(TypeName = "nvarchar(max)")]
+        public string? FieldFormats { get; set; } // JSON as string
+
+        [MaxLength(255)]
+        public string? FileNamingConvention { get; set; }
 
         [Required]
         [MaxLength(20)]
-        public string DeliveryMethod { get; set; } = "Email"; // Email, FTP, API, etc.
+        public string DeliveryMethod { get; set; } = "Email"; // Email, Download, SFTP, API
 
         [Required]
-        [MaxLength(50)]
-        public string InvoiceType { get; set; } = "Itemized"; // Itemized, Summary, Detailed, etc.
+        [MaxLength(20)]
+        public string InvoiceType { get; set; } = "itemized"; // itemized, summary
 
         [Required]
-        [MaxLength(200)]
-        public string FileNamingConvention { get; set; } = "INV-{customer}-{date}-{number}";
-
-        [MaxLength(1000)]
-        public string? Description { get; set; }
-
         public bool IsActive { get; set; } = true;
 
-        [Column(TypeName = "json")]
-        public string? AdditionalSettings { get; set; } // JSON for any additional template settings
-
         // Navigation properties
-        public virtual ICollection<BillingTemplateFieldOrder> FieldOrders { get; set; } = new List<BillingTemplateFieldOrder>();
+        public virtual ICollection<DynamicField> DynamicFields { get; set; } = new List<DynamicField>();
+        public virtual ICollection<AggregationRule> AggregationRules { get; set; } = new List<AggregationRule>();
+        public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+        public virtual ICollection<WorkOrder> WorkOrders { get; set; } = new List<WorkOrder>();
     }
 }

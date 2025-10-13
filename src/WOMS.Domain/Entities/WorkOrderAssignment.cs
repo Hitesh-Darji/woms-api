@@ -13,21 +13,21 @@ namespace WOMS.Domain.Entities
         public virtual WorkOrder WorkOrder { get; set; } = null!;
 
         [Required]
-        [MaxLength(50)]
-        public string AccountNumber { get; set; } = string.Empty;
+        [MaxLength(255)]
+        public string TechnicianId { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(100)]
-        public string Identifier { get; set; } = string.Empty;
+        public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
-        [MaxLength(100)]
-        public string SystemId { get; set; } = string.Empty;
+        [MaxLength(255)]
+        public string AssignedBy { get; set; } = string.Empty;
 
-        public int Quantity { get; set; } = 0;
+        [Required]
+        [MaxLength(20)]
+        public string Status { get; set; } = "assigned"; // assigned, accepted, rejected, completed
 
-        public DateTime AllocatedAt { get; set; } = DateTime.UtcNow;
-
-        public DateTime? ConsumedAt { get; set; }
+        [Column(TypeName = "nvarchar(max)")]
+        public string? Notes { get; set; }
     }
 }

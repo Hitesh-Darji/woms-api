@@ -26,7 +26,7 @@ namespace WOMS.Infrastructure.Services
             UserManager<TUser> userManager,
             IList<string> roles,
             string email,
-            Guid userId,
+            string userId,
             CancellationToken cancellationToken = default) where TUser : class
         {
             var jwtSection = _configuration.GetSection("Jwt");
@@ -40,11 +40,11 @@ namespace WOMS.Infrastructure.Services
 
             var claims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new(JwtRegisteredClaimNames.Sub, userId),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Email, email),
                 // Ensure ASP.NET Core maps the NameIdentifier claim for [Authorize]
-                new(ClaimTypes.NameIdentifier, userId.ToString())
+                new(ClaimTypes.NameIdentifier, userId)
             };
 
             foreach (var role in roles)
@@ -74,7 +74,7 @@ namespace WOMS.Infrastructure.Services
             return Task.FromResult(Guid.NewGuid().ToString());
         }
 
-        public async Task<RefreshToken> CreateRefreshTokenAsync(Guid userId, string jwtToken, CancellationToken cancellationToken = default)
+        public async Task<RefreshToken> CreateRefreshTokenAsync(string userId, string jwtToken, CancellationToken cancellationToken = default)
         {
             var refreshToken = new RefreshToken
             {

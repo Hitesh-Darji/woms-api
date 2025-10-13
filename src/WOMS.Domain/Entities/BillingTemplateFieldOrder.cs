@@ -27,7 +27,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(50)]
         public string? FieldType { get; set; } // Text, Number, Date, Currency, etc.
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? FieldSettings { get; set; } // JSON for field-specific settings like formatting
     }
 }

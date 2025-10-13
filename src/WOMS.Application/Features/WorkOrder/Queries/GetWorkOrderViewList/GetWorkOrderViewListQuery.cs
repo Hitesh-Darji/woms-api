@@ -1,5 +1,6 @@
 using MediatR;
 using WOMS.Application.Features.WorkOrder.DTOs;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Application.Features.WorkOrder.Queries.GetWorkOrderViewList
 {
@@ -11,9 +12,9 @@ namespace WOMS.Application.Features.WorkOrder.Queries.GetWorkOrderViewList
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 20;
         public string? SearchTerm { get; set; }
-        public string? Status { get; set; }
-        public string? Priority { get; set; }
-        public Guid? AssignedTechnicianId { get; set; }
+        public WorkOrderStatus? Status { get; set; }
+        public WorkOrderPriority? Priority { get; set; }
+        public string? AssignedTechnicianId { get; set; }
         public bool? IsOverdue { get; set; }
         public bool? IsToday { get; set; }
         public string? SortBy { get; set; } = "CreatedOn";

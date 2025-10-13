@@ -24,7 +24,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(50)]
         public string Operator { get; set; } = string.Empty; // equals, not_equals, contains, greater_than, less_than, in, not_in
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Value { get; set; } // JSON value for the condition
 
         [MaxLength(10)]

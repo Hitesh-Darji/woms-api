@@ -5,103 +5,98 @@ using WOMS.Domain.Entities;
 
 namespace WOMS.Infrastructure.Data
 {
-    public class WomsDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+    public class WomsDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public WomsDbContext(DbContextOptions<WomsDbContext> options) : base(options)
         {
         }
 
+        // Authentication entities
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<WorkOrder> WorkOrders { get; set; }
-        public DbSet<View> Views { get; set; }
+
+        // Department entities
         public DbSet<Department> Departments { get; set; }
-        
-        // Workflow entities
+
+        // Core Work Order entities
+        public DbSet<WorkOrder> WorkOrders { get; set; }
+        public DbSet<WorkOrderColumn> WorkOrderColumns { get; set; }
+        public DbSet<WorkOrderView> WorkOrderViews { get; set; }
+        public DbSet<WorkOrderAssignment> WorkOrderAssignments { get; set; }
+
+        // Customer entities
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+
+        // Form Builder entities
+        public DbSet<FormTemplate> FormTemplates { get; set; }
+        public DbSet<FormSection> FormSections { get; set; }
+        public DbSet<FormField> FormFields { get; set; }
+        public DbSet<ValidationRule> ValidationRules { get; set; }
+        public DbSet<FormSubmission> FormSubmissions { get; set; }
+        public DbSet<FormAttachment> FormAttachments { get; set; }
+        public DbSet<FormSignature> FormSignatures { get; set; }
+        public DbSet<FormGeolocation> FormGeolocations { get; set; }
+
+        // Inventory entities
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<Stock> Stocks { get; set; }
+        public DbSet<SerializedAsset> SerializedAssets { get; set; }
+        public DbSet<StockTransaction> StockTransactions { get; set; }
+        public DbSet<StockRequest> StockRequests { get; set; }
+        public DbSet<RequestItem> RequestItems { get; set; }
+        public DbSet<CycleCount> CycleCounts { get; set; }
+        public DbSet<CountItem> CountItems { get; set; }
+        public DbSet<JobKit> JobKits { get; set; }
+        public DbSet<KitItem> KitItems { get; set; }
+        public DbSet<AssetHistory> AssetHistories { get; set; }
+
+        // Billing entities
+        public DbSet<BillingTemplate> BillingTemplates { get; set; }
+        public DbSet<DynamicField> DynamicFields { get; set; }
+        public DbSet<AggregationRule> AggregationRules { get; set; }
+        public DbSet<RateTable> RateTables { get; set; }
+        public DbSet<TieredRate> TieredRates { get; set; }
+        public DbSet<ConditionalRate> ConditionalRates { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceLineItem> InvoiceLineItems { get; set; }
+        public DbSet<ApprovalRecord> ApprovalRecords { get; set; }
+        public DbSet<DeliverySetting> DeliverySettings { get; set; }
+        public DbSet<BillingSchedule> BillingSchedules { get; set; }
+
+        // Workflow entities (keeping existing structure)
         public DbSet<Workflow> Workflows { get; set; }
         public DbSet<WorkflowNode> WorkflowNodes { get; set; }
-        public DbSet<WorkflowEdge> WorkflowEdges { get; set; }
         public DbSet<WorkflowStatus> WorkflowStatuses { get; set; }
-        public DbSet<WorkflowTransition> WorkflowTransitions { get; set; }
-        public DbSet<WorkflowRule> WorkflowRules { get; set; }
-        public DbSet<WorkflowRuleCondition> WorkflowRuleConditions { get; set; }
-        public DbSet<WorkflowRuleAction> WorkflowRuleActions { get; set; }
+        public DbSet<WorkflowCondition> WorkflowConditions { get; set; }
         public DbSet<WorkflowAction> WorkflowActions { get; set; }
-        public DbSet<WorkflowAssignment> WorkflowAssignments { get; set; }
-        public DbSet<WorkflowProgress> WorkflowProgresses { get; set; }
+        public DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
+        public DbSet<WorkflowEscalation> WorkflowEscalations { get; set; }
+        public DbSet<WorkflowNotification> WorkflowNotifications { get; set; }
+        public DbSet<WorkflowVersion> WorkflowVersions { get; set; }
+        public DbSet<WorkflowTemplate> WorkflowTemplates { get; set; }
         public DbSet<WorkflowInstance> WorkflowInstances { get; set; }
-        public DbSet<WorkflowInstanceStep> WorkflowInstanceSteps { get; set; }
-        public DbSet<Form> Forms { get; set; }
-        public DbSet<WorkflowForm> WorkflowForms { get; set; }
-        
-        // Additional entities from Supabase schema
-        public DbSet<Inventory> Inventory { get; set; }
-        public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
-        public DbSet<SentNotification> SentNotifications { get; set; }
-        public DbSet<WorkOrderAssignment> WorkOrderAssignments { get; set; }
-        public DbSet<WorkOrderAttachment> WorkOrderAttachments { get; set; }
-        
-        // New entities for enhanced functionality
-        public DbSet<Skill> Skills { get; set; }
-        public DbSet<Equipment> Equipment { get; set; }
-        public DbSet<WorkOrderType> WorkOrderTypes { get; set; }
-        public DbSet<Zone> Zones { get; set; }
-        public DbSet<Route> Routes { get; set; }
-        public DbSet<RouteStop> RouteStops { get; set; }
-        public DbSet<AssignmentTemplate> AssignmentTemplates { get; set; }
-        
-        // Junction tables
-        public DbSet<TechnicianSkill> TechnicianSkills { get; set; }
-        public DbSet<TechnicianEquipment> TechnicianEquipments { get; set; }
-        public DbSet<TechnicianZone> TechnicianZones { get; set; }
-        public DbSet<WorkOrderSkillRequirement> WorkOrderSkillRequirements { get; set; }
-        public DbSet<WorkOrderEquipmentRequirement> WorkOrderEquipmentRequirements { get; set; }
-        public DbSet<WorkOrderZone> WorkOrderZones { get; set; }
-        public DbSet<WorkOrderTypeSkillRequirement> WorkOrderTypeSkillRequirements { get; set; }
-        public DbSet<WorkOrderTypeEquipmentRequirement> WorkOrderTypeEquipmentRequirements { get; set; }
-        public DbSet<AssignmentTemplateWorkType> AssignmentTemplateWorkTypes { get; set; }
-        public DbSet<AssignmentTemplateZone> AssignmentTemplateZones { get; set; }
-        public DbSet<AssignmentTemplateSkill> AssignmentTemplateSkills { get; set; }
-        public DbSet<AssignmentTemplateTechnician> AssignmentTemplateTechnicians { get; set; }
-        
-        // Additional inventory management entities
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
-        public DbSet<CycleCount> CycleCounts { get; set; }
-        public DbSet<CycleCountItem> CycleCountItems { get; set; }
-        public DbSet<Asset> Assets { get; set; }
-        public DbSet<AssetHistory> AssetHistories { get; set; }
-        public DbSet<JobKit> JobKits { get; set; }
-        public DbSet<JobKitItem> JobKitItems { get; set; }
-        public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<InventoryDisposition> InventoryDispositions { get; set; }
-        public DbSet<ValidationIssue> ValidationIssues { get; set; }
-        public DbSet<InventoryLocation> InventoryLocations { get; set; }
-        public DbSet<ScanLog> ScanLogs { get; set; }
-        
-        // Billing Template entities
-        public DbSet<BillingTemplate> BillingTemplates { get; set; }
-        public DbSet<BillingTemplateFieldOrder> BillingTemplateFieldOrders { get; set; }
-        
-        // Rate Table entities
-        public DbSet<RateTable> RateTables { get; set; }
-        public DbSet<RateTableItem> RateTableItems { get; set; }
-        
-        // Billing Schedule entities
-        public DbSet<BillingSchedule> BillingSchedules { get; set; }
-        public DbSet<BillingScheduleTemplate> BillingScheduleTemplates { get; set; }
-        public DbSet<BillingScheduleRun> BillingScheduleRuns { get; set; }
-
+        public DbSet<WorkflowExecutionLog> WorkflowExecutionLogs { get; set; }
+        public DbSet<WorkflowProgress> WorkflowProgresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure User entity
-           
-
-            // Configure ApplicationUser self references
+            // Configure ApplicationUser
             modelBuilder.Entity<ApplicationUser>(entity =>
             {
+                entity.Property(u => u.FirstName).HasMaxLength(100);
+                entity.Property(u => u.LastName).HasMaxLength(100);
+                entity.Property(u => u.Position).HasMaxLength(100);
+                entity.Property(u => u.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(u => u.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(u => u.CreatedBy).HasMaxLength(450);
+                entity.Property(u => u.UpdatedBy).HasMaxLength(450);
+                entity.Property(u => u.DeletedBy).HasMaxLength(450);
+
+                // Configure self-referencing relationships
                 entity.HasOne(u => u.UpdatedByUser)
                       .WithMany()
                       .HasForeignKey(u => u.UpdatedBy)
@@ -112,494 +107,52 @@ namespace WOMS.Infrastructure.Data
                       .HasForeignKey(u => u.DeletedBy)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.Property(u => u.FirstName).IsRequired().HasMaxLength(100);
-                entity.Property(u => u.LastName).IsRequired().HasMaxLength(100);
-                entity.Property(u => u.FullName).HasMaxLength(200);
-                entity.Property(u => u.Address).IsRequired().HasMaxLength(500);
-                entity.Property(u => u.City).IsRequired().HasMaxLength(100);
-                entity.Property(u => u.PostalCode).IsRequired().HasMaxLength(100);
-                entity.Property(u => u.Phone).HasMaxLength(20);
-                entity.Property(u => u.Skills).HasColumnType("nvarchar(max)");
-                entity.Property(u => u.Status).HasConversion<string>();
-            });
-
-            // Configure RefreshToken entity
-            modelBuilder.Entity<RefreshToken>(entity =>
-            {
-                entity.HasKey(rt => rt.Id);
-                entity.Property(rt => rt.UserId).IsRequired();
-                entity.Property(rt => rt.Refresh_Token).IsRequired();
-                entity.Property(rt => rt.JwtToken).IsRequired();
-                entity.Property(rt => rt.RefreshTokenExpirationTime).IsRequired();
-                entity.Property(rt => rt.CreatedOn).IsRequired();
-
-                entity.HasOne(rt => rt.User)
+                // Configure Department relationship
+                entity.HasOne(u => u.DepartmentNavigation)
                       .WithMany()
-                      .HasForeignKey(rt => rt.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .HasForeignKey(u => u.DepartmentId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Configure Subordinates relationship (Manager -> Subordinates)
+                entity.HasMany(u => u.Subordinates)
+                      .WithOne()
+                      .HasForeignKey("ManagerId")
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Configure WorkOrder entity
-            modelBuilder.Entity<WorkOrder>(entity =>
+            // Configure ApplicationRole
+            modelBuilder.Entity<ApplicationRole>(entity =>
             {
-                entity.HasKey(wo => wo.Id);
-                entity.Property(wo => wo.WorkOrderNumber).IsRequired().HasMaxLength(50);
-                entity.Property(wo => wo.Priority).IsRequired().HasMaxLength(20);
-                entity.Property(wo => wo.Status).IsRequired().HasMaxLength(50);
-                entity.Property(wo => wo.ServiceAddress).IsRequired().HasMaxLength(500);
-                entity.Property(wo => wo.Metadata).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(wo => wo.Workflow)
-                      .WithMany()
-                      .HasForeignKey(wo => wo.WorkflowId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(wo => wo.AssignedTechnician)
-                      .WithMany()
-                      .HasForeignKey(wo => wo.AssignedTechnicianId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(wo => wo.CreatedByUser)
-                      .WithMany()
-                      .HasForeignKey(wo => wo.CreatedBy)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                // Single column indexes for filtering and sorting
-                entity.HasIndex(wo => wo.WorkOrderNumber).IsUnique();
-                entity.HasIndex(wo => wo.Status);
-                entity.HasIndex(wo => wo.Priority);
-                entity.HasIndex(wo => wo.AssignedTechnicianId);
-                entity.HasIndex(wo => wo.WorkOrderTypeId);
-                entity.HasIndex(wo => wo.ScheduledDate);
-                entity.HasIndex(wo => wo.CreatedOn);
-                entity.HasIndex(wo => wo.IsDeleted);
-                
-                // Composite indexes for common query patterns
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.Status })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Status");
-                      
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.Priority })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority");
-                      
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.AssignedTechnicianId })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_AssignedTechnicianId");
-                      
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.WorkOrderTypeId })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_WorkOrderTypeId");
-                      
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.ScheduledDate })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_ScheduledDate");
-                      
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.CreatedOn })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_CreatedOn");
-                      
-                // Composite index for sorting and filtering
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.Status, wo.CreatedOn })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Status_CreatedOn");
-                      
-                entity.HasIndex(wo => new { wo.IsDeleted, wo.Priority, wo.CreatedOn })
-                      .HasDatabaseName("IX_WorkOrder_IsDeleted_Priority_CreatedOn");
+                entity.Property(r => r.Description).HasColumnType("nvarchar(max)");
+                entity.Property(r => r.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
             });
 
-            // Configure Workflow entity
-            modelBuilder.Entity<Workflow>(entity =>
-            {
-                entity.HasKey(w => w.Id);
-                entity.Property(w => w.Name).IsRequired().HasMaxLength(200);
-                entity.Property(w => w.Version).IsRequired();
-                entity.Property(w => w.Metadata).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(w => w.CreatedByUser)
-                      .WithMany()
-                      .HasForeignKey(w => w.CreatedBy)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                entity.HasIndex(w => w.Name);
-            });
-
-            // Configure WorkflowNode entity
-            modelBuilder.Entity<WorkflowNode>(entity =>
-            {
-                entity.HasKey(wn => wn.Id);
-                entity.Property(wn => wn.NodeId).IsRequired().HasMaxLength(100);
-                entity.Property(wn => wn.Type).IsRequired().HasMaxLength(50);
-                entity.Property(wn => wn.Label).IsRequired().HasMaxLength(200);
-                entity.Property(wn => wn.Config).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(wn => wn.Workflow)
-                      .WithMany(w => w.Nodes)
-                      .HasForeignKey(wn => wn.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(wn => new { wn.WorkflowId, wn.NodeId }).IsUnique();
-            });
-
-            // Configure WorkflowEdge entity
-            modelBuilder.Entity<WorkflowEdge>(entity =>
-            {
-                entity.HasKey(we => we.Id);
-                entity.Property(we => we.EdgeId).IsRequired().HasMaxLength(100);
-                entity.Property(we => we.SourceNodeId).IsRequired().HasMaxLength(100);
-                entity.Property(we => we.TargetNodeId).IsRequired().HasMaxLength(100);
-
-                entity.HasOne(we => we.Workflow)
-                      .WithMany(w => w.Edges)
-                      .HasForeignKey(we => we.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                // Note: Complex foreign key relationships will be handled in application logic
-                // entity.HasOne(we => we.SourceNode) - requires composite foreign keys
-                // entity.HasOne(we => we.TargetNode) - requires composite foreign keys
-
-                entity.HasIndex(we => new { we.WorkflowId, we.EdgeId }).IsUnique();
-            });
-
-            // Configure WorkflowStatus entity
-            modelBuilder.Entity<WorkflowStatus>(entity =>
-            {
-                entity.HasKey(ws => ws.Id);
-                entity.Property(ws => ws.StatusId).IsRequired().HasMaxLength(100);
-                entity.Property(ws => ws.Name).IsRequired().HasMaxLength(100);
-                entity.Property(ws => ws.Color).IsRequired().HasMaxLength(7);
-                entity.Property(ws => ws.SortOrder).IsRequired();
-
-                entity.HasOne(ws => ws.Workflow)
-                      .WithMany(w => w.Statuses)
-                      .HasForeignKey(ws => ws.WorkflowId)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                entity.HasIndex(ws => new { ws.WorkflowId, ws.StatusId }).IsUnique();
-            });
-
-            // Configure WorkflowTransition entity
-            modelBuilder.Entity<WorkflowTransition>(entity =>
-            {
-                entity.HasKey(wt => wt.Id);
-                entity.Property(wt => wt.TransitionId).IsRequired().HasMaxLength(100);
-                entity.Property(wt => wt.Name).IsRequired().HasMaxLength(200);
-
-                entity.HasOne(wt => wt.Workflow)
-                      .WithMany(w => w.Transitions)
-                      .HasForeignKey(wt => wt.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(wt => wt.FromStatus)
-                      .WithMany(ws => ws.OutgoingTransitions)
-                      .HasForeignKey(wt => wt.FromStatusId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(wt => wt.ToStatus)
-                      .WithMany(ws => ws.IncomingTransitions)
-                      .HasForeignKey(wt => wt.ToStatusId)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                entity.HasIndex(wt => new { wt.WorkflowId, wt.TransitionId }).IsUnique();
-            });
-
-            // Configure WorkflowRule entity
-            modelBuilder.Entity<WorkflowRule>(entity =>
-            {
-                entity.HasKey(wr => wr.Id);
-                entity.Property(wr => wr.RuleId).IsRequired().HasMaxLength(100);
-                entity.Property(wr => wr.Name).IsRequired().HasMaxLength(200);
-                entity.Property(wr => wr.Type).IsRequired().HasMaxLength(50);
-
-                entity.HasOne(wr => wr.Workflow)
-                      .WithMany(w => w.Rules)
-                      .HasForeignKey(wr => wr.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(wr => new { wr.WorkflowId, wr.RuleId }).IsUnique();
-            });
-
-            // Configure WorkflowRuleCondition entity
-            modelBuilder.Entity<WorkflowRuleCondition>(entity =>
-            {
-                entity.HasKey(wrc => wrc.Id);
-                entity.Property(wrc => wrc.ConditionId).IsRequired().HasMaxLength(100);
-                entity.Property(wrc => wrc.Field).IsRequired().HasMaxLength(100);
-                entity.Property(wrc => wrc.Operator).IsRequired().HasMaxLength(50);
-                entity.Property(wrc => wrc.Value).HasColumnType("nvarchar(max)");
-                entity.Property(wrc => wrc.SortOrder).IsRequired();
-
-                entity.HasOne(wrc => wrc.Rule)
-                      .WithMany(wr => wr.Conditions)
-                      .HasForeignKey(wrc => wrc.RuleId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // Configure WorkflowRuleAction entity
-            modelBuilder.Entity<WorkflowRuleAction>(entity =>
-            {
-                entity.HasKey(wra => wra.Id);
-                entity.Property(wra => wra.ActionId).IsRequired().HasMaxLength(100);
-                entity.Property(wra => wra.Type).IsRequired().HasMaxLength(50);
-                entity.Property(wra => wra.Config).HasColumnType("nvarchar(max)");
-                entity.Property(wra => wra.SortOrder).IsRequired();
-
-                entity.HasOne(wra => wra.Rule)
-                      .WithMany(wr => wr.Actions)
-                      .HasForeignKey(wra => wra.RuleId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // Configure WorkflowAction entity
-            modelBuilder.Entity<WorkflowAction>(entity =>
-            {
-                entity.HasKey(wa => wa.Id);
-                entity.Property(wa => wa.ActionId).IsRequired().HasMaxLength(100);
-                entity.Property(wa => wa.Type).IsRequired().HasMaxLength(50);
-                entity.Property(wa => wa.Config).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(wa => wa.Workflow)
-                      .WithMany(w => w.Actions)
-                      .HasForeignKey(wa => wa.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(wa => new { wa.WorkflowId, wa.ActionId }).IsUnique();
-            });
-
-            // Configure WorkflowAssignment entity
-            modelBuilder.Entity<WorkflowAssignment>(entity =>
-            {
-                entity.HasKey(wa => wa.Id);
-                entity.Property(wa => wa.NodeId).IsRequired().HasMaxLength(100);
-                entity.Property(wa => wa.AssigneeId).IsRequired().HasMaxLength(100);
-                entity.Property(wa => wa.AssigneeName).IsRequired().HasMaxLength(200);
-                entity.Property(wa => wa.Status).IsRequired().HasMaxLength(50);
-                entity.Property(wa => wa.Priority).IsRequired().HasMaxLength(20);
-
-                entity.HasOne(wa => wa.Workflow)
-                      .WithMany()
-                      .HasForeignKey(wa => wa.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                // Note: Complex foreign key relationship will be handled in application logic
-                // entity.HasOne(wa => wa.Node) - requires composite foreign keys
-            });
-
-            // Configure WorkflowProgress entity
-            modelBuilder.Entity<WorkflowProgress>(entity =>
-            {
-                entity.HasKey(wp => wp.Id);
-                entity.Property(wp => wp.CompletedSteps).HasColumnType("nvarchar(max)");
-                entity.Property(wp => wp.PendingSteps).HasColumnType("nvarchar(max)");
-                entity.Property(wp => wp.Metadata).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(wp => wp.Workflow)
-                      .WithMany()
-                      .HasForeignKey(wp => wp.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(wp => wp.CurrentStatus)
-                      .WithMany(ws => ws.WorkflowProgresses)
-                      .HasForeignKey(wp => wp.CurrentStatusId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // Configure WorkflowInstance entity
-            modelBuilder.Entity<WorkflowInstance>(entity =>
-            {
-                entity.HasKey(wi => wi.Id);
-                entity.Property(wi => wi.InstanceName).HasMaxLength(200);
-                entity.Property(wi => wi.Status).IsRequired().HasMaxLength(20);
-                entity.Property(wi => wi.CurrentNodeId).HasMaxLength(100);
-                entity.Property(wi => wi.Metadata).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(wi => wi.Workflow)
-                      .WithMany(w => w.Instances)
-                      .HasForeignKey(wi => wi.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(wi => wi.CreatedByUser)
-                      .WithMany()
-                      .HasForeignKey(wi => wi.CreatedBy)
-                      .OnDelete(DeleteBehavior.NoAction);
-            });
-
-            // Configure WorkflowInstanceStep entity
-            modelBuilder.Entity<WorkflowInstanceStep>(entity =>
-            {
-                entity.HasKey(wis => wis.Id);
-                entity.Property(wis => wis.NodeId).IsRequired().HasMaxLength(100);
-                entity.Property(wis => wis.StepName).IsRequired().HasMaxLength(200);
-                entity.Property(wis => wis.Status).IsRequired().HasMaxLength(20);
-                entity.Property(wis => wis.AssigneeId).HasMaxLength(100);
-                entity.Property(wis => wis.AssigneeName).HasMaxLength(200);
-                entity.Property(wis => wis.ResultData).HasColumnType("nvarchar(max)");
-                entity.Property(wis => wis.ErrorMessage).HasMaxLength(1000);
-
-                entity.HasOne(wis => wis.Instance)
-                      .WithMany(wi => wi.Steps)
-                      .HasForeignKey(wis => wis.InstanceId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                // Note: Complex foreign key relationship will be handled in application logic
-                // entity.HasOne(wis => wis.Node) - requires additional WorkflowId property
-            });
-
-            // Configure Form entity
-            modelBuilder.Entity<Form>(entity =>
-            {
-                entity.HasKey(f => f.Id);
-                entity.Property(f => f.Name).IsRequired().HasMaxLength(200);
-                entity.Property(f => f.Fields).HasColumnType("nvarchar(max)");
-                entity.Property(f => f.Settings).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(f => f.User)
-                      .WithMany()
-                      .HasForeignKey(f => f.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(f => f.Name);
-            });
-
-            // Configure WorkflowForm entity
-            modelBuilder.Entity<WorkflowForm>(entity =>
-            {
-                entity.HasKey(wf => wf.Id);
-
-                entity.HasOne(wf => wf.Workflow)
-                      .WithMany(w => w.WorkflowForms)
-                      .HasForeignKey(wf => wf.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(wf => wf.Form)
-                      .WithMany(f => f.WorkflowForms)
-                      .HasForeignKey(wf => wf.FormId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(wf => new { wf.WorkflowId, wf.FormId }).IsUnique();
-            });
-
-            // Configure Inventory entity
-            modelBuilder.Entity<Inventory>(entity =>
-            {
-                entity.HasKey(i => i.Id);
-                entity.Property(i => i.AccountNumber).IsRequired().HasMaxLength(50);
-                entity.Property(i => i.Identifier).IsRequired().HasMaxLength(100);
-                entity.Property(i => i.SystemId).IsRequired().HasMaxLength(100);
-                entity.Property(i => i.FileName).IsRequired().HasMaxLength(255);
-                entity.Property(i => i.UploadStatus).IsRequired().HasConversion<string>();
-                entity.Property(i => i.Category).HasConversion<string>();
-                entity.Property(i => i.UnitOfMeasure).HasConversion<string>();
-                entity.Property(i => i.CurrentStatus).HasConversion<string>();
-                entity.Property(i => i.DispositionStatus).HasConversion<string>();
-
-                entity.HasIndex(i => i.AccountNumber);
-                entity.HasIndex(i => i.Identifier);
-                entity.HasIndex(i => i.SystemId);
-            });
-
-            // Configure NotificationTemplate entity
-            modelBuilder.Entity<NotificationTemplate>(entity =>
-            {
-                entity.HasKey(nt => nt.Id);
-                entity.Property(nt => nt.Name).IsRequired().HasMaxLength(200);
-                entity.Property(nt => nt.Type).IsRequired().HasMaxLength(50);
-                entity.Property(nt => nt.Content).IsRequired().HasColumnType("nvarchar(max)");
-                entity.Property(nt => nt.Placeholders).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(nt => nt.User)
-                      .WithMany()
-                      .HasForeignKey(nt => nt.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(nt => nt.Name);
-                entity.HasIndex(nt => nt.Type);
-            });
-
-            // Configure SentNotification entity
-            modelBuilder.Entity<SentNotification>(entity =>
-            {
-                entity.HasKey(sn => sn.Id);
-                entity.Property(sn => sn.Recipient).IsRequired().HasMaxLength(200);
-                entity.Property(sn => sn.Status).IsRequired().HasMaxLength(50);
-                entity.Property(sn => sn.Type).IsRequired().HasMaxLength(50);
-                entity.Property(sn => sn.Content).IsRequired().HasColumnType("nvarchar(max)");
-                entity.Property(sn => sn.Metadata).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(sn => sn.Template)
-                      .WithMany(nt => nt.SentNotifications)
-                      .HasForeignKey(sn => sn.TemplateId)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                entity.HasOne(sn => sn.User)
-                      .WithMany()
-                      .HasForeignKey(sn => sn.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(sn => sn.Recipient);
-                entity.HasIndex(sn => sn.Status);
-            });
-
-
-            // Configure WorkOrderAssignment entity
-            modelBuilder.Entity<WorkOrderAssignment>(entity =>
-            {
-                entity.HasKey(woa => woa.Id);
-                entity.Property(woa => woa.AccountNumber).IsRequired().HasMaxLength(50);
-                entity.Property(woa => woa.Identifier).IsRequired().HasMaxLength(100);
-                entity.Property(woa => woa.SystemId).IsRequired().HasMaxLength(100);
-
-                entity.HasOne(woa => woa.WorkOrder)
-                      .WithMany(wo => wo.WorkOrderAssignments)
-                      .HasForeignKey(woa => woa.WorkOrderId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(woa => woa.AccountNumber);
-                entity.HasIndex(woa => woa.Identifier);
-            });
-
-            // Configure WorkOrderAttachment entity
-            modelBuilder.Entity<WorkOrderAttachment>(entity =>
-            {
-                entity.HasKey(woa => woa.Id);
-                entity.Property(woa => woa.FileName).IsRequired().HasMaxLength(255);
-                entity.Property(woa => woa.FilePath).IsRequired().HasMaxLength(500);
-
-                entity.HasOne(woa => woa.WorkOrder)
-                      .WithMany(wo => wo.WorkOrderAttachments)
-                      .HasForeignKey(woa => woa.WorkOrderId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(woa => woa.UploadedByUser)
-                      .WithMany()
-                      .HasForeignKey(woa => woa.UploadedBy)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasIndex(woa => woa.FileName);
-            });
-
-            // Configure View entity
-            modelBuilder.Entity<View>(entity =>
-            {
-                entity.HasKey(v => v.Id);
-                entity.Property(v => v.Name).IsRequired().HasMaxLength(100);
-                entity.Property(v => v.SelectedColumns).IsRequired().HasColumnType("nvarchar(max)");
-
-                entity.HasOne(v => v.CreatedByUser)
-                      .WithMany()
-                      .HasForeignKey(v => v.CreatedBy)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                entity.HasIndex(v => v.Name);
-            });
-
-            // Configure Department entity
+            // Configure Department
             modelBuilder.Entity<Department>(entity =>
             {
-                entity.HasKey(d => d.Id);
                 entity.Property(d => d.Name).IsRequired().HasMaxLength(100);
                 entity.Property(d => d.Description).HasMaxLength(500);
                 entity.Property(d => d.Code).HasMaxLength(50);
-                entity.Property(d => d.Status).IsRequired().HasMaxLength(20).HasDefaultValue("Active");
                 entity.Property(d => d.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(d => d.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(d => d.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(d => d.CreatedBy).HasMaxLength(450);
+                entity.Property(d => d.UpdatedBy).HasMaxLength(450);
+                entity.Property(d => d.DeletedBy).HasMaxLength(450);
 
+                // Indexes
+                entity.HasIndex(d => d.Name);
+                entity.HasIndex(d => d.Code).IsUnique().HasFilter("[Code] IS NOT NULL");
+                entity.HasIndex(d => d.IsActive);
+                entity.HasIndex(d => d.CreatedBy);
+                entity.HasIndex(d => d.UpdatedBy);
+                entity.HasIndex(d => d.DeletedBy);
+
+                // Foreign key relationships for audit fields
                 entity.HasOne(d => d.CreatedByUser)
                       .WithMany()
                       .HasForeignKey(d => d.CreatedBy)
-                      .OnDelete(DeleteBehavior.NoAction);
+                      .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.UpdatedByUser)
                       .WithMany()
@@ -611,805 +164,374 @@ namespace WOMS.Infrastructure.Data
                       .HasForeignKey(d => d.DeletedBy)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasIndex(d => d.Name);
-                entity.HasIndex(d => d.Code).IsUnique();
-                entity.HasIndex(d => d.Status);
-                entity.HasIndex(d => d.IsActive);
-            });
-
-
-            // Configure new entities
-            ConfigureSkillEntity(modelBuilder);
-            ConfigureEquipmentEntity(modelBuilder);
-            ConfigureWorkOrderTypeEntity(modelBuilder);
-            ConfigureZoneEntity(modelBuilder);
-            ConfigureRouteEntity(modelBuilder);
-            ConfigureRouteStopEntity(modelBuilder);
-            ConfigureAssignmentTemplateEntity(modelBuilder);
-            ConfigureJunctionEntities(modelBuilder);
-            ConfigureInventoryManagementEntities(modelBuilder);
-            ConfigureBillingTemplateEntities(modelBuilder);
-            ConfigureRateTableEntities(modelBuilder);
-            ConfigureBillingScheduleEntities(modelBuilder);
-        }
-
-        private void ConfigureSkillEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Skill>(entity =>
-            {
-                entity.HasKey(s => s.Id);
-                entity.Property(s => s.Name).IsRequired().HasMaxLength(100);
-                entity.Property(s => s.Category).HasMaxLength(50);
-                entity.Property(s => s.Level).HasMaxLength(20);
-                entity.HasIndex(s => s.Name);
-                entity.HasIndex(s => s.Category);
-            });
-        }
-
-        private void ConfigureEquipmentEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Equipment>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Category).HasConversion<string>();
-                entity.Property(e => e.Status).HasConversion<string>();
-                entity.Property(e => e.SerialNumber).HasMaxLength(100);
-                entity.HasIndex(e => e.Name);
-                entity.HasIndex(e => e.Category);
-                entity.HasIndex(e => e.SerialNumber);
-            });
-        }
-
-        private void ConfigureWorkOrderTypeEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<WorkOrderType>(entity =>
-            {
-                entity.HasKey(wot => wot.Id);
-                entity.Property(wot => wot.Name).IsRequired().HasMaxLength(100);
-                entity.Property(wot => wot.Category).HasMaxLength(50);
-                entity.Property(wot => wot.Priority).IsRequired().HasMaxLength(20);
-                entity.HasIndex(wot => wot.Name);
-                entity.HasIndex(wot => wot.Category);
-            });
-        }
-
-        private void ConfigureZoneEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Zone>(entity =>
-            {
-                entity.HasKey(z => z.Id);
-                entity.Property(z => z.Name).IsRequired().HasMaxLength(100);
-                entity.Property(z => z.Type).HasMaxLength(50);
-                entity.Property(z => z.Status).HasMaxLength(20);
-                entity.HasIndex(z => z.Name);
-                entity.HasIndex(z => z.Type);
-            });
-        }
-
-        private void ConfigureRouteEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Route>(entity =>
-            {
-                entity.HasKey(r => r.Id);
-                entity.Property(r => r.Status).IsRequired().HasMaxLength(50);
-                entity.Property(r => r.TotalDistance).HasPrecision(10, 2);
-                entity.Property(r => r.TotalTime).HasPrecision(10, 2);
-                entity.Property(r => r.Efficiency).HasPrecision(5, 2);
-
-                entity.HasOne(r => r.Driver)
-                      .WithMany(u => u.Routes)
-                      .HasForeignKey(r => r.DriverId)
+                // Navigation property for users
+                entity.HasMany(d => d.Users)
+                      .WithOne(u => u.DepartmentNavigation)
+                      .HasForeignKey(u => u.DepartmentId)
                       .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasIndex(r => r.RouteDate);
-                entity.HasIndex(r => r.Status);
             });
-        }
 
-        private void ConfigureRouteStopEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<RouteStop>(entity =>
+            // Configure WorkOrder
+            modelBuilder.Entity<WorkOrder>(entity =>
             {
-                entity.HasKey(rs => rs.Id);
-                entity.Property(rs => rs.Status).HasMaxLength(50);
-                entity.Property(rs => rs.EstimatedDuration).HasPrecision(10, 2);
-                entity.Property(rs => rs.TravelTime).HasPrecision(10, 2);
-                entity.Property(rs => rs.Distance).HasPrecision(10, 2);
+                entity.Property(wo => wo.Customer).IsRequired().HasMaxLength(255);
+                entity.Property(wo => wo.CustomerContact).HasMaxLength(255);
+                entity.Property(wo => wo.Type).IsRequired().HasMaxLength(100);
+                entity.Property(wo => wo.Priority).IsRequired().HasMaxLength(20);
+                entity.Property(wo => wo.Status).IsRequired().HasMaxLength(20);
+                entity.Property(wo => wo.Assignee).HasMaxLength(255);
+                entity.Property(wo => wo.Location).HasMaxLength(255);
+                entity.Property(wo => wo.Address).HasColumnType("nvarchar(max)");
+                entity.Property(wo => wo.Description).HasColumnType("nvarchar(max)");
+                entity.Property(wo => wo.Tags).HasColumnType("nvarchar(max)");
+                entity.Property(wo => wo.Equipment).HasMaxLength(255);
+                entity.Property(wo => wo.Notes).HasColumnType("nvarchar(max)");
+                entity.Property(wo => wo.Utility).HasMaxLength(255);
+                entity.Property(wo => wo.Make).HasMaxLength(100);
+                entity.Property(wo => wo.Model).HasMaxLength(100);
+                entity.Property(wo => wo.Size).HasMaxLength(50);
+                entity.Property(wo => wo.ManagerTechnician).HasMaxLength(255);
+                entity.Property(wo => wo.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(wo => wo.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(wo => wo.CreatedBy).IsRequired().HasMaxLength(255);
+                entity.Property(wo => wo.UpdatedBy).IsRequired().HasMaxLength(255);
+                // entity.Property(wo => wo.IsActive).IsRequired().HasDefaultValue(true); // Property doesn't exist
 
-                entity.HasOne(rs => rs.Route)
-                      .WithMany(r => r.RouteStops)
-                      .HasForeignKey(rs => rs.RouteId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(rs => rs.WorkOrder)
-                      .WithMany(wo => wo.RouteStops)
-                      .HasForeignKey(rs => rs.WorkOrderId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasIndex(rs => new { rs.RouteId, rs.SequenceNumber });
+                // Indexes
+                entity.HasIndex(wo => wo.Status);
+                entity.HasIndex(wo => wo.Priority);
+                entity.HasIndex(wo => wo.Customer);
+                entity.HasIndex(wo => wo.Assignee);
+                entity.HasIndex(wo => wo.DueDate);
+                entity.HasIndex(wo => wo.CreatedOn);
             });
-        }
 
-        private void ConfigureAssignmentTemplateEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<AssignmentTemplate>(entity =>
+            // Configure Customer
+            modelBuilder.Entity<Customer>(entity =>
             {
-                entity.HasKey(at => at.Id);
-                entity.Property(at => at.Name).IsRequired().HasMaxLength(200);
-                entity.Property(at => at.StartTime).IsRequired();
-                entity.Property(at => at.EndTime).IsRequired();
-                entity.HasIndex(at => at.Name);
-                entity.HasIndex(at => at.IsActive);
-            });
-        }
+                entity.Property(c => c.Name).IsRequired().HasMaxLength(255);
+                entity.Property(c => c.Type).IsRequired().HasMaxLength(20);
+                entity.Property(c => c.Status).IsRequired().HasMaxLength(20);
+                entity.Property(c => c.TaxId).HasMaxLength(50);
+                entity.Property(c => c.Industry).HasMaxLength(100);
+                entity.Property(c => c.Size).HasMaxLength(20);
+                entity.Property(c => c.PaymentTerms).HasMaxLength(100);
+                entity.Property(c => c.Notes).HasColumnType("nvarchar(max)");
+                entity.Property(c => c.Tags).HasColumnType("nvarchar(max)");
+                entity.Property(c => c.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(c => c.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(c => c.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(c => c.CreatedBy).IsRequired().HasMaxLength(255);
 
-        private void ConfigureJunctionEntities(ModelBuilder modelBuilder)
-        {
-            // TechnicianSkill
-            modelBuilder.Entity<TechnicianSkill>(entity =>
-            {
-                entity.HasKey(ts => ts.Id);
-                entity.Property(ts => ts.Level).HasMaxLength(20);
-                entity.Property(ts => ts.CertificationNumber).HasMaxLength(200);
-
-                entity.HasOne(ts => ts.Technician)
-                      .WithMany(u => u.TechnicianSkills)
-                      .HasForeignKey(ts => ts.TechnicianId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(ts => ts.Skill)
-                      .WithMany(s => s.TechnicianSkills)
-                      .HasForeignKey(ts => ts.SkillId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(ts => new { ts.TechnicianId, ts.SkillId }).IsUnique();
+                // Indexes
+                entity.HasIndex(c => c.Name);
+                entity.HasIndex(c => c.Status);
+                entity.HasIndex(c => c.Type);
             });
 
-            // TechnicianEquipment
-            modelBuilder.Entity<TechnicianEquipment>(entity =>
-            {
-                entity.HasKey(te => te.Id);
-                entity.Property(te => te.Status).HasMaxLength(50);
-
-                entity.HasOne(te => te.Technician)
-                      .WithMany(u => u.TechnicianEquipments)
-                      .HasForeignKey(te => te.TechnicianId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(te => te.Equipment)
-                      .WithMany(e => e.TechnicianEquipments)
-                      .HasForeignKey(te => te.EquipmentId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // TechnicianZone
-            modelBuilder.Entity<TechnicianZone>(entity =>
-            {
-                entity.HasKey(tz => tz.Id);
-                entity.Property(tz => tz.Status).HasMaxLength(50);
-
-                entity.HasOne(tz => tz.Technician)
-                      .WithMany(u => u.TechnicianZones)
-                      .HasForeignKey(tz => tz.TechnicianId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(tz => tz.Zone)
-                      .WithMany(z => z.TechnicianZones)
-                      .HasForeignKey(tz => tz.ZoneId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // WorkOrderSkillRequirement
-            modelBuilder.Entity<WorkOrderSkillRequirement>(entity =>
-            {
-                entity.HasKey(wosr => wosr.Id);
-                entity.Property(wosr => wosr.RequiredLevel).HasMaxLength(20);
-
-                entity.HasOne(wosr => wosr.WorkOrder)
-                      .WithMany(wo => wo.WorkOrderSkillRequirements)
-                      .HasForeignKey(wosr => wosr.WorkOrderId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(wosr => wosr.Skill)
-                      .WithMany(s => s.WorkOrderSkillRequirements)
-                      .HasForeignKey(wosr => wosr.SkillId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // WorkOrderEquipmentRequirement
-            modelBuilder.Entity<WorkOrderEquipmentRequirement>(entity =>
-            {
-                entity.HasKey(woer => woer.Id);
-
-                entity.HasOne(woer => woer.WorkOrder)
-                      .WithMany(wo => wo.WorkOrderEquipmentRequirements)
-                      .HasForeignKey(woer => woer.WorkOrderId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(woer => woer.Equipment)
-                      .WithMany(e => e.WorkOrderEquipmentRequirements)
-                      .HasForeignKey(woer => woer.EquipmentId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // WorkOrderZone
-            modelBuilder.Entity<WorkOrderZone>(entity =>
-            {
-                entity.HasKey(woz => woz.Id);
-                entity.Property(woz => woz.Status).HasMaxLength(50);
-
-                entity.HasOne(woz => woz.WorkOrder)
-                      .WithMany(wo => wo.WorkOrderZones)
-                      .HasForeignKey(woz => woz.WorkOrderId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(woz => woz.Zone)
-                      .WithMany(z => z.WorkOrderZones)
-                      .HasForeignKey(woz => woz.ZoneId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // WorkOrderTypeSkillRequirement
-            modelBuilder.Entity<WorkOrderTypeSkillRequirement>(entity =>
-            {
-                entity.HasKey(wotsr => wotsr.Id);
-                entity.Property(wotsr => wotsr.RequiredLevel).HasMaxLength(20);
-
-                entity.HasOne(wotsr => wotsr.WorkOrderType)
-                      .WithMany(wot => wot.WorkOrderTypeSkillRequirements)
-                      .HasForeignKey(wotsr => wotsr.WorkOrderTypeId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(wotsr => wotsr.Skill)
-                      .WithMany()
-                      .HasForeignKey(wotsr => wotsr.SkillId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // WorkOrderTypeEquipmentRequirement
-            modelBuilder.Entity<WorkOrderTypeEquipmentRequirement>(entity =>
-            {
-                entity.HasKey(woter => woter.Id);
-
-                entity.HasOne(woter => woter.WorkOrderType)
-                      .WithMany(wot => wot.WorkOrderTypeEquipmentRequirements)
-                      .HasForeignKey(woter => woter.WorkOrderTypeId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(woter => woter.Equipment)
-                      .WithMany()
-                      .HasForeignKey(woter => woter.EquipmentId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // AssignmentTemplateWorkType
-            modelBuilder.Entity<AssignmentTemplateWorkType>(entity =>
-            {
-                entity.HasKey(atwt => atwt.Id);
-
-                entity.HasOne(atwt => atwt.AssignmentTemplate)
-                      .WithMany(at => at.AssignmentTemplateWorkTypes)
-                      .HasForeignKey(atwt => atwt.AssignmentTemplateId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(atwt => atwt.WorkOrderType)
-                      .WithMany()
-                      .HasForeignKey(atwt => atwt.WorkOrderTypeId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // AssignmentTemplateZone
-            modelBuilder.Entity<AssignmentTemplateZone>(entity =>
-            {
-                entity.HasKey(atz => atz.Id);
-
-                entity.HasOne(atz => atz.AssignmentTemplate)
-                      .WithMany(at => at.AssignmentTemplateZones)
-                      .HasForeignKey(atz => atz.AssignmentTemplateId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(atz => atz.Zone)
-                      .WithMany()
-                      .HasForeignKey(atz => atz.ZoneId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // AssignmentTemplateSkill
-            modelBuilder.Entity<AssignmentTemplateSkill>(entity =>
-            {
-                entity.HasKey(ats => ats.Id);
-                entity.Property(ats => ats.RequiredLevel).HasMaxLength(20);
-
-                entity.HasOne(ats => ats.AssignmentTemplate)
-                      .WithMany(at => at.AssignmentTemplateSkills)
-                      .HasForeignKey(ats => ats.AssignmentTemplateId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(ats => ats.Skill)
-                      .WithMany()
-                      .HasForeignKey(ats => ats.SkillId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // AssignmentTemplateTechnician
-            modelBuilder.Entity<AssignmentTemplateTechnician>(entity =>
-            {
-                entity.HasKey(att => att.Id);
-                entity.Property(att => att.Status).HasMaxLength(50);
-
-                entity.HasOne(att => att.AssignmentTemplate)
-                      .WithMany(at => at.AssignmentTemplateTechnicians)
-                      .HasForeignKey(att => att.AssignmentTemplateId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(att => att.Technician)
-                      .WithMany(u => u.AssignmentTemplateTechnicians)
-                      .HasForeignKey(att => att.TechnicianId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-        }
-
-        private void ConfigureInventoryManagementEntities(ModelBuilder modelBuilder)
-        {
-            // Location entity configuration
+            // Configure Location
             modelBuilder.Entity<Location>(entity =>
             {
-                entity.HasKey(l => l.Id);
-                entity.Property(l => l.Name).IsRequired().HasMaxLength(100);
-                entity.Property(l => l.Type).IsRequired().HasConversion<string>();
-                entity.Property(l => l.Status).IsRequired().HasConversion<string>();
-                entity.Property(l => l.Code).HasMaxLength(100);
-
-                entity.HasOne(l => l.Manager)
-                      .WithMany()
-                      .HasForeignKey(l => l.ManagerId)
-                      .OnDelete(DeleteBehavior.SetNull);
+                entity.Property(l => l.Name).IsRequired().HasMaxLength(255);
+                entity.Property(l => l.Type).IsRequired().HasMaxLength(20);
+                entity.Property(l => l.Address).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(l => l.Manager).IsRequired().HasMaxLength(255);
+                entity.Property(l => l.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(l => l.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(l => l.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(l => l.CreatedBy).IsRequired().HasMaxLength(255);
 
                 entity.HasOne(l => l.ParentLocation)
                       .WithMany(l => l.SubLocations)
                       .HasForeignKey(l => l.ParentLocationId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasIndex(l => l.Code).IsUnique();
-                entity.HasIndex(l => l.Type);
-                entity.HasIndex(l => l.Status);
-            });
-
-            // InventoryTransaction entity configuration
-            modelBuilder.Entity<InventoryTransaction>(entity =>
-            {
-                entity.HasKey(it => it.Id);
-                entity.Property(it => it.TransactionType).IsRequired().HasConversion<string>();
-                entity.Property(it => it.Status).IsRequired().HasConversion<string>();
-                entity.Property(it => it.Reference).HasMaxLength(200);
-
-                entity.HasOne(it => it.Inventory)
-                      .WithMany(i => i.InventoryTransactions)
-                      .HasForeignKey(it => it.InventoryId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(it => it.FromLocation)
-                      .WithMany(l => l.FromTransactions)
-                      .HasForeignKey(it => it.FromLocationId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(it => it.ToLocation)
-                      .WithMany(l => l.ToTransactions)
-                      .HasForeignKey(it => it.ToLocationId)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                entity.HasOne(it => it.User)
-                      .WithMany()
-                      .HasForeignKey(it => it.UserId)
+                // Configure StockRequest relationships
+                entity.HasMany(l => l.FromRequests)
+                      .WithOne(sr => sr.FromLocation)
+                      .HasForeignKey(sr => sr.FromLocationId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasIndex(it => it.TransactionDate);
-                entity.HasIndex(it => it.TransactionType);
-                entity.HasIndex(it => it.Status);
-            });
-
-            // CycleCount entity configuration
-            modelBuilder.Entity<CycleCount>(entity =>
-            {
-                entity.HasKey(cc => cc.Id);
-                entity.Property(cc => cc.CountType).IsRequired().HasConversion<string>();
-                entity.Property(cc => cc.Status).IsRequired().HasConversion<string>();
-
-                entity.HasOne(cc => cc.Location)
-                      .WithMany()
-                      .HasForeignKey(cc => cc.LocationId)
+                entity.HasMany(l => l.ToRequests)
+                      .WithOne(sr => sr.ToLocation)
+                      .HasForeignKey(sr => sr.ToLocationId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(cc => cc.CountedByUser)
-                      .WithMany()
-                      .HasForeignKey(cc => cc.CountedByUserId)
+                // Configure StockTransaction relationships
+                entity.HasMany(l => l.FromTransactions)
+                      .WithOne(st => st.FromLocation)
+                      .HasForeignKey(st => st.FromLocationId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasIndex(cc => cc.PlannedDate);
-                entity.HasIndex(cc => cc.Status);
-            });
-
-            // CycleCountItem entity configuration
-            modelBuilder.Entity<CycleCountItem>(entity =>
-            {
-                entity.HasKey(cci => cci.Id);
-                entity.Property(cci => cci.Status).IsRequired().HasConversion<string>();
-                
-                // Ignore computed properties
-                entity.Ignore(cci => cci.Variance);
-                entity.Ignore(cci => cci.IsVariance);
-
-                entity.HasOne(cci => cci.CycleCount)
-                      .WithMany(cc => cc.CycleCountItems)
-                      .HasForeignKey(cci => cci.CycleCountId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(cci => cci.Inventory)
-                      .WithMany(i => i.CycleCountItems)
-                      .HasForeignKey(cci => cci.InventoryId)
+                entity.HasMany(l => l.ToTransactions)
+                      .WithOne(st => st.ToLocation)
+                      .HasForeignKey(st => st.ToLocationId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Asset entity configuration
-            modelBuilder.Entity<Asset>(entity =>
+            // Configure InventoryItem
+            modelBuilder.Entity<InventoryItem>(entity =>
             {
-                entity.HasKey(a => a.Id);
-                entity.Property(a => a.SerialNumber).IsRequired().HasMaxLength(100);
-                entity.Property(a => a.Model).IsRequired().HasMaxLength(100);
-                entity.Property(a => a.Status).IsRequired().HasConversion<string>();
-                entity.Property(a => a.DispositionStatus).IsRequired().HasConversion<string>();
-                entity.Property(a => a.Category).HasConversion<string>();
+                entity.Property(ii => ii.PartNumber).IsRequired().HasMaxLength(100);
+                entity.Property(ii => ii.Description).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(ii => ii.Category).IsRequired().HasMaxLength(100);
+                entity.Property(ii => ii.Manufacturer).IsRequired().HasMaxLength(255);
+                entity.Property(ii => ii.UnitOfMeasure).IsRequired().HasMaxLength(20);
+                entity.Property(ii => ii.Barcode).HasMaxLength(100);
+                entity.Property(ii => ii.QrCode).HasMaxLength(100);
+                entity.Property(ii => ii.IsSerializedAsset).IsRequired().HasDefaultValue(false);
+                entity.Property(ii => ii.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(ii => ii.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(ii => ii.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(ii => ii.CreatedBy).IsRequired().HasMaxLength(255);
 
-                entity.HasOne(a => a.CurrentLocation)
-                      .WithMany(l => l.Assets)
-                      .HasForeignKey(a => a.CurrentLocationId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(a => a.WorkOrder)
-                      .WithMany()
-                      .HasForeignKey(a => a.WorkOrderId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasIndex(a => a.SerialNumber).IsUnique();
-                entity.HasIndex(a => a.Model);
-                entity.HasIndex(a => a.Status);
-                entity.HasIndex(a => a.Category);
+                entity.HasIndex(ii => ii.PartNumber).IsUnique();
             });
 
-            // AssetHistory entity configuration
-            modelBuilder.Entity<AssetHistory>(entity =>
+            // Configure Stock
+            modelBuilder.Entity<Stock>(entity =>
             {
-                entity.HasKey(ah => ah.Id);
-                entity.Property(ah => ah.Action).IsRequired().HasConversion<string>();
-                entity.Property(ah => ah.Status).IsRequired().HasConversion<string>();
+                entity.Property(s => s.Quantity).IsRequired().HasDefaultValue(0);
+                entity.Property(s => s.MinThreshold).IsRequired().HasDefaultValue(0);
+                entity.Property(s => s.MaxThreshold).IsRequired().HasDefaultValue(0);
+                entity.Property(s => s.Reserved).IsRequired().HasDefaultValue(0);
+                entity.Property(s => s.OnHand).IsRequired().HasDefaultValue(0);
+                entity.Property(s => s.InTransit).IsRequired().HasDefaultValue(0);
+                // entity.Property(s => s.LastUpdated).IsRequired().HasDefaultValueSql("GETDATE()"); // Property doesn't exist
+                entity.Property(s => s.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(s => s.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
 
-                entity.HasOne(ah => ah.Asset)
-                      .WithMany(a => a.AssetHistories)
-                      .HasForeignKey(ah => ah.AssetId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(ah => ah.FromLocation)
-                      .WithMany()
-                      .HasForeignKey(ah => ah.FromLocationId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(ah => ah.ToLocation)
-                      .WithMany()
-                      .HasForeignKey(ah => ah.ToLocationId)
-                      .OnDelete(DeleteBehavior.NoAction);
-
-                entity.HasOne(ah => ah.User)
-                      .WithMany()
-                      .HasForeignKey(ah => ah.UserId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(ah => ah.WorkOrder)
-                      .WithMany()
-                      .HasForeignKey(ah => ah.WorkOrderId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasIndex(ah => ah.Action);
-                entity.HasIndex(ah => ah.Status);
+                entity.HasIndex(s => new { s.ItemId, s.LocationId }).IsUnique();
             });
 
-            // JobKit entity configuration
-            modelBuilder.Entity<JobKit>(entity =>
+            // Configure SerializedAsset
+            modelBuilder.Entity<SerializedAsset>(entity =>
             {
-                entity.HasKey(jk => jk.Id);
-                entity.Property(jk => jk.Name).IsRequired().HasMaxLength(100);
-                entity.Property(jk => jk.Status).IsRequired().HasConversion<string>();
-                entity.Property(jk => jk.Availability).IsRequired().HasConversion<string>();
+                entity.Property(sa => sa.SerialNumber).IsRequired().HasMaxLength(255);
+                entity.Property(sa => sa.Manufacturer).IsRequired().HasMaxLength(255);
+                entity.Property(sa => sa.Model).IsRequired().HasMaxLength(255);
+                entity.Property(sa => sa.Status).IsRequired().HasMaxLength(20);
+                entity.Property(sa => sa.DispositionStatus).HasMaxLength(20);
+                entity.Property(sa => sa.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(sa => sa.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(sa => sa.CreatedBy).IsRequired().HasMaxLength(255);
 
-                entity.HasIndex(jk => jk.Name);
-                entity.HasIndex(jk => jk.Status);
-                entity.HasIndex(jk => jk.JobType);
+                entity.HasIndex(sa => sa.SerialNumber).IsUnique();
+                entity.HasIndex(sa => sa.Status);
             });
 
-            // JobKitItem entity configuration
-            modelBuilder.Entity<JobKitItem>(entity =>
+            // Configure StockRequest
+            modelBuilder.Entity<StockRequest>(entity =>
             {
-                entity.HasKey(jki => jki.Id);
-                entity.Property(jki => jki.Status).IsRequired().HasConversion<string>();
+                entity.Property(sr => sr.RequesterId).IsRequired().HasMaxLength(255);
+                entity.Property(sr => sr.Status).IsRequired().HasMaxLength(20);
+                entity.Property(sr => sr.RequestDate).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(sr => sr.ApprovedBy).HasMaxLength(255);
+                entity.Property(sr => sr.Notes).HasColumnType("nvarchar(max)");
+                entity.Property(sr => sr.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(sr => sr.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(sr => sr.CreatedBy).IsRequired().HasMaxLength(255);
 
-                entity.HasOne(jki => jki.JobKit)
-                      .WithMany(jk => jk.JobKitItems)
-                      .HasForeignKey(jki => jki.JobKitId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(jki => jki.Inventory)
-                      .WithMany(i => i.JobKitItems)
-                      .HasForeignKey(jki => jki.InventoryId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasIndex(jki => jki.IsOptional);
+                entity.HasIndex(sr => sr.Status);
+                entity.HasIndex(sr => sr.RequestDate);
+                entity.HasIndex(sr => sr.FromLocationId);
+                entity.HasIndex(sr => sr.ToLocationId);
             });
 
-            // Vendor entity configuration
-            modelBuilder.Entity<Vendor>(entity =>
+            // Configure StockTransaction
+            modelBuilder.Entity<StockTransaction>(entity =>
             {
-                entity.HasKey(v => v.Id);
-                entity.Property(v => v.Name).IsRequired().HasMaxLength(100);
-                entity.Property(v => v.Status).IsRequired().HasConversion<string>();
+                entity.Property(st => st.Type).IsRequired().HasMaxLength(20);
+                entity.Property(st => st.Quantity).IsRequired();
+                entity.Property(st => st.UnitCost).IsRequired().HasColumnType("decimal(15,2)");
+                entity.Property(st => st.UserId).IsRequired().HasMaxLength(255);
+                entity.Property(st => st.SerialNumbers).HasColumnType("nvarchar(max)");
+                entity.Property(st => st.Timestamp).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(st => st.Notes).HasColumnType("nvarchar(max)");
+                entity.Property(st => st.ApprovedBy).HasMaxLength(255);
+                entity.Property(st => st.Reference).HasMaxLength(255);
+                entity.Property(st => st.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
 
-                entity.HasIndex(v => v.Name);
-                entity.HasIndex(v => v.Status);
+                entity.HasIndex(st => st.Type);
+                entity.HasIndex(st => st.Timestamp);
+                entity.HasIndex(st => st.FromLocationId);
+                entity.HasIndex(st => st.ToLocationId);
+                entity.HasIndex(st => st.ItemId);
             });
 
-            // InventoryDisposition entity configuration
-            modelBuilder.Entity<InventoryDisposition>(entity =>
+            // Configure FormTemplate
+            modelBuilder.Entity<FormTemplate>(entity =>
             {
-                entity.HasKey(id => id.Id);
-                entity.Property(id => id.DispositionType).IsRequired().HasConversion<string>();
-                entity.Property(id => id.Status).IsRequired().HasConversion<string>();
+                entity.Property(ft => ft.Name).IsRequired().HasMaxLength(255);
+                entity.Property(ft => ft.Description).HasColumnType("nvarchar(max)");
+                entity.Property(ft => ft.Category).IsRequired().HasMaxLength(100);
+                entity.Property(ft => ft.Status).IsRequired().HasMaxLength(20);
+                entity.Property(ft => ft.Version).IsRequired().HasDefaultValue(1);
+                entity.Property(ft => ft.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(ft => ft.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(ft => ft.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(ft => ft.CreatedBy).IsRequired().HasMaxLength(255);
 
-                entity.HasOne(id => id.Inventory)
-                      .WithMany(i => i.InventoryDispositions)
-                      .HasForeignKey(id => id.InventoryId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(id => id.DisposedByUser)
-                      .WithMany()
-                      .HasForeignKey(id => id.DisposedByUserId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(id => id.Vendor)
-                      .WithMany(v => v.InventoryDispositions)
-                      .HasForeignKey(id => id.VendorId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasIndex(id => id.DispositionType);
-                entity.HasIndex(id => id.Status);
+                entity.HasIndex(ft => ft.Category);
+                entity.HasIndex(ft => ft.Status);
+                entity.HasIndex(ft => ft.IsActive);
             });
 
-            // ValidationIssue entity configuration
-            modelBuilder.Entity<ValidationIssue>(entity =>
-            {
-                entity.HasKey(vi => vi.Id);
-                entity.Property(vi => vi.Type).IsRequired().HasConversion<string>();
-                entity.Property(vi => vi.Code).IsRequired().HasMaxLength(100);
-                entity.Property(vi => vi.Message).IsRequired().HasMaxLength(500);
-                entity.Property(vi => vi.Severity).IsRequired().HasConversion<string>();
-
-                entity.HasOne(vi => vi.Asset)
-                      .WithMany(a => a.ValidationIssues)
-                      .HasForeignKey(vi => vi.AssetId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(vi => vi.ResolvedByUser)
-                      .WithMany()
-                      .HasForeignKey(vi => vi.ResolvedByUserId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasIndex(vi => vi.Type);
-                entity.HasIndex(vi => vi.IsResolved);
-                entity.HasIndex(vi => vi.Severity);
-            });
-
-            // InventoryLocation entity configuration
-            modelBuilder.Entity<InventoryLocation>(entity =>
-            {
-                entity.HasKey(il => il.Id);
-                entity.Property(il => il.Status).IsRequired().HasConversion<string>();
-
-                entity.HasOne(il => il.Inventory)
-                      .WithMany(i => i.InventoryLocations)
-                      .HasForeignKey(il => il.InventoryId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(il => il.Location)
-                      .WithMany(l => l.InventoryLocations)
-                      .HasForeignKey(il => il.LocationId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(il => new { il.InventoryId, il.LocationId }).IsUnique();
-                entity.HasIndex(il => il.Status);
-            });
-
-            // ScanLog entity configuration
-            modelBuilder.Entity<ScanLog>(entity =>
-            {
-                entity.HasKey(sl => sl.Id);
-                entity.Property(sl => sl.ScannedCode).IsRequired().HasMaxLength(100);
-                entity.Property(sl => sl.ScanType).IsRequired().HasConversion<string>();
-                entity.Property(sl => sl.Result).HasMaxLength(50);
-
-                entity.HasOne(sl => sl.Inventory)
-                      .WithMany()
-                      .HasForeignKey(sl => sl.InventoryId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(sl => sl.Asset)
-                      .WithMany()
-                      .HasForeignKey(sl => sl.AssetId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(sl => sl.ScannedByUser)
-                      .WithMany()
-                      .HasForeignKey(sl => sl.ScannedByUserId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasIndex(sl => sl.ScannedCode);
-                entity.HasIndex(sl => sl.ScanType);
-                entity.HasIndex(sl => sl.Result);
-            });
-        }
-
-        private void ConfigureBillingTemplateEntities(ModelBuilder modelBuilder)
-        {
-            // BillingTemplate entity configuration
+            // Configure BillingTemplate
             modelBuilder.Entity<BillingTemplate>(entity =>
             {
-                entity.HasKey(bt => bt.Id);
-                entity.Property(bt => bt.TemplateName).IsRequired().HasMaxLength(200);
-                entity.Property(bt => bt.CustomerId).IsRequired().HasMaxLength(50);
-                entity.Property(bt => bt.CustomerName).IsRequired().HasMaxLength(200);
+                entity.Property(bt => bt.Name).IsRequired().HasMaxLength(255);
+                entity.Property(bt => bt.CustomerId).IsRequired().HasMaxLength(255);
+                entity.Property(bt => bt.CustomerName).IsRequired().HasMaxLength(255);
                 entity.Property(bt => bt.OutputFormat).IsRequired().HasMaxLength(20);
+                entity.Property(bt => bt.FieldOrder).HasColumnType("nvarchar(max)");
+                entity.Property(bt => bt.FieldFormats).HasColumnType("nvarchar(max)");
+                entity.Property(bt => bt.FileNamingConvention).HasMaxLength(255);
                 entity.Property(bt => bt.DeliveryMethod).IsRequired().HasMaxLength(20);
-                entity.Property(bt => bt.InvoiceType).IsRequired().HasMaxLength(50);
-                entity.Property(bt => bt.FileNamingConvention).IsRequired().HasMaxLength(200);
-                entity.Property(bt => bt.Description).HasMaxLength(1000);
-                entity.Property(bt => bt.AdditionalSettings).HasColumnType("nvarchar(max)");
-
-                entity.HasIndex(bt => bt.TemplateName);
-                entity.HasIndex(bt => bt.CustomerId);
-                entity.HasIndex(bt => bt.IsActive);
+                entity.Property(bt => bt.InvoiceType).IsRequired().HasMaxLength(20);
+                entity.Property(bt => bt.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(bt => bt.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(bt => bt.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(bt => bt.CreatedBy).IsRequired().HasMaxLength(255);
             });
 
-            // BillingTemplateFieldOrder entity configuration
-            modelBuilder.Entity<BillingTemplateFieldOrder>(entity =>
+            // Configure Invoice
+            modelBuilder.Entity<Invoice>(entity =>
             {
-                entity.HasKey(btfo => btfo.Id);
-                entity.Property(btfo => btfo.FieldName).IsRequired().HasMaxLength(100);
-                entity.Property(btfo => btfo.DisplayLabel).HasMaxLength(200);
-                entity.Property(btfo => btfo.FieldType).HasMaxLength(50);
-                entity.Property(btfo => btfo.FieldSettings).HasColumnType("nvarchar(max)");
+                entity.Property(i => i.InvoiceNumber).IsRequired().HasMaxLength(100);
+                entity.Property(i => i.CustomerId).IsRequired().HasMaxLength(255);
+                entity.Property(i => i.CustomerName).IsRequired().HasMaxLength(255);
+                entity.Property(i => i.Status).IsRequired().HasMaxLength(20);
+                entity.Property(i => i.InvoiceType).IsRequired().HasMaxLength(20);
+                entity.Property(i => i.GeneratedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(i => i.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(i => i.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(i => i.CreatedBy).IsRequired().HasMaxLength(255);
 
-                entity.HasOne(btfo => btfo.BillingTemplate)
-                      .WithMany(bt => bt.FieldOrders)
-                      .HasForeignKey(btfo => btfo.BillingTemplateId)
+                entity.HasIndex(i => i.InvoiceNumber).IsUnique();
+                entity.HasIndex(i => i.Status);
+                entity.HasIndex(i => i.CustomerId);
+                entity.HasIndex(i => i.DueDate);
+            });
+
+            // Configure Workflow
+            modelBuilder.Entity<Workflow>(entity =>
+            {
+                entity.Property(w => w.Name).IsRequired().HasMaxLength(255);
+                entity.Property(w => w.Description).HasColumnType("nvarchar(max)");
+                entity.Property(w => w.Category).IsRequired().HasMaxLength(100);
+                entity.Property(w => w.CurrentVersion).IsRequired().HasDefaultValue(1);
+                entity.Property(w => w.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(w => w.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(w => w.UpdatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(w => w.CreatedBy).IsRequired().HasMaxLength(255);
+
+                entity.HasIndex(w => w.Category);
+                entity.HasIndex(w => w.IsActive);
+            });
+
+            // Configure WorkflowStatus
+            modelBuilder.Entity<WorkflowStatus>(entity =>
+            {
+                entity.Property(ws => ws.StatusId).IsRequired().HasMaxLength(100);
+                entity.Property(ws => ws.Name).IsRequired().HasMaxLength(100);
+                entity.Property(ws => ws.Description).HasMaxLength(500);
+                entity.Property(ws => ws.Color).IsRequired().HasMaxLength(7);
+                entity.Property(ws => ws.SortOrder).IsRequired();
+
+                entity.HasOne(ws => ws.Workflow)
+                      .WithMany(w => w.Statuses)
+                      .HasForeignKey(ws => ws.WorkflowId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasIndex(btfo => new { btfo.BillingTemplateId, btfo.DisplayOrder });
-                entity.HasIndex(btfo => btfo.FieldName);
-            });
-        }
+                // Configure WorkflowTransition relationships
+                entity.HasMany(ws => ws.OutgoingTransitions)
+                      .WithOne(wt => wt.FromStatus)
+                      .HasForeignKey(wt => wt.FromStatusId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
-        private void ConfigureRateTableEntities(ModelBuilder modelBuilder)
-        {
-            // RateTable entity configuration
-            modelBuilder.Entity<RateTable>(entity =>
-            {
-                entity.HasKey(rt => rt.Id);
-                entity.Property(rt => rt.RateTableName).IsRequired().HasMaxLength(200);
-                entity.Property(rt => rt.RateType).IsRequired().HasMaxLength(50);
-                entity.Property(rt => rt.Description).HasMaxLength(1000);
-                entity.Property(rt => rt.BaseRate).IsRequired().HasColumnType("decimal(18,2)");
-                entity.Property(rt => rt.EffectiveStartDate).IsRequired();
-                entity.Property(rt => rt.EffectiveEndDate).IsRequired();
-                entity.Property(rt => rt.Currency).HasMaxLength(50);
-                entity.Property(rt => rt.Category).HasMaxLength(100);
-                entity.Property(rt => rt.RateRules).HasColumnType("nvarchar(max)");
-                entity.Property(rt => rt.AdditionalSettings).HasColumnType("nvarchar(max)");
-
-                entity.HasIndex(rt => rt.RateTableName);
-                entity.HasIndex(rt => rt.RateType);
-                entity.HasIndex(rt => rt.IsActive);
-                entity.HasIndex(rt => rt.EffectiveStartDate);
-                entity.HasIndex(rt => rt.EffectiveEndDate);
+                entity.HasMany(ws => ws.IncomingTransitions)
+                      .WithOne(wt => wt.ToStatus)
+                      .HasForeignKey(wt => wt.ToStatusId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // RateTableItem entity configuration
-            modelBuilder.Entity<RateTableItem>(entity =>
+            // Configure WorkflowTransition
+            modelBuilder.Entity<WorkflowTransition>(entity =>
             {
-                entity.HasKey(rti => rti.Id);
-                entity.Property(rti => rti.ItemName).IsRequired().HasMaxLength(200);
-                entity.Property(rti => rti.Description).HasMaxLength(500);
-                entity.Property(rti => rti.Rate).IsRequired().HasColumnType("decimal(18,2)");
-                entity.Property(rti => rti.Unit).HasMaxLength(50);
-                entity.Property(rti => rti.Category).HasMaxLength(100);
-                entity.Property(rti => rti.SkillLevel).HasMaxLength(50);
-                entity.Property(rti => rti.WorkType).HasMaxLength(100);
-                entity.Property(rti => rti.Conditions).HasColumnType("nvarchar(max)");
-                entity.Property(rti => rti.AdditionalSettings).HasColumnType("nvarchar(max)");
+                entity.Property(wt => wt.TransitionId).IsRequired().HasMaxLength(100);
+                entity.Property(wt => wt.Name).IsRequired().HasMaxLength(200);
+                entity.Property(wt => wt.Description).HasMaxLength(500);
 
-                entity.HasOne(rti => rti.RateTable)
-                      .WithMany(rt => rt.RateTableItems)
-                      .HasForeignKey(rti => rti.RateTableId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(rti => new { rti.RateTableId, rti.DisplayOrder });
-                entity.HasIndex(rti => rti.ItemName);
-                entity.HasIndex(rti => rti.Category);
-                entity.HasIndex(rti => rti.IsActive);
-            });
-        }
-
-        private void ConfigureBillingScheduleEntities(ModelBuilder modelBuilder)
-        {
-            // BillingSchedule entity configuration
-            modelBuilder.Entity<BillingSchedule>(entity =>
-            {
-                entity.HasKey(bs => bs.Id);
-                entity.Property(bs => bs.ScheduleName).IsRequired().HasMaxLength(200);
-                entity.Property(bs => bs.Frequency).IsRequired().HasMaxLength(50);
-                entity.Property(bs => bs.Time).IsRequired();
-                entity.Property(bs => bs.DayOfWeekName).HasMaxLength(100);
-                entity.Property(bs => bs.Description).HasMaxLength(1000);
-                entity.Property(bs => bs.Status).HasMaxLength(50);
-                entity.Property(bs => bs.LastRunStatus).HasMaxLength(500);
-                entity.Property(bs => bs.LastRunMessage).HasMaxLength(1000);
-                entity.Property(bs => bs.ScheduleSettings).HasColumnType("nvarchar(max)");
-                entity.Property(bs => bs.NotificationSettings).HasColumnType("nvarchar(max)");
-
-                entity.HasIndex(bs => bs.ScheduleName);
-                entity.HasIndex(bs => bs.Frequency);
-                entity.HasIndex(bs => bs.IsActive);
-                entity.HasIndex(bs => bs.Status);
-                entity.HasIndex(bs => bs.NextRunDate);
-            });
-
-            // BillingScheduleTemplate entity configuration
-            modelBuilder.Entity<BillingScheduleTemplate>(entity =>
-            {
-                entity.HasKey(bst => bst.Id);
-                entity.Property(bst => bst.Notes).HasMaxLength(500);
-                entity.Property(bst => bst.TemplateSettings).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(bst => bst.BillingSchedule)
-                      .WithMany(bs => bs.BillingScheduleTemplates)
-                      .HasForeignKey(bst => bst.BillingScheduleId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(bst => bst.BillingTemplate)
+                entity.HasOne(wt => wt.Workflow)
                       .WithMany()
-                      .HasForeignKey(bst => bst.BillingTemplateId)
+                      .HasForeignKey(wt => wt.WorkflowId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasIndex(bst => new { bst.BillingScheduleId, bst.DisplayOrder });
-                entity.HasIndex(bst => bst.IsActive);
+                entity.HasIndex(wt => wt.FromStatusId);
+                entity.HasIndex(wt => wt.ToStatusId);
             });
 
-            // BillingScheduleRun entity configuration
-            modelBuilder.Entity<BillingScheduleRun>(entity =>
+            // Configure WorkflowNode
+            modelBuilder.Entity<WorkflowNode>(entity =>
             {
-                entity.HasKey(bsr => bsr.Id);
-                entity.Property(bsr => bsr.RunDate).IsRequired();
-                entity.Property(bsr => bsr.ScheduledRunDate).IsRequired();
-                entity.Property(bsr => bsr.Status).IsRequired().HasMaxLength(50);
-                entity.Property(bsr => bsr.ErrorMessage).HasMaxLength(1000);
-                entity.Property(bsr => bsr.Summary).HasMaxLength(2000);
-                entity.Property(bsr => bsr.RunDetails).HasColumnType("nvarchar(max)");
-                entity.Property(bsr => bsr.ErrorDetails).HasColumnType("nvarchar(max)");
+                entity.Property(wn => wn.Type).IsRequired().HasMaxLength(20);
+                entity.Property(wn => wn.Title).IsRequired().HasMaxLength(255);
+                entity.Property(wn => wn.Description).HasColumnType("nvarchar(max)");
+                entity.Property(wn => wn.Position).HasColumnType("nvarchar(max)");
+                entity.Property(wn => wn.Data).HasColumnType("nvarchar(max)");
+                entity.Property(wn => wn.Connections).HasColumnType("nvarchar(max)");
 
-                entity.HasOne(bsr => bsr.BillingSchedule)
-                      .WithMany(bs => bs.BillingScheduleRuns)
-                      .HasForeignKey(bsr => bsr.BillingScheduleId)
+                entity.HasOne(wn => wn.Workflow)
+                      .WithMany()
+                      .HasForeignKey(wn => wn.WorkflowId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure WorkflowInstance
+            modelBuilder.Entity<WorkflowInstance>(entity =>
+            {
+                entity.Property(wi => wi.Status).IsRequired().HasMaxLength(20);
+                entity.Property(wi => wi.Data).HasColumnType("nvarchar(max)");
+                entity.Property(wi => wi.StartedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(wi => wi.CreatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(wi => wi.UpdatedAt).IsRequired().HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(wi => wi.Workflow)
+                      .WithMany()
+                      .HasForeignKey(wi => wi.WorkflowId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(wi => wi.WorkOrder)
+                      .WithMany(wo => wo.WorkflowInstances)
+                      .HasForeignKey(wi => wi.WorkOrderId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasIndex(bsr => bsr.RunDate);
-                entity.HasIndex(bsr => bsr.ScheduledRunDate);
-                entity.HasIndex(bsr => bsr.Status);
+                entity.HasIndex(wi => wi.WorkflowId);
+                entity.HasIndex(wi => wi.WorkOrderId);
+                entity.HasIndex(wi => wi.Status);
+            });
+
+            // Configure WorkflowProgress
+            modelBuilder.Entity<WorkflowProgress>(entity =>
+            {
+                entity.Property(wp => wp.CompletedSteps).HasColumnType("nvarchar(max)");
+                entity.Property(wp => wp.PendingSteps).HasColumnType("nvarchar(max)");
+                entity.Property(wp => wp.Metadata).HasColumnType("nvarchar(max)");
+                entity.Property(wp => wp.LastUpdated).IsRequired().HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(wp => wp.Workflow)
+                      .WithMany()
+                      .HasForeignKey(wp => wp.WorkflowId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(wp => wp.CurrentStatus)
+                      .WithMany()
+                      .HasForeignKey(wp => wp.CurrentStatusId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(wp => wp.WorkflowId);
+                entity.HasIndex(wp => wp.CurrentStatusId);
             });
         }
     }

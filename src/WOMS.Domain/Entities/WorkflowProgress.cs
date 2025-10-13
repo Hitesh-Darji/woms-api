@@ -18,10 +18,10 @@ namespace WOMS.Domain.Entities
         [ForeignKey(nameof(CurrentStatusId))]
         public virtual WorkflowStatus CurrentStatus { get; set; } = null!;
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? CompletedSteps { get; set; } // JSON array of completed step IDs
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? PendingSteps { get; set; } // JSON array of pending step IDs
 
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
@@ -32,7 +32,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(200)]
         public string? AssigneeName { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Metadata { get; set; } // JSON metadata for additional data
     }
 }

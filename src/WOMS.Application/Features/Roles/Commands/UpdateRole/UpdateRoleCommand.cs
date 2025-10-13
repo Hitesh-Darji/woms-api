@@ -8,6 +8,6 @@ namespace WOMS.Application.Features.Roles.Commands.UpdateRole
         public string Id { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string? Description { get; init; }
-        public Guid UpdatedBy { get; init; }
+        public string UpdatedBy { get; init; } = string.Empty;
     }
 }

@@ -11,6 +11,6 @@ namespace WOMS.Application.Features.Departments.Commands.UpdateDepartment
         public string? Code { get; init; }
         public string Status { get; init; } = "Active";
         public bool IsActive { get; init; } = true;
-        public Guid UpdatedBy { get; init; }
+        public string UpdatedBy { get; init; } = string.Empty;
     }
 }

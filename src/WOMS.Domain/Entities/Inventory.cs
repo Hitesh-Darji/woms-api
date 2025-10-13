@@ -112,7 +112,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(500)]
         public string? Description { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Attributes { get; set; } // JSON for additional item-specific attributes
 
         // Navigation properties

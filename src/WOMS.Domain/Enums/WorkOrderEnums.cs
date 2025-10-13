@@ -19,14 +19,23 @@ namespace WOMS.Domain.Enums
 
     public enum WorkOrderStatus
     {
-        [Description("Assigned")]
-        Assigned = 0,
+        [Description("Pending")]
+        Pending = 0,
         
-        [Description("Unassigned")]
-        Unassigned = 1,
+        [Description("Assigned")]
+        Assigned = 1,
+        
+        [Description("In Progress")]
+        InProgress = 2,
         
         [Description("Completed")]
-        Completed = 2
+        Completed = 3,
+        
+        [Description("Cancelled")]
+        Cancelled = 4,
+        
+        [Description("Unassigned")]
+        Unassigned = 5
     }
 
     public enum WorkOrderType

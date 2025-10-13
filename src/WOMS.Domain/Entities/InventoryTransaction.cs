@@ -43,7 +43,7 @@ namespace WOMS.Domain.Entities
         public string? Notes { get; set; }
 
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; } = null!;

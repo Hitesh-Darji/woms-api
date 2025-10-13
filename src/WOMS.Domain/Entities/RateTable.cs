@@ -3,22 +3,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WOMS.Domain.Entities
 {
+    [Table("RateTable")]
     public class RateTable : BaseEntity
     {
         [Required]
-        [MaxLength(200)]
-        public string RateTableName { get; set; } = string.Empty;
+        [MaxLength(255)]
+        public string Name { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(50)]
-        public string RateType { get; set; } = "Flat Fee"; // Flat Fee, Hourly, Per Unit, Tiered, etc.
-
-        [MaxLength(1000)]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal BaseRate { get; set; } = 0.00m;
+        [MaxLength(20)]
+        public string RateType { get; set; } = "flat"; // flat, hourly, tiered, unit, conditional
+
+        [Column(TypeName = "decimal(15,2)")]
+        public decimal? BaseRate { get; set; }
 
         [Required]
         public DateTime EffectiveStartDate { get; set; }
@@ -29,19 +29,9 @@ namespace WOMS.Domain.Entities
         [Required]
         public bool IsActive { get; set; } = true;
 
-        [MaxLength(50)]
-        public string? Currency { get; set; } = "USD";
-
-        [MaxLength(100)]
-        public string? Category { get; set; } // e.g., "Labor", "Equipment", "Materials", "Service"
-
-        [Column(TypeName = "json")]
-        public string? RateRules { get; set; } // JSON for complex pricing rules, tiers, etc.
-
-        [Column(TypeName = "json")]
-        public string? AdditionalSettings { get; set; } // JSON for any additional rate settings
-
         // Navigation properties
-        public virtual ICollection<RateTableItem> RateTableItems { get; set; } = new List<RateTableItem>();
+        public virtual ICollection<TieredRate> TieredRates { get; set; } = new List<TieredRate>();
+        public virtual ICollection<ConditionalRate> ConditionalRates { get; set; } = new List<ConditionalRate>();
+        public virtual ICollection<InvoiceLineItem> InvoiceLineItems { get; set; } = new List<InvoiceLineItem>();
     }
 }

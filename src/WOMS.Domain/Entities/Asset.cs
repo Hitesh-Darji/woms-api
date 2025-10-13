@@ -57,7 +57,7 @@ namespace WOMS.Domain.Entities
         [MaxLength(100)]
         public string? QRCode { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Attributes { get; set; } // JSON for additional asset-specific attributes
 
         // Navigation properties

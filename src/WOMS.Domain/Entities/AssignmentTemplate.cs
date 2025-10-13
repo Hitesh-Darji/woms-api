@@ -19,7 +19,7 @@ namespace WOMS.Domain.Entities
 
         public TimeSpan EndTime { get; set; } = new TimeSpan(17, 0, 0); // 17:00
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? DaysOfWeek { get; set; } // JSON array of selected days
 
         // Auto-Assignment Rules
@@ -35,7 +35,7 @@ namespace WOMS.Domain.Entities
 
         public DateTime? LastUsedDate { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Settings { get; set; } // JSON for additional template settings
 
         // Navigation properties

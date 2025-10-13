@@ -7,7 +7,7 @@ namespace WOMS.Domain.Entities
     public class Form : BaseEntity
     {
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; } = null!;
@@ -19,10 +19,10 @@ namespace WOMS.Domain.Entities
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Fields { get; set; }
 
-        [Column(TypeName = "json")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Settings { get; set; } 
 
         public bool Locked { get; set; } = false;

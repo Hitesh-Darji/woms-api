@@ -23,7 +23,7 @@ namespace WOMS.Domain.Entities
         public DateTime DispositionDate { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public Guid DisposedByUserId { get; set; }
+        public string DisposedByUserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(DisposedByUserId))]
         public virtual ApplicationUser DisposedByUser { get; set; } = null!;

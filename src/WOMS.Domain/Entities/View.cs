@@ -13,6 +13,9 @@ namespace WOMS.Domain.Entities
         [Column(TypeName = "nvarchar(max)")]
         public string SelectedColumns { get; set; } = string.Empty; // JSON array of selected column names
 
+        // Override BaseEntity property to use string for ApplicationUser reference
+        public new string? CreatedBy { get; set; }
+
         [ForeignKey(nameof(CreatedBy))]
         public virtual ApplicationUser? CreatedByUser { get; set; }
     }

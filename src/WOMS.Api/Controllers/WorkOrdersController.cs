@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WOMS.Application.Features.WorkOrder.DTOs;
 using WOMS.Application.Features.WorkOrder.Queries.GetAllWorkOrders;
 using WOMS.Application.Features.WorkOrder.Queries.GetWorkOrderViewList;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Api.Controllers
 {
@@ -44,7 +45,7 @@ namespace WOMS.Api.Controllers
             [FromQuery] string? searchTerm = null,
             [FromQuery] string? status = null,
             [FromQuery] string? priority = null,
-            [FromQuery] Guid? assignedTechnicianId = null,
+            [FromQuery] string? assignedTechnicianId = null,
             [FromQuery] Guid? workOrderTypeId = null,
             [FromQuery] DateTime? scheduledDateFrom = null,
             [FromQuery] DateTime? scheduledDateTo = null,
@@ -62,8 +63,8 @@ namespace WOMS.Api.Controllers
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 SearchTerm = searchTerm,
-                Status = status,
-                Priority = priority,
+                Status = !string.IsNullOrEmpty(status) && Enum.TryParse<WorkOrderStatus>(status, true, out var statusEnum) ? statusEnum : null,
+                Priority = !string.IsNullOrEmpty(priority) && Enum.TryParse<WorkOrderPriority>(priority, true, out var priorityEnum) ? priorityEnum : null,
                 AssignedTechnicianId = assignedTechnicianId,
                 WorkOrderTypeId = workOrderTypeId,
                 ScheduledDateFrom = scheduledDateFrom,
@@ -124,7 +125,7 @@ namespace WOMS.Api.Controllers
             [FromQuery] string? searchTerm = null,
             [FromQuery] string? status = null,
             [FromQuery] string? priority = null,
-            [FromQuery] Guid? assignedTechnicianId = null,
+            [FromQuery] string? assignedTechnicianId = null,
             [FromQuery] bool? isOverdue = null,
             [FromQuery] bool? isToday = null,
             [FromQuery] string? sortBy = "CreatedOn",
@@ -142,8 +143,8 @@ namespace WOMS.Api.Controllers
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 SearchTerm = searchTerm,
-                Status = status,
-                Priority = priority,
+                Status = !string.IsNullOrEmpty(status) && Enum.TryParse<WorkOrderStatus>(status, true, out var statusEnum) ? statusEnum : null,
+                Priority = !string.IsNullOrEmpty(priority) && Enum.TryParse<WorkOrderPriority>(priority, true, out var priorityEnum) ? priorityEnum : null,
                 AssignedTechnicianId = assignedTechnicianId,
                 IsOverdue = isOverdue,
                 IsToday = isToday,
