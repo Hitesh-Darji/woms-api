@@ -5,50 +5,37 @@ using WOMS.Infrastructure.Data;
 
 namespace WOMS.Infrastructure.Repositories
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    public class RefreshTokenRepository : Repository<RefreshToken>, IRefreshTokenRepository
     {
-        private readonly WomsDbContext _context;
-
-        public RefreshTokenRepository(WomsDbContext context)
+        public RefreshTokenRepository(WomsDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<RefreshToken?> GetByTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            return await _context.RefreshTokens
+            return await _dbSet
                 .Include(rt => rt.User)
                 .FirstOrDefaultAsync(rt => rt.Refresh_Token == refreshToken, cancellationToken);
         }
 
         public async Task<RefreshToken> CreateAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
         {
-            _context.RefreshTokens.Add(refreshToken);
-            await _context.SaveChangesAsync(cancellationToken);
-            return refreshToken;
+            // Use the common AddAsync method from base repository
+            return await AddAsync(refreshToken, cancellationToken);
         }
 
-        public async Task UpdateAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
-        {
-            _context.RefreshTokens.Update(refreshToken);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        public async Task DeleteAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
-        {
-            _context.RefreshTokens.Remove(refreshToken);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
+        // UpdateAsync and DeleteAsync are already available from base repository
+        // No need to override them unless you need specific behavior
 
         public async Task DeleteByTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            var token = await _context.RefreshTokens
+            var token = await _dbSet
                 .FirstOrDefaultAsync(rt => rt.Refresh_Token == refreshToken, cancellationToken);
             
             if (token != null)
             {
-                _context.RefreshTokens.Remove(token);
-                await _context.SaveChangesAsync(cancellationToken);
+                // Use the common DeleteAsync method from base repository
+                await DeleteAsync(token, cancellationToken);
             }
         }
     }

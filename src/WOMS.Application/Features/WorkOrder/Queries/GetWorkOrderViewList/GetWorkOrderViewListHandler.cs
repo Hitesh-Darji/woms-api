@@ -25,69 +25,35 @@ namespace WOMS.Application.Features.WorkOrder.Queries.GetWorkOrderViewList
 
         public async Task<WorkOrderViewListResponse> Handle(GetWorkOrderViewListQuery request, CancellationToken cancellationToken)
         {
-            // Get view/list data with optimized projection
-            var (workOrderData, totalCount) = await _workOrderRepository.GetWorkOrderViewListAsync(
+            // Use the existing GetPaginatedAsync method from the repository
+            var (workOrders, totalCount) = await _workOrderRepository.GetPaginatedAsync(
                 request.PageNumber,
                 request.PageSize,
                 request.SearchTerm,
                 request.Status,
                 request.Priority,
                 request.AssignedTechnicianId,
-                request.IsOverdue,
-                request.IsToday,
                 request.SortBy,
                 request.SortDescending,
                 cancellationToken);
 
-            // Convert dynamic objects to DTOs efficiently
-            var workOrderViews = workOrderData.Select(item => new WorkOrderViewDto
+            // Convert to WorkOrderViewDto
+            var workOrderViews = workOrders.Select(wo => new WorkOrderViewDto
             {
-                Id = item.Id,
-                WorkOrderNumber = item.WorkOrderNumber,
-                Status = item.Status,
-                Priority = item.Priority,
-                ServiceAddress = item.ServiceAddress,
-                AssignedTechnicianName = item.AssignedTechnicianName,
-                ScheduledDate = item.ScheduledDate,
-                CreatedAt = item.CreatedAt,
-                WorkOrderTypeName = item.WorkOrderTypeName,
-                CustomerName = item.CustomerName,
-                CustomerPhone = item.CustomerPhone,
-                IsOverdue = item.IsOverdue,
-                DaysSinceCreated = item.DaysSinceCreated,
-                StatusColor = item.StatusColor,
-                PriorityColor = item.PriorityColor
+                Id = wo.Id,
+                WorkOrderNumber = wo.WorkOrderNumber,
+                Status = wo.Status.ToString(),
+                Priority = wo.Priority.ToString(),
+                ServiceAddress = wo.Address ?? string.Empty,
+                AssignedTechnicianName = wo.Assignee,
+                CreatedAt = wo.CreatedOn,
+                CustomerName = wo.Customer,
+                CustomerPhone = wo.CustomerContact,
+                IsOverdue = wo.DueDate.HasValue && wo.DueDate < DateTime.UtcNow,
+                DaysSinceCreated = (int)(DateTime.UtcNow - wo.CreatedOn).TotalDays,
+                StatusColor = GetStatusColor(wo.Status),
+                PriorityColor = GetPriorityColor(wo.Priority)
             }).ToList();
-
-            // Get summary statistics if requested
-            Dictionary<string, int> statusCounts = new();
-            Dictionary<string, int> priorityCounts = new();
-            int overdueCount = 0;
-            int todayCount = 0;
-
-            if (request.IncludeSummary)
-            {
-                var summary = await _workOrderRepository.GetWorkOrderViewSummaryAsync(cancellationToken);
-                
-                statusCounts = new Dictionary<string, int>
-                {
-                    ["pending"] = (int)summary["PendingCount"],
-                    ["assigned"] = (int)summary["AssignedCount"],
-                    ["in_progress"] = (int)summary["InProgressCount"],
-                    ["completed"] = (int)summary["CompletedCount"],
-                    ["cancelled"] = (int)summary["CancelledCount"]
-                };
-
-                priorityCounts = new Dictionary<string, int>
-                {
-                    ["high"] = (int)summary["HighPriorityCount"],
-                    ["medium"] = (int)summary["MediumPriorityCount"],
-                    ["low"] = (int)summary["LowPriorityCount"]
-                };
-
-                overdueCount = (int)summary["OverdueCount"];
-                todayCount = (int)summary["TodayCount"];
-            }
 
             return new WorkOrderViewListResponse
             {
@@ -95,28 +61,35 @@ namespace WOMS.Application.Features.WorkOrder.Queries.GetWorkOrderViewList
                 TotalCount = totalCount,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
-                StatusCounts = statusCounts,
-                PriorityCounts = priorityCounts,
-                OverdueCount = overdueCount,
-                TodayCount = todayCount
+                StatusCounts = new Dictionary<string, int>(),
+                PriorityCounts = new Dictionary<string, int>(),
+                OverdueCount = 0,
+                TodayCount = 0
             };
         }
 
-        // Helper method for metadata extraction
-        private static string? ExtractFromMetadata(string? metadata, string key)
+        // Helper methods for UI styling
+        private static string GetStatusColor(WOMS.Domain.Enums.WorkOrderStatus status)
         {
-            if (string.IsNullOrEmpty(metadata))
-                return null;
+            return status switch
+            {
+                WOMS.Domain.Enums.WorkOrderStatus.Pending => "yellow",
+                WOMS.Domain.Enums.WorkOrderStatus.InProgress => "blue",
+                WOMS.Domain.Enums.WorkOrderStatus.Completed => "green",
+                WOMS.Domain.Enums.WorkOrderStatus.Cancelled => "red",
+                _ => "gray"
+            };
+        }
 
-            try
+        private static string GetPriorityColor(WOMS.Domain.Enums.WorkOrderPriority priority)
+        {
+            return priority switch
             {
-                var metadataDict = JsonSerializer.Deserialize<Dictionary<string, object>>(metadata);
-                return metadataDict?.ContainsKey(key) == true ? metadataDict[key]?.ToString() : null;
-            }
-            catch
-            {
-                return null;
-            }
+                WOMS.Domain.Enums.WorkOrderPriority.High => "red",
+                WOMS.Domain.Enums.WorkOrderPriority.Medium => "orange",
+                WOMS.Domain.Enums.WorkOrderPriority.Low => "green",
+                _ => "gray"
+            };
         }
     }
 }
