@@ -102,6 +102,12 @@ namespace WOMS.Api.Middleware
                     exModel.Message = ex.Message;
                     break;
 
+                case UnauthorizedAccessException ex:
+                    exModel.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    exModel.Message = ex.Message;
+                    break;
+
                 case NotSupportedException ex:
                     exModel.StatusCode = (int)HttpStatusCode.NotImplemented;
                     response.StatusCode = (int)HttpStatusCode.NotImplemented;
