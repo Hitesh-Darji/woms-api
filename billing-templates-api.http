@@ -1,0 +1,198 @@
+### Billing Templates API Test File
+### This file contains example requests for the Billing Templates API
+### Note: CreatedBy, UpdatedBy, and DeletedBy are automatically populated from the JWT token
+
+### Variables
+@baseUrl = https://localhost:7001
+@token = your_jwt_token_here
+
+### 1. Create a new billing template
+POST {{baseUrl}}/api/BillingTemplates
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Monthly Billing - Acme Corp",
+  "customerId": "CUST001",
+  "customerName": "Acme Corporation",
+  "outputFormat": "PDF",
+  "fileNamingConvention": "INV-{customer}-{date}-{number}",
+  "deliveryMethod": "Email",
+  "invoiceType": "Service",
+  "fieldOrder": [
+    {
+      "fieldName": "Work Order Id",
+      "displayOrder": 1,
+      "isEnabled": true,
+      "displayLabel": "Work Order ID",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Description",
+      "displayOrder": 2,
+      "isEnabled": true,
+      "displayLabel": "Description",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Quantity",
+      "displayOrder": 3,
+      "isEnabled": true,
+      "displayLabel": "Quantity",
+      "fieldType": "Number"
+    },
+    {
+      "fieldName": "Rate",
+      "displayOrder": 4,
+      "isEnabled": true,
+      "displayLabel": "Rate",
+      "fieldType": "Currency"
+    },
+    {
+      "fieldName": "Total",
+      "displayOrder": 5,
+      "isEnabled": true,
+      "displayLabel": "Total",
+      "fieldType": "Currency"
+    },
+    {
+      "fieldName": "Location",
+      "displayOrder": 6,
+      "isEnabled": false,
+      "displayLabel": "Location",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Category",
+      "displayOrder": 7,
+      "isEnabled": false,
+      "displayLabel": "Category",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Work Type",
+      "displayOrder": 8,
+      "isEnabled": false,
+      "displayLabel": "Work Type",
+      "fieldType": "Text"
+    }
+  ]
+}
+
+### 2. Get all billing templates
+GET {{baseUrl}}/api/BillingTemplates
+Authorization: Bearer {{token}}
+
+### 3. Get billing templates for a specific customer
+GET {{baseUrl}}/api/BillingTemplates?customerId=CUST001
+Authorization: Bearer {{token}}
+
+### 4. Get a specific billing template by ID
+GET {{baseUrl}}/api/BillingTemplates/{{templateId}}
+Authorization: Bearer {{token}}
+
+### 5. Update a billing template
+PUT {{baseUrl}}/api/BillingTemplates/{{templateId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "{{templateId}}",
+  "name": "Updated Monthly Billing - Acme Corp",
+  "customerId": "CUST001",
+  "customerName": "Acme Corporation",
+  "outputFormat": "Excel",
+  "fileNamingConvention": "INV-{customer}-{date}-{number}",
+  "deliveryMethod": "SFTP",
+  "invoiceType": "Summary",
+  "isActive": true,
+  "fieldOrder": [
+    {
+      "fieldName": "Work Order Id",
+      "displayOrder": 1,
+      "isEnabled": true,
+      "displayLabel": "Work Order ID",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Description",
+      "displayOrder": 2,
+      "isEnabled": true,
+      "displayLabel": "Description",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Quantity",
+      "displayOrder": 3,
+      "isEnabled": true,
+      "displayLabel": "Quantity",
+      "fieldType": "Number"
+    },
+    {
+      "fieldName": "Rate",
+      "displayOrder": 4,
+      "isEnabled": true,
+      "displayLabel": "Rate",
+      "fieldType": "Currency"
+    },
+    {
+      "fieldName": "Total",
+      "displayOrder": 5,
+      "isEnabled": true,
+      "displayLabel": "Total",
+      "fieldType": "Currency"
+    },
+    {
+      "fieldName": "Location",
+      "displayOrder": 6,
+      "isEnabled": true,
+      "displayLabel": "Location",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Category",
+      "displayOrder": 7,
+      "isEnabled": false,
+      "displayLabel": "Category",
+      "fieldType": "Text"
+    },
+    {
+      "fieldName": "Work Type",
+      "displayOrder": 8,
+      "isEnabled": false,
+      "displayLabel": "Work Type",
+      "fieldType": "Text"
+    }
+  ]
+}
+
+### 6. Delete a billing template (soft delete)
+DELETE {{baseUrl}}/api/BillingTemplates/{{templateId}}
+Authorization: Bearer {{token}}
+
+### Example Response for Create/Update/Get operations:
+### {
+###   "id": "123e4567-e89b-12d3-a456-426614174000",
+###   "name": "Monthly Billing - Acme Corp",
+###   "customerId": "CUST001",
+###   "customerName": "Acme Corporation",
+###   "outputFormat": "PDF",
+###   "fileNamingConvention": "INV-{customer}-{date}-{number}",
+###   "deliveryMethod": "Email",
+###   "invoiceType": "Service",
+###   "isActive": true,
+###   "createdOn": "2025-01-15T10:30:00Z",
+###   "updatedOn": null,
+###   "createdBy": "user123",
+###   "updatedBy": null,
+###   "fieldOrder": [
+###     {
+###       "fieldName": "Work Order Id",
+###       "displayOrder": 1,
+###       "isEnabled": true,
+###       "displayLabel": "Work Order ID",
+###       "fieldType": "Text",
+###       "fieldSettings": null
+###     }
+###   ]
+### }
