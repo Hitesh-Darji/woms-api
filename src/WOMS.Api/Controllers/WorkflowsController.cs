@@ -6,7 +6,6 @@ using WOMS.Application.Features.Workflow.Commands.ConnectNodes;
 using WOMS.Application.Features.Workflow.Commands.CreateWorkflow;
 using WOMS.Application.Features.Workflow.Commands.DeleteNode;
 using WOMS.Application.Features.Workflow.Commands.DisconnectNodes;
-using WOMS.Application.Features.Workflow.Commands.TestWorkflow;
 using WOMS.Application.Features.Workflow.Commands.UpdateNode;
 using WOMS.Application.Features.Workflow.Commands.UpdateWorkflow;
 using WOMS.Application.Features.Workflow.DTOs;
@@ -58,7 +57,7 @@ namespace WOMS.Api.Controllers
                 SortDescending = sortDescending
             };
             var result = await _mediator.Send(query);
-            return Ok(result);
+            return HandleResponse(StatusCodes.Status200OK, "Workflows retrieved successfully", true, result, null);
         }
 
         [HttpGet("{id}")]
@@ -73,7 +72,7 @@ namespace WOMS.Api.Controllers
             if (result == null)
                 return NotFound();
 
-            return Ok(result);
+            return HandleResponse(StatusCodes.Status200OK, "Workflows retrieved successfully", true, result, null);
         }
 
 
@@ -93,8 +92,8 @@ namespace WOMS.Api.Controllers
                 Category = request.Category
             };
 
-            var result = await _mediator.Send(command );
-            return CreatedAtAction(nameof(GetWorkflow), new { id = result.Id }, result);
+            var result = await _mediator.Send(command);
+            return HandleResponse(StatusCodes.Status201Created, "Workflow created successfully",true,result,null);
         }
 
 
@@ -117,7 +116,7 @@ namespace WOMS.Api.Controllers
                 IsActive = request.IsActive
             };
             var result = await _mediator.Send(command);
-            return Ok(result);
+            return HandleResponse(StatusCodes.Status200OK, "Workflow updated successfully", true, result, null);
         }
 
 
@@ -215,24 +214,6 @@ namespace WOMS.Api.Controllers
             };
             var result = await _mediator.Send(command);
             return Ok(new { success = result });
-        }
-
-        [HttpPost("test")]
-        [ProducesResponseType(typeof(WorkflowTestResultDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<WorkflowTestResultDto>> TestWorkflow([FromBody] TestWorkflowRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = new TestWorkflowCommand
-            {
-                WorkflowId = request.WorkflowId,
-                TestData = request.TestData
-            };
-            var result = await _mediator.Send(command);
-            return Ok(result);
         }
 
         [HttpGet("node-types")]

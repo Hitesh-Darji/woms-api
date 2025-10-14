@@ -10,8 +10,6 @@ namespace WOMS.Application.Profiles
         public WorkflowProfile()
         {
             CreateMap<Workflow, WorkflowDto>()
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedOn))
-                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedOn))
                 .ForMember(dest => dest.Nodes, opt => opt.MapFrom(src => src.Nodes));
 
             CreateMap<WorkflowNode, WorkflowNodeDto>()
@@ -24,45 +22,24 @@ namespace WOMS.Application.Profiles
         {
             if (string.IsNullOrEmpty(json))
                 return null;
-            
-            try
-            {
-                return JsonSerializer.Deserialize<NodePositionDto>(json);
-            }
-            catch
-            {
-                return null;
-            }
+            try { return JsonSerializer.Deserialize<NodePositionDto>(json); }
+            catch { return null; }
         }
 
         private static Dictionary<string, object>? DeserializeData(string? json)
         {
             if (string.IsNullOrEmpty(json))
                 return null;
-            
-            try
-            {
-                return JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-            }
-            catch
-            {
-                return null;
-            }
+            try { return JsonSerializer.Deserialize<Dictionary<string, object>>(json); }
+            catch { return null; }
         }
 
         private static List<string>? DeserializeConnections(string? json)
         {
             if (string.IsNullOrEmpty(json))
                 return null;
-            
-            try
-            {
-                return JsonSerializer.Deserialize<List<string>>(json);
-            }
-            catch
-            {
-                return null;
-            }
+            try { return JsonSerializer.Deserialize<List<string>>(json); }
+            catch { return null; }
         }
     }
 }

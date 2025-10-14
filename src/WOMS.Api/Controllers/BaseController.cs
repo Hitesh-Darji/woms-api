@@ -8,14 +8,14 @@ namespace WOMS.Api.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected IActionResult HandleResponse<T>(int statusCode, string successMessage, bool isSuccess, T data, List<string> errors = null)
+        protected ActionResult<T> HandleResponse<T>(int statusCode, string successMessage, bool isSuccess, T data, List<string>? errors = null)
         {
             var response = new ApiResponse<T>
             {
                 StatusCode = statusCode,
                 Message = successMessage,
                 IsSuccess = isSuccess,
-                Errors = errors,
+                Errors = errors ?? new List<string>(),
                 Data = data
             };
 /*
@@ -26,8 +26,8 @@ namespace WOMS.Api.Controllers
 
             return StatusCode(statusCode, response);
         }
-    
 
+        
         protected IActionResult ValidateRequest<T>(IValidator<T> validator, T request)
         {
             if (request == null || validator == null)
@@ -49,7 +49,7 @@ namespace WOMS.Api.Controllers
                     Data = null
                 });
             }
-            return null;
+            return null!;
         }
 
         protected Guid? UserId

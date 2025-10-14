@@ -14,39 +14,116 @@ namespace WOMS.Infrastructure.Repositories
 
         public async Task<IEnumerable<Workflow>> GetAllWithNodesAsync(CancellationToken cancellationToken = default)
         {
-            return await GetQueryable()
+            var workflows = await GetQueryable()
                 .AsNoTracking()
-                .Include(w => w.Nodes)
                 .Where(w => !w.IsDeleted)
-                .OrderByDescending(w => w.CreatedAt)
+                .OrderByDescending(w => w.CreatedOn)
                 .ToListAsync(cancellationToken);
+
+            if (workflows.Count == 0)
+                return workflows;
+
+            var workflowIds = workflows.Select(w => w.Id).ToList();
+            var nodes = await _context.WorkflowNodes
+                .AsNoTracking()
+                .Where(n => workflowIds.Contains(n.WorkflowId) && !n.IsDeleted)
+                .OrderBy(n => n.OrderIndex)
+                .ToListAsync(cancellationToken);
+
+            var nodesByWorkflowId = nodes
+                .GroupBy(n => n.WorkflowId)
+                .ToDictionary(g => g.Key, g => (ICollection<WorkflowNode>)g.ToList());
+
+            foreach (var wf in workflows)
+            {
+                wf.Nodes = nodesByWorkflowId.TryGetValue(wf.Id, out var list)
+                    ? list
+                    : new List<WorkflowNode>();
+            }
+
+            return workflows;
         }
 
         public async Task<Workflow?> GetByIdWithNodesAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await GetQueryable()
-                .Include(w => w.Nodes)
+            var workflow = await GetQueryable()
                 .FirstOrDefaultAsync(w => w.Id == id && !w.IsDeleted, cancellationToken);
+
+            if (workflow == null)
+                return null;
+
+            var nodes = await _context.WorkflowNodes
+                .AsNoTracking()
+                .Where(n => n.WorkflowId == id && !n.IsDeleted)
+                .OrderBy(n => n.OrderIndex)
+                .ToListAsync(cancellationToken);
+
+            workflow.Nodes = nodes;
+            return workflow;
         }
 
         public async Task<IEnumerable<Workflow>> GetByCategoryAsync(string category, CancellationToken cancellationToken = default)
         {
-            return await GetQueryable()
+            var workflows = await GetQueryable()
                 .AsNoTracking()
-                .Include(w => w.Nodes)
                 .Where(w => !w.IsDeleted && w.Category == category)
-                .OrderByDescending(w => w.CreatedAt)
+                .OrderByDescending(w => w.CreatedOn)
                 .ToListAsync(cancellationToken);
+
+            if (workflows.Count == 0)
+                return workflows;
+
+            var workflowIds = workflows.Select(w => w.Id).ToList();
+            var nodes = await _context.WorkflowNodes
+                .AsNoTracking()
+                .Where(n => workflowIds.Contains(n.WorkflowId) && !n.IsDeleted)
+                .OrderBy(n => n.OrderIndex)
+                .ToListAsync(cancellationToken);
+
+            var nodesByWorkflowId = nodes
+                .GroupBy(n => n.WorkflowId)
+                .ToDictionary(g => g.Key, g => (ICollection<WorkflowNode>)g.ToList());
+
+            foreach (var wf in workflows)
+            {
+                wf.Nodes = nodesByWorkflowId.TryGetValue(wf.Id, out var list)
+                    ? list
+                    : new List<WorkflowNode>();
+            }
+
+            return workflows;
         }
 
         public async Task<IEnumerable<Workflow>> GetActiveWorkflowsAsync(CancellationToken cancellationToken = default)
         {
-            return await GetQueryable()
+            var workflows = await GetQueryable()
                 .AsNoTracking()
-                .Include(w => w.Nodes)
                 .Where(w => !w.IsDeleted && w.IsActive)
-                .OrderByDescending(w => w.CreatedAt)
+                .OrderByDescending(w => w.CreatedOn)
                 .ToListAsync(cancellationToken);
+
+            if (workflows.Count == 0)
+                return workflows;
+
+            var workflowIds = workflows.Select(w => w.Id).ToList();
+            var nodes = await _context.WorkflowNodes
+                .AsNoTracking()
+                .Where(n => workflowIds.Contains(n.WorkflowId) && !n.IsDeleted)
+                .OrderBy(n => n.OrderIndex)
+                .ToListAsync(cancellationToken);
+
+            var nodesByWorkflowId = nodes
+                .GroupBy(n => n.WorkflowId)
+                .ToDictionary(g => g.Key, g => (ICollection<WorkflowNode>)g.ToList());
+
+            foreach (var wf in workflows)
+            {
+                wf.Nodes = nodesByWorkflowId.TryGetValue(wf.Id, out var list)
+                    ? list
+                    : new List<WorkflowNode>();
+            }
+
+            return workflows;
         }
 
         public async Task<(IEnumerable<Workflow> Workflows, int TotalCount)> GetPaginatedAsync(
@@ -61,7 +138,6 @@ namespace WOMS.Infrastructure.Repositories
         {
             var query = GetQueryable()
                 .AsNoTracking()
-                .Include(w => w.Nodes)
                 .Where(w => !w.IsDeleted);
 
             if (!string.IsNullOrEmpty(searchTerm))
@@ -91,11 +167,11 @@ namespace WOMS.Infrastructure.Repositories
                     ? query.OrderByDescending(w => w.Category)
                     : query.OrderBy(w => w.Category),
                 "updatedat" => sortDescending
-                    ? query.OrderByDescending(w => w.UpdatedAt)
-                    : query.OrderBy(w => w.UpdatedAt),
+                    ? query.OrderByDescending(w => w.UpdatedOn)
+                    : query.OrderBy(w => w.UpdatedOn),
                 _ => sortDescending
-                    ? query.OrderByDescending(w => w.CreatedAt)
-                    : query.OrderBy(w => w.CreatedAt)
+                    ? query.OrderByDescending(w => w.CreatedOn)
+                    : query.OrderBy(w => w.CreatedOn)
             };
 
             // Get total count
@@ -106,6 +182,27 @@ namespace WOMS.Infrastructure.Repositories
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
+
+            if (workflows.Count > 0)
+            {
+                var workflowIds = workflows.Select(w => w.Id).ToList();
+                var nodes = await _context.WorkflowNodes
+                    .AsNoTracking()
+                    .Where(n => workflowIds.Contains(n.WorkflowId) && !n.IsDeleted)
+                    .OrderBy(n => n.OrderIndex)
+                    .ToListAsync(cancellationToken);
+
+                var nodesByWorkflowId = nodes
+                    .GroupBy(n => n.WorkflowId)
+                    .ToDictionary(g => g.Key, g => (ICollection<WorkflowNode>)g.ToList());
+
+                foreach (var wf in workflows)
+                {
+                    wf.Nodes = nodesByWorkflowId.TryGetValue(wf.Id, out var list)
+                        ? list
+                        : new List<WorkflowNode>();
+                }
+            }
 
             return (workflows, totalCount);
         }

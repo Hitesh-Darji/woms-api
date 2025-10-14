@@ -32,7 +32,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
             workflow.Description = request.Description;
             workflow.Category = request.Category;
             workflow.IsActive = request.IsActive;
-            workflow.UpdatedAt = DateTime.UtcNow;
+            workflow.UpdatedOn = DateTime.UtcNow;
 
             await _workflowRepository.UpdateAsync(workflow, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

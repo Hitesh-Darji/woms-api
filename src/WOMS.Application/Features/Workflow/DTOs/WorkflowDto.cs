@@ -4,14 +4,11 @@ namespace WOMS.Application.Features.Workflow.DTOs
 {
     public class WorkflowDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string Category { get; set; } = string.Empty;
         public int CurrentVersion { get; set; } = 1;
         public bool IsActive { get; set; } = true;
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public List<WorkflowNodeDto> Nodes { get; set; } = new List<WorkflowNodeDto>();
     }
 
