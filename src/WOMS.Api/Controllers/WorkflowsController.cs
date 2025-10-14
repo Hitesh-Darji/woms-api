@@ -113,7 +113,8 @@ namespace WOMS.Api.Controllers
                 Name = request.Name,
                 Description = request.Description,
                 Category = request.Category,
-                IsActive = request.IsActive
+                IsActive = request.IsActive,
+                Nodes = request.Nodes
             };
             var result = await _mediator.Send(command);
             return HandleResponse(StatusCodes.Status200OK, "Workflow updated successfully", true, result, null);

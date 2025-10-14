@@ -36,6 +36,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile<WOMS.Application.Profiles.ViewProfile>();
     cfg.AddProfile<WOMS.Application.Profiles.BillingProfiles>();
     cfg.AddProfile<WorkflowProfile>();
+    cfg.AddProfile<WorkflowStatusProfile>();
 });
 
 var mapper = config.CreateMapper();

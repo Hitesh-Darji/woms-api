@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
@@ -14,8 +15,7 @@ namespace WOMS.Domain.Entities
         public string? Description { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public string Category { get; set; } = string.Empty;
+        public WorkflowCategory Category { get; set; } = WorkflowCategory.General;
 
         [Required]
         public int CurrentVersion { get; set; } = 1;

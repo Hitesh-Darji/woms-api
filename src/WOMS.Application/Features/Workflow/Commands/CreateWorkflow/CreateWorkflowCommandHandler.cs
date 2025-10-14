@@ -5,6 +5,7 @@ using System.Security.Claims;
 using WOMS.Application.Features.Workflow.DTOs;
 using WOMS.Application.Interfaces;
 using WOMS.Domain.Repositories;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Application.Features.Workflow.Commands.CreateWorkflow
 {

@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Application.Features.Workflow.DTOs
 {
     public class WorkflowDto
     {
+        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public string Category { get; set; } = string.Empty;
+        public WorkflowCategory Category { get; set; } = WorkflowCategory.General;
         public int CurrentVersion { get; set; } = 1;
         public bool IsActive { get; set; } = true;
         public List<WorkflowNodeDto> Nodes { get; set; } = new List<WorkflowNodeDto>();
@@ -23,6 +25,15 @@ namespace WOMS.Application.Features.Workflow.DTOs
         public Dictionary<string, object>? Data { get; set; }
         public List<string>? Connections { get; set; }
         public int OrderIndex { get; set; }
+        
+        // Node-specific configurations
+        public StartNodeConfigDto? StartConfig { get; set; }
+        public StatusNodeConfigDto? StatusConfig { get; set; }
+        public ConditionNodeConfigDto? ConditionConfig { get; set; }
+        public ApprovalNodeConfigDto? ApprovalConfig { get; set; }
+        public NotificationNodeConfigDto? NotificationConfig { get; set; }
+        public EscalationNodeConfigDto? EscalationConfig { get; set; }
+        public EndNodeConfigDto? EndConfig { get; set; }
     }
 
     public class NodePositionDto
@@ -41,8 +52,7 @@ namespace WOMS.Application.Features.Workflow.DTOs
         public string? Description { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public string Category { get; set; } = "General";
+        public WorkflowCategory Category { get; set; } = WorkflowCategory.General;
     }
 
     public class UpdateWorkflowRequest
@@ -55,10 +65,11 @@ namespace WOMS.Application.Features.Workflow.DTOs
         public string? Description { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public string Category { get; set; } = "General";
+        public WorkflowCategory Category { get; set; } = WorkflowCategory.General;
 
         public bool IsActive { get; set; } = true;
+        
+        public List<WorkflowNodeDto> Nodes { get; set; } = new List<WorkflowNodeDto>();
     }
 
     public class AddNodeRequest
@@ -151,5 +162,52 @@ namespace WOMS.Application.Features.Workflow.DTOs
         public string Description { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;
+    }
+
+    // Node-specific configuration DTOs
+    public class StartNodeConfigDto
+    {
+        public WorkflowTriggerType TriggerType { get; set; } = WorkflowTriggerType.ManualStart;
+    }
+
+    public class StatusNodeConfigDto
+    {
+        public string TargetStatus { get; set; } = string.Empty; // Planned, Dispatched, In Progress, etc.
+        public WorkflowAssigneeType AutoAssignTo { get; set; } = WorkflowAssigneeType.KeepCurrentAssignee;
+    }
+
+    public class ConditionNodeConfigDto
+    {
+        public WorkflowConditionField FieldToCheck { get; set; } = WorkflowConditionField.Priority;
+        public WorkflowConditionOperator Operator { get; set; } = WorkflowConditionOperator.Equals;
+        public string Value { get; set; } = string.Empty;
+        public string LogicalOperator { get; set; } = "AND"; // AND, OR for multiple conditions
+    }
+
+    public class ApprovalNodeConfigDto
+    {
+        public string ApprovalName { get; set; } = string.Empty; // e.g., Manager Approval
+        public List<string> ApproverRoles { get; set; } = new List<string>(); // Supervisor, Manager, Safety Officer, etc.
+        public WorkflowApprovalType ApprovalType { get; set; } = WorkflowApprovalType.SingleApprover;
+        public int DeadlineHours { get; set; } = 24;
+    }
+
+    public class NotificationNodeConfigDto
+    {
+        public WorkflowNotificationType NotificationType { get; set; } = WorkflowNotificationType.Email;
+        public WorkflowRecipientType Recipient { get; set; } = WorkflowRecipientType.CurrentAssignee;
+        public WorkflowMessageTemplate MessageTemplate { get; set; } = WorkflowMessageTemplate.StatusChangeAlert;
+    }
+
+    public class EscalationNodeConfigDto
+    {
+        public WorkflowEscalationTrigger Trigger { get; set; } = WorkflowEscalationTrigger.TimeElapsed;
+        public int HoursToWait { get; set; } = 24;
+        public WorkflowEscalationAction Action { get; set; } = WorkflowEscalationAction.SendNotification;
+    }
+
+    public class EndNodeConfigDto
+    {
+        public WorkflowCompletionAction CompletionAction { get; set; } = WorkflowCompletionAction.NoAdditionalAction;
     }
 }
