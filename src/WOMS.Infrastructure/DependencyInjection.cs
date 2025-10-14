@@ -37,6 +37,7 @@ namespace WOMS.Infrastructure
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
             services.AddScoped<IBillingTemplateRepository, BillingTemplateRepository>();
+            services.AddScoped<IRateTableRepository, RateTableRepository>();
 
             // Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

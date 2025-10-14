@@ -1,4 +1,5 @@
 using AutoMapper;
+using WOMS.Application.Features.BillingRates.DTOs;
 using WOMS.Application.Features.BillingTemplates.Commands.CreateBillingTemplate;
 using WOMS.Application.Features.BillingTemplates.Commands.UpdateBillingTemplate;
 using WOMS.Application.Features.BillingTemplates.DTOs;
@@ -17,7 +18,8 @@ namespace WOMS.Application.Profiles
 
             // DTO to Command mappings
             CreateMap<CreateBillingTemplateDto, CreateBillingTemplateCommand>();
-            
+            CreateMap<CreateBillingRateDto, RateTable>().ReverseMap();
+            CreateMap<BillingRateDto, RateTable>().ReverseMap(); 
             // Custom mapping for UpdateBillingTemplateCommand that includes Id
             CreateMap<(UpdateBillingTemplateDto dto, Guid id), UpdateBillingTemplateCommand>()
                 .ConstructUsing(src => new UpdateBillingTemplateCommand

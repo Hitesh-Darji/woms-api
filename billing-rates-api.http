@@ -1,0 +1,102 @@
+### Billing Rates API Test File
+### Base URL: https://localhost:7001/api/BillingRates
+
+### Variables
+@baseUrl = https://localhost:7001
+@apiUrl = {{baseUrl}}/api/BillingRates
+@token = your_jwt_token_here
+
+### 1. Create a new billing rate table
+POST {{apiUrl}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Standard Hourly Rates",
+  "description": "Standard hourly rates for general maintenance work",
+  "rateType": "Flat Fee",
+  "baseRate": 75.00,
+  "effectiveStartDate": "2025-10-14T00:00:00Z",
+  "effectiveEndDate": "2026-12-31T23:59:59Z",
+  "isActive": true
+}
+
+### 2. Create another billing rate table
+POST {{apiUrl}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Emergency Service Rates",
+  "description": "Premium rates for emergency and after-hours service calls",
+  "rateType": "Flat Fee",
+  "baseRate": 125.00,
+  "effectiveStartDate": "2025-10-14T00:00:00Z",
+  "effectiveEndDate": "2026-12-31T23:59:59Z",
+  "isActive": true
+}
+
+### 3. Get all billing rates
+GET {{apiUrl}}
+Authorization: Bearer {{token}}
+
+### 4. Get all active billing rates only
+GET {{apiUrl}}?isActive=true
+Authorization: Bearer {{token}}
+
+### 5. Get billing rates by date range
+GET {{apiUrl}}?startDate=2025-10-01T00:00:00Z&endDate=2025-12-31T23:59:59Z
+Authorization: Bearer {{token}}
+
+### 6. Get a specific billing rate by ID (replace {id} with actual ID from create response)
+GET {{apiUrl}}/{id}
+Authorization: Bearer {{token}}
+
+### 7. Update a billing rate (replace {id} with actual ID)
+PUT {{apiUrl}}/{id}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Standard Hourly Rates",
+  "description": "Updated standard hourly rates with new pricing structure",
+  "rateType": "Flat Fee",
+  "baseRate": 85.00,
+  "effectiveStartDate": "2025-10-14T00:00:00Z",
+  "effectiveEndDate": "2026-12-31T23:59:59Z",
+  "isActive": true
+}
+
+### 8. Delete a billing rate (replace {id} with actual ID)
+DELETE {{apiUrl}}/{id}
+Authorization: Bearer {{token}}
+
+### 9. Create billing rate with different rate types
+POST {{apiUrl}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Tiered Service Rates",
+  "description": "Tiered pricing based on service complexity",
+  "rateType": "Tiered",
+  "baseRate": 50.00,
+  "effectiveStartDate": "2025-10-14T00:00:00Z",
+  "effectiveEndDate": "2026-12-31T23:59:59Z",
+  "isActive": true
+}
+
+### 10. Create billing rate with conditional pricing
+POST {{apiUrl}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Location-Based Rates",
+  "description": "Rates that vary based on location and accessibility",
+  "rateType": "Conditional",
+  "baseRate": 65.00,
+  "effectiveStartDate": "2025-10-14T00:00:00Z",
+  "effectiveEndDate": "2026-12-31T23:59:59Z",
+  "isActive": true
+}
