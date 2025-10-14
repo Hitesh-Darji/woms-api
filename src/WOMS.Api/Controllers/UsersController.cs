@@ -12,7 +12,7 @@ namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly IMediator _mediator;
         public UsersController(IMediator mediator)
@@ -88,20 +88,8 @@ namespace WOMS.Api.Controllers
             {
                 UpdateUserDto = updateUserDto
             };
-
-            try
-            {
-                var result = await _mediator.Send(command);
-                return Ok(result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [Authorize]
@@ -115,22 +103,12 @@ namespace WOMS.Api.Controllers
             {
                 Id = id
             };
-
-            try
+            var result = await _mediator.Send(command);
+            if (!result)
             {
-                var result = await _mediator.Send(command);
-                
-                if (!result)
-                {
-                    return NotFound();
-                }
-
-                return NoContent();
+                return NotFound();
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+            return NoContent();
         }
     }
 }

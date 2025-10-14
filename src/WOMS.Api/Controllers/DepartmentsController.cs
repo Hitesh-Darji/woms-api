@@ -12,7 +12,7 @@ namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DepartmentsController : ControllerBase
+    public class DepartmentsController : BaseController
     {
         private readonly IMediator _mediator;
         
@@ -45,15 +45,10 @@ namespace WOMS.Api.Controllers
                 CreatedBy = userIdClaim
             };
 
-            try
-            {
+           
                 var result = await _mediator.Send(command);
                 return CreatedAtAction(nameof(GetDepartment), new { id = result.Id }, result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+    
         }
 
         [Authorize]
@@ -111,15 +106,10 @@ namespace WOMS.Api.Controllers
                 UpdatedBy = userIdClaim
             };
 
-            try
-            {
+
                 var result = await _mediator.Send(command);
                 return Ok(result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+           
         }
 
         [Authorize]

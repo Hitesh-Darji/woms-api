@@ -2,17 +2,17 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WOMS.Application.Features.Roles.Commands.CreateRole;
-using WOMS.Application.Features.Roles.Commands.UpdateRole;
 using WOMS.Application.Features.Roles.Commands.DeleteRole;
+using WOMS.Application.Features.Roles.Commands.UpdateRole;
 using WOMS.Application.Features.Roles.DTOs;
-using WOMS.Application.Features.Roles.Queries.GetRoleById;
 using WOMS.Application.Features.Roles.Queries.GetAllRoles;
+using WOMS.Application.Features.Roles.Queries.GetRoleById;
 
 namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RolesController : ControllerBase
+    public class RolesController : BaseController
     {
         private readonly IMediator _mediator;
 
@@ -40,16 +40,8 @@ namespace WOMS.Api.Controllers
                 Description = createRoleDto.Description,
                 CreatedBy = userIdClaim
             };
-
-            try
-            {
-                var result = await _mediator.Send(command);
-                return CreatedAtAction(nameof(GetRole), new { id = result.Id }, result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetRole), new { id = result.Id }, result);
         }
 
         [Authorize]
@@ -77,7 +69,6 @@ namespace WOMS.Api.Controllers
             {
                 return NotFound();
             }
-
             return Ok(result);
         }
 
@@ -104,15 +95,8 @@ namespace WOMS.Api.Controllers
                 UpdatedBy = userIdClaim
             };
 
-            try
-            {
-                var result = await _mediator.Send(command);
-                return Ok(result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [Authorize]
@@ -128,25 +112,12 @@ namespace WOMS.Api.Controllers
                 Id = id
             };
 
-            try
+            var result = await _mediator.Send(command);
+            if (!result)
             {
-                var result = await _mediator.Send(command);
-                
-                if (!result)
-                {
-                    return NotFound();
-                }
-
-                return NoContent();
+                return NotFound();
             }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+            return NoContent();
         }
     }
 }

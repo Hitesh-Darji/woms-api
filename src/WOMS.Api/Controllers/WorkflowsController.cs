@@ -1,0 +1,248 @@
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WOMS.Application.Features.Workflow.Commands.AddNode;
+using WOMS.Application.Features.Workflow.Commands.ConnectNodes;
+using WOMS.Application.Features.Workflow.Commands.CreateWorkflow;
+using WOMS.Application.Features.Workflow.Commands.DeleteNode;
+using WOMS.Application.Features.Workflow.Commands.DisconnectNodes;
+using WOMS.Application.Features.Workflow.Commands.TestWorkflow;
+using WOMS.Application.Features.Workflow.Commands.UpdateNode;
+using WOMS.Application.Features.Workflow.Commands.UpdateWorkflow;
+using WOMS.Application.Features.Workflow.DTOs;
+using WOMS.Application.Features.Workflow.Queries.GetAllWorkflows;
+using WOMS.Application.Features.Workflow.Queries.GetNodeTypes;
+using WOMS.Application.Features.Workflow.Queries.GetWorkflowById;
+
+namespace WOMS.Api.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class WorkflowsController : BaseController
+    {
+        private readonly IMediator _mediator;
+
+        public WorkflowsController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(WorkflowListResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<WorkflowListResponse>> GetAllWorkflows(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? searchTerm = null,
+            [FromQuery] string? category = null,
+            [FromQuery] bool? isActive = null,
+            [FromQuery] string sortBy = "CreatedAt",
+            [FromQuery] bool sortDescending = true)
+        {
+            if (pageNumber < 1)
+                return BadRequest("Page number must be greater than 0");
+
+            if (pageSize < 1 || pageSize > 100)
+                return BadRequest("Page size must be between 1 and 100");
+
+            var query = new GetAllWorkflowsQuery
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SearchTerm = searchTerm,
+                Category = category,
+                IsActive = isActive,
+                SortBy = sortBy,
+                SortDescending = sortDescending
+            };
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(WorkflowDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<WorkflowDto>> GetWorkflow(Guid id)
+        {
+            var query = new GetWorkflowByIdQuery { Id = id };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType(typeof(WorkflowDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<WorkflowDto>> CreateWorkflow([FromBody] CreateWorkflowRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new CreateWorkflowCommand
+            {
+                Name = request.Name,
+                Description = request.Description,
+                Category = request.Category
+            };
+
+            var result = await _mediator.Send(command );
+            return CreatedAtAction(nameof(GetWorkflow), new { id = result.Id }, result);
+        }
+
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(WorkflowDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<WorkflowDto>> UpdateWorkflow(Guid id, [FromBody] UpdateWorkflowRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new UpdateWorkflowCommand
+            {
+                Id = id,
+                Name = request.Name,
+                Description = request.Description,
+                Category = request.Category,
+                IsActive = request.IsActive
+            };
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+
+        [HttpPost("nodes")]
+        [ProducesResponseType(typeof(WorkflowNodeDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<WorkflowNodeDto>> AddNode([FromBody] AddNodeRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var command = new AddNodeCommand
+            {
+                WorkflowId = request.WorkflowId,
+                Type = request.Type,
+                Title = request.Title,
+                Description = request.Description,
+                Position = request.Position,
+                Data = request.Data,
+                OrderIndex = request.OrderIndex
+            };
+            var result = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetWorkflow), new { id = request.WorkflowId }, result);
+        }
+
+        [HttpPut("nodes/{nodeId}")]
+        [ProducesResponseType(typeof(WorkflowNodeDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<WorkflowNodeDto>> UpdateNode(Guid nodeId, [FromBody] UpdateNodeRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var command = new UpdateNodeCommand
+            {
+                NodeId = nodeId,
+                Title = request.Title,
+                Description = request.Description,
+                Position = request.Position,
+                Data = request.Data,
+                OrderIndex = request.OrderIndex
+            };
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+
+        [HttpDelete("nodes/{nodeId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteNode(Guid nodeId)
+        {
+            var command = new DeleteNodeCommand { NodeId = nodeId };
+            var result = await _mediator.Send(command);
+
+            if (!result)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpPost("nodes/connect")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> ConnectNodes([FromBody] ConnectNodesRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new ConnectNodesCommand
+            {
+                FromNodeId = request.FromNodeId,
+                ToNodeId = request.ToNodeId
+            };
+            var result = await _mediator.Send(command);
+            return Ok(new { success = result });
+        }
+
+        [HttpPost("nodes/disconnect")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DisconnectNodes([FromBody] DisconnectNodesRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new DisconnectNodesCommand
+            {
+                FromNodeId = request.FromNodeId,
+                ToNodeId = request.ToNodeId
+            };
+            var result = await _mediator.Send(command);
+            return Ok(new { success = result });
+        }
+
+        [HttpPost("test")]
+        [ProducesResponseType(typeof(WorkflowTestResultDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<WorkflowTestResultDto>> TestWorkflow([FromBody] TestWorkflowRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new TestWorkflowCommand
+            {
+                WorkflowId = request.WorkflowId,
+                TestData = request.TestData
+            };
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpGet("node-types")]
+        [ProducesResponseType(typeof(List<NodeTypeInfoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<List<NodeTypeInfoDto>>> GetNodeTypes()
+        {
+            var query = new GetNodeTypesQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+    }
+}

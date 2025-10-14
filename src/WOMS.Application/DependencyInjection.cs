@@ -20,6 +20,7 @@ namespace WOMS.Application
 
             // Add AutoMapper
             services.AddAutoMapper(typeof(BillingRateProfile).Assembly);
+            services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile), typeof(DepartmentProfile), typeof(WorkflowProfile));
 
             // Add FluentValidation
             services.AddValidatorsFromAssembly(assembly);
