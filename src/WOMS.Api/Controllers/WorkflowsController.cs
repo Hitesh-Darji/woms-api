@@ -6,7 +6,6 @@ using WOMS.Application.Features.Workflow.Commands.ConnectNodes;
 using WOMS.Application.Features.Workflow.Commands.CreateWorkflow;
 using WOMS.Application.Features.Workflow.Commands.DeleteNode;
 using WOMS.Application.Features.Workflow.Commands.DisconnectNodes;
-using WOMS.Application.Features.Workflow.Commands.TestWorkflow;
 using WOMS.Application.Features.Workflow.Commands.UpdateNode;
 using WOMS.Application.Features.Workflow.Commands.UpdateWorkflow;
 using WOMS.Application.Features.Workflow.DTOs;
@@ -217,23 +216,7 @@ namespace WOMS.Api.Controllers
             return Ok(new { success = result });
         }
 
-        [HttpPost("test")]
-        [ProducesResponseType(typeof(WorkflowTestResultDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<WorkflowTestResultDto>> TestWorkflow([FromBody] TestWorkflowRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = new TestWorkflowCommand
-            {
-                WorkflowId = request.WorkflowId,
-                TestData = request.TestData
-            };
-            var result = await _mediator.Send(command);
-            return Ok(result);
-        }
+        // Test workflow endpoint removed (no TestWorkflow command available)
 
         [HttpGet("node-types")]
         [ProducesResponseType(typeof(List<NodeTypeInfoDto>), StatusCodes.Status200OK)]
