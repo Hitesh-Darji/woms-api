@@ -7,6 +7,7 @@ using WOMS.Application.Features.Workflow.Commands.CreateWorkflow;
 using WOMS.Application.Features.Workflow.Commands.DeleteNode;
 using WOMS.Application.Features.Workflow.Commands.DisconnectNodes;
 using WOMS.Application.Features.Workflow.Commands.UpdateNode;
+using WOMS.Application.Features.Workflow.Commands.ToggleWorkflowStatus;
 using WOMS.Application.Features.Workflow.Commands.UpdateWorkflow;
 using WOMS.Application.Features.Workflow.DTOs;
 using WOMS.Application.Features.Workflow.Queries.GetAllWorkflows;
@@ -226,6 +227,33 @@ namespace WOMS.Api.Controllers
             var query = new GetNodeTypesQuery();
             var result = await _mediator.Send(query);
             return Ok(result);
+        }
+
+        [HttpPut("{id}/toggle-status")]
+        [ProducesResponseType(typeof(ToggleWorkflowStatusResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<ToggleWorkflowStatusResponse>> ToggleWorkflowStatus(Guid id, [FromBody] ToggleWorkflowStatusRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var command = new ToggleWorkflowStatusCommand
+                {
+                    WorkflowId = id,
+                    IsActive = request.IsActive
+                };
+
+                var result = await _mediator.Send(command);
+                return HandleResponse(StatusCodes.Status200OK, result.Message, true, result, null);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

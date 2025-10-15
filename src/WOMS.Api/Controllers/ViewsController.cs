@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WOMS.Application.Features.View.Commands.CreateView;
 using WOMS.Application.Features.View.DTOs;
+using WOMS.Application.Features.View.Queries.GetViewById;
+using WOMS.Application.Features.View.Queries.GetAllViews;
 
 namespace WOMS.Api.Controllers
 {
@@ -49,16 +51,37 @@ namespace WOMS.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType(typeof(List<ViewDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<List<ViewDto>>> GetAllViews()
+        {
+            // Get the current user ID from the JWT token
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            
+            var query = new GetAllViewsQuery { UserId = userIdClaim };
+            var result = await _mediator.Send(query);
+            
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         [Authorize]
         [ProducesResponseType(typeof(ViewDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult<ViewDto> GetView(Guid id)
+        public async Task<ActionResult<ViewDto>> GetView(Guid id)
         {
-            // This would need a GetViewByIdQuery implementation
-            // For now, returning a placeholder
-            return NotFound("GetViewByIdQuery not implemented yet");
+            var query = new GetViewByIdQuery { Id = id };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                return NotFound($"View with ID {id} not found.");
+            }
+
+            return Ok(result);
         }
     }
 }

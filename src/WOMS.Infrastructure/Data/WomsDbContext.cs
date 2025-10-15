@@ -23,6 +23,11 @@ namespace WOMS.Infrastructure.Data
         public DbSet<WorkOrderView> WorkOrderViews { get; set; }
         public DbSet<WorkOrderAssignment> WorkOrderAssignments { get; set; }
 
+        // View entities
+        public DbSet<View> Views { get; set; }
+        public DbSet<ViewColumn> ViewColumns { get; set; }
+        public DbSet<ViewFilter> ViewFilters { get; set; }
+
         // Customer entities
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> Addresses { get; set; }
@@ -528,6 +533,27 @@ namespace WOMS.Infrastructure.Data
 
                 entity.HasIndex(wp => wp.WorkflowId);
                 entity.HasIndex(wp => wp.CurrentStatusId);
+            });
+
+            // Configure View
+            modelBuilder.Entity<View>(entity =>
+            {
+                entity.Property(v => v.Name).IsRequired().HasMaxLength(100);
+                entity.Property(v => v.SelectedColumns).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(v => v.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(v => v.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(v => v.CreatedBy).HasMaxLength(450);
+                entity.Property(v => v.UpdatedBy).HasMaxLength(450);
+                entity.Property(v => v.DeletedBy).HasMaxLength(450);
+
+                // Foreign key relationship for CreatedBy
+                entity.HasOne(v => v.CreatedByUser)
+                      .WithMany()
+                      .HasForeignKey(v => v.CreatedBy)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(v => v.Name);
+                entity.HasIndex(v => v.CreatedBy);
             });
         }
     }
