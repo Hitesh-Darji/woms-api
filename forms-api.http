@@ -1,0 +1,505 @@
+### Form Builder CRUD API Test File
+### This file contains comprehensive tests for the Form Builder API endpoints
+
+@baseUrl = https://localhost:7000
+@token = your_jwt_token_here
+
+### 1. Create a new form template
+POST {{baseUrl}}/api/forms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Customer Feedback Form",
+  "description": "A comprehensive form for collecting customer feedback",
+  "category": "Customer Service",
+  "status": "draft",
+  "isActive": true,
+  "sections": [
+    {
+      "title": "Customer Information",
+      "description": "Basic customer details",
+      "orderIndex": 1,
+      "isRequired": true,
+      "isCollapsible": false,
+      "isCollapsed": false,
+      "fields": [
+        {
+          "fieldType": "text",
+          "label": "Customer Name",
+          "placeholder": "Enter your full name",
+          "helpText": "Please provide your complete name",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1,
+          "minLength": 2,
+          "maxLength": 100
+        },
+        {
+          "fieldType": "email",
+          "label": "Email Address",
+          "placeholder": "your.email@example.com",
+          "helpText": "We'll use this to send you updates",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2,
+          "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$"
+        },
+        {
+          "fieldType": "phone",
+          "label": "Phone Number",
+          "placeholder": "(555) 123-4567",
+          "helpText": "Optional contact number",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 3
+        }
+      ]
+    },
+    {
+      "title": "Feedback Details",
+      "description": "Your feedback and suggestions",
+      "orderIndex": 2,
+      "isRequired": true,
+      "isCollapsible": true,
+      "isCollapsed": false,
+      "fields": [
+        {
+          "fieldType": "select",
+          "label": "Service Rating",
+          "helpText": "How would you rate our service?",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1,
+          "options": "[\"Excellent\", \"Good\", \"Average\", \"Poor\", \"Very Poor\"]"
+        },
+        {
+          "fieldType": "textarea",
+          "label": "Comments",
+          "placeholder": "Please share your detailed feedback...",
+          "helpText": "Tell us about your experience",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2,
+          "rows": 5,
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        {
+          "fieldType": "checkbox",
+          "label": "Would you recommend us?",
+          "helpText": "Check if you would recommend our service to others",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 3,
+          "defaultValue": "false"
+        }
+      ]
+    },
+    {
+      "title": "Additional Information",
+      "description": "Optional additional details",
+      "orderIndex": 3,
+      "isRequired": false,
+      "isCollapsible": true,
+      "isCollapsed": true,
+      "fields": [
+        {
+          "fieldType": "date",
+          "label": "Preferred Contact Date",
+          "helpText": "When would you like us to contact you?",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1
+        },
+        {
+          "fieldType": "file",
+          "label": "Attach Screenshots",
+          "helpText": "Upload any relevant screenshots (optional)",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2
+        }
+      ]
+    }
+  ]
+}
+
+### 2. Get all form templates
+GET {{baseUrl}}/api/forms
+Authorization: Bearer {{token}}
+
+### 3. Get form template by ID (replace {id} with actual ID from create response)
+GET {{baseUrl}}/api/forms/{{id}}
+Authorization: Bearer {{token}}
+
+### 4. Update form template (replace {id} with actual ID)
+PUT {{baseUrl}}/api/forms/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Customer Feedback Form",
+  "description": "An updated comprehensive form for collecting customer feedback",
+  "category": "Customer Service",
+  "status": "active",
+  "isActive": true,
+  "sections": [
+    {
+      "title": "Customer Information",
+      "description": "Basic customer details",
+      "orderIndex": 1,
+      "isRequired": true,
+      "isCollapsible": false,
+      "isCollapsed": false,
+      "fields": [
+        {
+          "fieldType": "text",
+          "label": "Customer Name",
+          "placeholder": "Enter your full name",
+          "helpText": "Please provide your complete name",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1,
+          "minLength": 2,
+          "maxLength": 100
+        },
+        {
+          "fieldType": "email",
+          "label": "Email Address",
+          "placeholder": "your.email@example.com",
+          "helpText": "We'll use this to send you updates",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2,
+          "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$"
+        },
+        {
+          "fieldType": "phone",
+          "label": "Phone Number",
+          "placeholder": "(555) 123-4567",
+          "helpText": "Optional contact number",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 3
+        },
+        {
+          "fieldType": "select",
+          "label": "Customer Type",
+          "helpText": "What type of customer are you?",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 4,
+          "options": "[\"Individual\", \"Business\", \"Non-Profit\", \"Government\"]"
+        }
+      ]
+    },
+    {
+      "title": "Feedback Details",
+      "description": "Your feedback and suggestions",
+      "orderIndex": 2,
+      "isRequired": true,
+      "isCollapsible": true,
+      "isCollapsed": false,
+      "fields": [
+        {
+          "fieldType": "select",
+          "label": "Service Rating",
+          "helpText": "How would you rate our service?",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1,
+          "options": "[\"Excellent\", \"Good\", \"Average\", \"Poor\", \"Very Poor\"]"
+        },
+        {
+          "fieldType": "textarea",
+          "label": "Comments",
+          "placeholder": "Please share your detailed feedback...",
+          "helpText": "Tell us about your experience",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2,
+          "rows": 5,
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        {
+          "fieldType": "checkbox",
+          "label": "Would you recommend us?",
+          "helpText": "Check if you would recommend our service to others",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 3,
+          "defaultValue": "false"
+        },
+        {
+          "fieldType": "radio",
+          "label": "How did you hear about us?",
+          "helpText": "Select the option that best describes how you found us",
+          "isRequired": false,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 4,
+          "options": "[\"Social Media\", \"Search Engine\", \"Referral\", \"Advertisement\", \"Other\"]"
+        }
+      ]
+    }
+  ]
+}
+
+### 5. Get form templates by category
+GET {{baseUrl}}/api/forms/category/Customer Service
+Authorization: Bearer {{token}}
+
+### 6. Get active form templates
+GET {{baseUrl}}/api/forms/active
+Authorization: Bearer {{token}}
+
+### 7. Create another form template for testing
+POST {{baseUrl}}/api/forms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Employee Onboarding Form",
+  "description": "Form for new employee onboarding process",
+  "category": "HR",
+  "status": "draft",
+  "isActive": true,
+  "sections": [
+    {
+      "title": "Personal Information",
+      "description": "Employee personal details",
+      "orderIndex": 1,
+      "isRequired": true,
+      "isCollapsible": false,
+      "isCollapsed": false,
+      "fields": [
+        {
+          "fieldType": "text",
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1,
+          "minLength": 2,
+          "maxLength": 100
+        },
+        {
+          "fieldType": "email",
+          "label": "Work Email",
+          "placeholder": "firstname.lastname@company.com",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2
+        },
+        {
+          "fieldType": "date",
+          "label": "Date of Birth",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 3
+        },
+        {
+          "fieldType": "text",
+          "label": "Social Security Number",
+          "placeholder": "XXX-XX-XXXX",
+          "helpText": "Required for tax purposes",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 4,
+          "pattern": "^\\d{3}-\\d{2}-\\d{4}$"
+        }
+      ]
+    },
+    {
+      "title": "Employment Details",
+      "description": "Job and department information",
+      "orderIndex": 2,
+      "isRequired": true,
+      "isCollapsible": false,
+      "isCollapsed": false,
+      "fields": [
+        {
+          "fieldType": "text",
+          "label": "Job Title",
+          "placeholder": "Enter your job title",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1
+        },
+        {
+          "fieldType": "select",
+          "label": "Department",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2,
+          "options": "[\"Engineering\", \"Sales\", \"Marketing\", \"HR\", \"Finance\", \"Operations\"]"
+        },
+        {
+          "fieldType": "date",
+          "label": "Start Date",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 3
+        },
+        {
+          "fieldType": "number",
+          "label": "Salary",
+          "placeholder": "Enter annual salary",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 4,
+          "minValue": 30000,
+          "maxValue": 200000,
+          "step": 1000
+        }
+      ]
+    },
+    {
+      "title": "Emergency Contact",
+      "description": "Emergency contact information",
+      "orderIndex": 3,
+      "isRequired": true,
+      "isCollapsible": true,
+      "isCollapsed": false,
+      "fields": [
+        {
+          "fieldType": "text",
+          "label": "Emergency Contact Name",
+          "placeholder": "Full name of emergency contact",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 1
+        },
+        {
+          "fieldType": "text",
+          "label": "Relationship",
+          "placeholder": "e.g., Spouse, Parent, Sibling",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 2
+        },
+        {
+          "fieldType": "phone",
+          "label": "Emergency Contact Phone",
+          "placeholder": "(555) 123-4567",
+          "isRequired": true,
+          "isReadOnly": false,
+          "isVisible": true,
+          "orderIndex": 3
+        }
+      ]
+    }
+  ]
+}
+
+### 8. Delete form template (replace {id} with actual ID)
+DELETE {{baseUrl}}/api/forms/{{id}}
+Authorization: Bearer {{token}}
+
+### 9. Test validation - Create form template with invalid data
+POST {{baseUrl}}/api/forms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "",
+  "description": "This should fail validation",
+  "category": "",
+  "status": "invalid_status_that_is_too_long",
+  "sections": [
+    {
+      "title": "",
+      "orderIndex": -1,
+      "fields": [
+        {
+          "fieldType": "",
+          "label": "",
+          "orderIndex": -1,
+          "minValue": 100,
+          "maxValue": 50
+        }
+      ]
+    }
+  ]
+}
+
+# Expected Response: 400 Bad Request
+# {
+#   "message": "Validation failed",
+#   "errors": [
+#     {
+#       "propertyName": "Name",
+#       "errorMessage": "Form template name is required."
+#     },
+#     {
+#       "propertyName": "Sections[0].Title",
+#       "errorMessage": "Section title is required."
+#     },
+#     {
+#       "propertyName": "Sections[0].Fields[0].MinValue",
+#       "errorMessage": "Minimum value must be less than maximum value."
+#     }
+#   ]
+# }
+
+### 9.1. Test null request body
+POST {{baseUrl}}/api/forms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+null
+
+### 9.2. Test empty request body
+POST {{baseUrl}}/api/forms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{}
+
+### 10. Test unauthorized access (without token)
+GET {{baseUrl}}/api/forms
+
+### 11. Test not found scenario
+GET {{baseUrl}}/api/forms/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{token}}
+
+### 12. Test update non-existent form template
+PUT {{baseUrl}}/api/forms/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Non-existent Form",
+  "description": "This should return 404",
+  "category": "Test",
+  "status": "draft",
+  "isActive": true,
+  "sections": []
+}

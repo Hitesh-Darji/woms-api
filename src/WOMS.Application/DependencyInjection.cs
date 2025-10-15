@@ -20,7 +20,7 @@ namespace WOMS.Application
 
             // Add AutoMapper - register consolidated BillingProfiles and other profiles
             services.AddAutoMapper(typeof(BillingProfiles).Assembly);
-            services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile), typeof(DepartmentProfile), typeof(WorkflowProfile));
+            services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile), typeof(DepartmentProfile), typeof(WorkflowProfile), typeof(FormProfile));
 
             // Add FluentValidation
             services.AddValidatorsFromAssembly(assembly);

@@ -17,3 +17,4 @@ namespace WOMS.Domain.Enums
         Enterprise = 3
     }
 }
+

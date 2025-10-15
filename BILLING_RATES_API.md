@@ -233,3 +233,4 @@ Supported rate types:
 - Soft delete ensures historical billing data remains intact
 - Rate tables can be linked to specific customers, work types, or service categories
 - The system supports complex pricing structures through the tiered and conditional rate types
+

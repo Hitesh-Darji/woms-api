@@ -14,3 +14,4 @@ namespace WOMS.Domain.Enums
         Suspended = 2
     }
 }
+

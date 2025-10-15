@@ -41,6 +41,9 @@ namespace WOMS.Infrastructure
             services.AddScoped<IBillingTemplateRepository, BillingTemplateRepository>();
             services.AddScoped<IBillingScheduleRepository, BillingScheduleRepository>();
             services.AddScoped<IRateTableRepository, RateTableRepository>();
+            services.AddScoped<IFormTemplateRepository, FormTemplateRepository>();
+            services.AddScoped<IFormSectionRepository, FormSectionRepository>();
+            services.AddScoped<IFormFieldRepository, FormFieldRepository>();
 
             // Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
