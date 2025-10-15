@@ -18,7 +18,7 @@ namespace WOMS.Application.Features.Workflow.DTOs
     {
         public Guid Id { get; set; }
         public Guid WorkflowId { get; set; }
-        public string Type { get; set; } = string.Empty; // start, status, condition, approval, notification, escalation, end
+        public WorkflowNodeType Type { get; set; } = WorkflowNodeType.Start;
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public NodePositionDto? Position { get; set; }
@@ -78,8 +78,7 @@ namespace WOMS.Application.Features.Workflow.DTOs
         public Guid WorkflowId { get; set; }
 
         [Required]
-        [MaxLength(20)]
-        public string Type { get; set; } = string.Empty; // start, status, condition, approval, notification, escalation, end
+        public WorkflowNodeType Type { get; set; } = WorkflowNodeType.Start;
 
         [Required]
         [MaxLength(255)]
@@ -155,9 +154,32 @@ namespace WOMS.Application.Features.Workflow.DTOs
         public Dictionary<string, object>? ResultData { get; set; }
     }
 
+    // DTO specifically for GET operations that returns category as string
+    public class WorkflowGetDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; }
+        public string Category { get; set; } = "General";
+        public int CurrentVersion { get; set; } = 1;
+        public bool IsActive { get; set; } = true;
+        public List<WorkflowNodeDto> Nodes { get; set; } = new List<WorkflowNodeDto>();
+    }
+
+    public class WorkflowListGetResponse
+    {
+        public List<WorkflowGetDto> Workflows { get; set; } = new List<WorkflowGetDto>();
+        public int TotalCount { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
+        public bool HasNextPage => PageNumber < TotalPages;
+        public bool HasPreviousPage => PageNumber > 1;
+    }
+
     public class NodeTypeInfoDto
     {
-        public string Type { get; set; } = string.Empty;
+        public WorkflowNodeType Type { get; set; } = WorkflowNodeType.Start;
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;

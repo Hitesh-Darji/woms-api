@@ -1,5 +1,6 @@
 using MediatR;
 using WOMS.Application.Features.Workflow.DTOs;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
 {
@@ -11,7 +12,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
             {
                 new NodeTypeInfoDto
                 {
-                    Type = "start",
+                    Type = WorkflowNodeType.Start,
                     Title = "Start",
                     Description = "Workflow entry point.",
                     Icon = "play",
@@ -19,7 +20,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
                 },
                 new NodeTypeInfoDto
                 {
-                    Type = "status",
+                    Type = WorkflowNodeType.Status,
                     Title = "Status",
                     Description = "Change work order status.",
                     Icon = "square",
@@ -27,7 +28,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
                 },
                 new NodeTypeInfoDto
                 {
-                    Type = "condition",
+                    Type = WorkflowNodeType.Condition,
                     Title = "Condition",
                     Description = "Branch based on criteria.",
                     Icon = "branch",
@@ -35,7 +36,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
                 },
                 new NodeTypeInfoDto
                 {
-                    Type = "approval",
+                    Type = WorkflowNodeType.Approval,
                     Title = "Approval",
                     Description = "Require approval to continue.",
                     Icon = "users",
@@ -43,7 +44,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
                 },
                 new NodeTypeInfoDto
                 {
-                    Type = "notification",
+                    Type = WorkflowNodeType.Notification,
                     Title = "Notification",
                     Description = "Send email, SMS, or alert.",
                     Icon = "bell",
@@ -51,7 +52,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
                 },
                 new NodeTypeInfoDto
                 {
-                    Type = "escalation",
+                    Type = WorkflowNodeType.Escalation,
                     Title = "Escalation",
                     Description = "Escalate overdue items.",
                     Icon = "warning",
@@ -59,7 +60,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetNodeTypes
                 },
                 new NodeTypeInfoDto
                 {
-                    Type = "end",
+                    Type = WorkflowNodeType.End,
                     Title = "End",
                     Description = "Workflow completion.",
                     Icon = "target",

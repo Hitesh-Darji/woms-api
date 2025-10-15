@@ -36,64 +36,27 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
             workflow.IsActive = request.IsActive;
             workflow.UpdatedOn = DateTime.UtcNow;
 
-                // Update workflow nodes
-                if (request.Nodes != null)
-                {
-                    await UpdateWorkflowNodes(workflow, request.Nodes, cancellationToken);
-                }
+            // Update workflow nodes
+            if (request.Nodes != null)
+            {
+                await UpdateWorkflowNodes(workflow, request.Nodes, cancellationToken);
+            }
 
             await _workflowRepository.UpdateAsync(workflow, cancellationToken);
-            
-            try
-            {
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-            }
-            catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
-            {
-                // Handle concurrency conflict by reloading the workflow and retrying
-                var freshWorkflow = await _workflowRepository.GetByIdAsync(request.Id, cancellationToken);
-                if (freshWorkflow == null)
-                {
-                    throw new ArgumentException($"Workflow with ID {request.Id} not found.");
-                }
-                
-                // Update the fresh workflow with the same changes
-                freshWorkflow.Name = request.Name;
-                freshWorkflow.Description = request.Description;
-                freshWorkflow.Category = request.Category;
-                freshWorkflow.IsActive = request.IsActive;
-                freshWorkflow.UpdatedOn = DateTime.UtcNow;
-                
-                // Update workflow nodes if provided
-                if (request.Nodes != null)
-                {
-                    await UpdateWorkflowNodes(freshWorkflow, request.Nodes, cancellationToken);
-                }
-                
-                await _workflowRepository.UpdateAsync(freshWorkflow, cancellationToken);
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-                
-                return _mapper.Map<WorkflowDto>(freshWorkflow);
-            }
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<WorkflowDto>(workflow);
         }
 
         private async Task UpdateWorkflowNodes(Domain.Entities.Workflow workflow, List<WorkflowNodeDto> nodeDtos, CancellationToken cancellationToken)
         {
-            // Get existing nodes (including soft deleted ones for proper cleanup)
-            var existingNodes = await _workflowRepository.GetNodesByWorkflowIdAsync(workflow.Id, cancellationToken);
-            
-            // Create a dictionary for quick lookup of existing nodes
+            var existingNodes = await _workflowRepository.GetNodesByWorkflowIdAsync(workflow.Id, cancellationToken);         
             var existingNodesDict = existingNodes.ToDictionary(n => n.Id);
             
-            // Process each node in the request
             foreach (var nodeDto in nodeDtos)
-            {
-                // Check if this is an update (ID exists and matches existing node)
+            {               
                 if (nodeDto.Id != Guid.Empty && existingNodesDict.TryGetValue(nodeDto.Id, out var existingNode))
                 {
-                    // Update existing node - reload from database to avoid concurrency issues
                     var freshNode = await _workflowRepository.GetNodeByIdAsync(nodeDto.Id, cancellationToken);
                     if (freshNode != null)
                     {
@@ -103,19 +66,16 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                 }
                 else
                 {
-                    // Create new node (ID is empty or doesn't exist)
                     var newNode = CreateNewNode(workflow.Id, nodeDto);
                     await _workflowRepository.AddNodeAsync(newNode, cancellationToken);
                 }
             }
             
-            // Soft delete nodes that are no longer in the request
             var nodeIdsInRequest = nodeDtos.Select(n => n.Id).Where(id => id != Guid.Empty).ToHashSet();
             var nodesToSoftDelete = existingNodes.Where(n => !nodeIdsInRequest.Contains(n.Id) && !n.IsDeleted).ToList();
             
             foreach (var nodeToSoftDelete in nodesToSoftDelete)
             {
-                // Soft delete the node by setting IsDeleted flag
                 nodeToSoftDelete.IsDeleted = true;
                 nodeToSoftDelete.DeletedOn = DateTime.UtcNow;
                 nodeToSoftDelete.DeletedBy = workflow.UpdatedBy;
@@ -156,16 +116,16 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
             }
             
             // Then, override with specific config objects if provided
-            switch (nodeDto.Type.ToLower())
+            switch (nodeDto.Type)
             {
-                case "start":
+                case WorkflowNodeType.Start:
                     if (nodeDto.StartConfig != null)
                     {
                         nodeData["triggerType"] = nodeDto.StartConfig.TriggerType.ToString();
                     }
                     break;
                     
-                case "status":
+                case WorkflowNodeType.Status:
                     if (nodeDto.StatusConfig != null)
                     {
                         nodeData["targetStatus"] = nodeDto.StatusConfig.TargetStatus;
@@ -173,7 +133,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "condition":
+                case WorkflowNodeType.Condition:
                     if (nodeDto.ConditionConfig != null)
                     {
                         nodeData["fieldToCheck"] = nodeDto.ConditionConfig.FieldToCheck.ToString();
@@ -183,7 +143,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "approval":
+                case WorkflowNodeType.Approval:
                     if (nodeDto.ApprovalConfig != null)
                     {
                         nodeData["approvalName"] = nodeDto.ApprovalConfig.ApprovalName;
@@ -193,7 +153,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "notification":
+                case WorkflowNodeType.Notification:
                     if (nodeDto.NotificationConfig != null)
                     {
                         nodeData["notificationType"] = nodeDto.NotificationConfig.NotificationType.ToString();
@@ -202,7 +162,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "escalation":
+                case WorkflowNodeType.Escalation:
                     if (nodeDto.EscalationConfig != null)
                     {
                         nodeData["trigger"] = nodeDto.EscalationConfig.Trigger.ToString();
@@ -211,7 +171,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "end":
+                case WorkflowNodeType.End:
                     if (nodeDto.EndConfig != null)
                     {
                         nodeData["completionAction"] = nodeDto.EndConfig.CompletionAction.ToString();
@@ -263,17 +223,16 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                 }
             }
             
-            // Then, override with specific config objects if provided
-            switch (nodeDto.Type.ToLower())
+            switch (nodeDto.Type)
             {
-                case "start":
+                case WorkflowNodeType.Start:
                     if (nodeDto.StartConfig != null)
                     {
                         nodeData["triggerType"] = nodeDto.StartConfig.TriggerType.ToString();
                     }
                     break;
                     
-                case "status":
+                case WorkflowNodeType.Status:
                     if (nodeDto.StatusConfig != null)
                     {
                         nodeData["targetStatus"] = nodeDto.StatusConfig.TargetStatus;
@@ -281,7 +240,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "condition":
+                case WorkflowNodeType.Condition:
                     if (nodeDto.ConditionConfig != null)
                     {
                         nodeData["fieldToCheck"] = nodeDto.ConditionConfig.FieldToCheck.ToString();
@@ -291,7 +250,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "approval":
+                case WorkflowNodeType.Approval:
                     if (nodeDto.ApprovalConfig != null)
                     {
                         nodeData["approvalName"] = nodeDto.ApprovalConfig.ApprovalName;
@@ -301,7 +260,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "notification":
+                case WorkflowNodeType.Notification:
                     if (nodeDto.NotificationConfig != null)
                     {
                         nodeData["notificationType"] = nodeDto.NotificationConfig.NotificationType.ToString();
@@ -310,7 +269,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "escalation":
+                case WorkflowNodeType.Escalation:
                     if (nodeDto.EscalationConfig != null)
                     {
                         nodeData["trigger"] = nodeDto.EscalationConfig.Trigger.ToString();
@@ -319,7 +278,7 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                     }
                     break;
                     
-                case "end":
+                case WorkflowNodeType.End:
                     if (nodeDto.EndConfig != null)
                     {
                         nodeData["completionAction"] = nodeDto.EndConfig.CompletionAction.ToString();

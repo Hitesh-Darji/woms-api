@@ -1,4 +1,5 @@
 using WOMS.Domain.Entities;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Repositories
 {
@@ -6,13 +7,13 @@ namespace WOMS.Domain.Repositories
     {
         Task<IEnumerable<Workflow>> GetAllWithNodesAsync(CancellationToken cancellationToken = default);
         Task<Workflow?> GetByIdWithNodesAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<IEnumerable<Workflow>> GetByCategoryAsync(string category, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Workflow>> GetByCategoryAsync(WorkflowCategory category, CancellationToken cancellationToken = default);
         Task<IEnumerable<Workflow>> GetActiveWorkflowsAsync(CancellationToken cancellationToken = default);
         Task<(IEnumerable<Workflow> Workflows, int TotalCount)> GetPaginatedAsync(
             int pageNumber, 
             int pageSize, 
             string? searchTerm = null,
-            string? category = null,
+            WorkflowCategory? category = null,
             bool? isActive = null,
             string? sortBy = "CreatedAt",
             bool sortDescending = true,

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
@@ -13,8 +14,7 @@ namespace WOMS.Domain.Entities
         public virtual Workflow Workflow { get; set; } = null!;
 
         [Required]
-        [MaxLength(20)]
-        public string Type { get; set; } = string.Empty; // start, status, condition, approval, notification, escalation, end
+        public WorkflowNodeType Type { get; set; } = WorkflowNodeType.Start;
 
         [Required]
         [MaxLength(255)]

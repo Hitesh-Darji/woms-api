@@ -63,11 +63,11 @@ namespace WOMS.Infrastructure.Repositories
             return workflow;
         }
 
-        public async Task<IEnumerable<Workflow>> GetByCategoryAsync(string category, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Workflow>> GetByCategoryAsync(WorkflowCategory category, CancellationToken cancellationToken = default)
         {
             var workflows = await GetQueryable()
                 .AsNoTracking()
-                .Where(w => !w.IsDeleted && w.Category == Enum.Parse<WorkflowCategory>(category))
+                .Where(w => !w.IsDeleted && w.Category == category)
                 .OrderByDescending(w => w.CreatedOn)
                 .ToListAsync(cancellationToken);
 
@@ -131,7 +131,7 @@ namespace WOMS.Infrastructure.Repositories
             int pageNumber,
             int pageSize,
             string? searchTerm = null,
-            string? category = null,
+            WorkflowCategory? category = null,
             bool? isActive = null,
             string? sortBy = "CreatedAt",
             bool sortDescending = true,
@@ -148,12 +148,9 @@ namespace WOMS.Infrastructure.Repositories
                     EF.Functions.Like(w.Description, $"%{searchTerm}%"));
             }
 
-            if (!string.IsNullOrEmpty(category))
+            if (category.HasValue)
             {
-                if (Enum.TryParse<WorkflowCategory>(category, out var categoryEnum))
-                {
-                    query = query.Where(w => w.Category == categoryEnum);
-                }
+                query = query.Where(w => w.Category == category.Value);
             }
 
             if (isActive.HasValue)

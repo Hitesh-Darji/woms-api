@@ -5,7 +5,7 @@ using WOMS.Domain.Repositories;
 
 namespace WOMS.Application.Features.Workflow.Queries.GetAllWorkflows
 {
-    public class GetAllWorkflowsQueryHandler : IRequestHandler<GetAllWorkflowsQuery, WorkflowListResponse>
+    public class GetAllWorkflowsQueryHandler : IRequestHandler<GetAllWorkflowsQuery, WorkflowListGetResponse>
     {
         private readonly IWorkflowRepository _workflowRepository;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace WOMS.Application.Features.Workflow.Queries.GetAllWorkflows
             _mapper = mapper;
         }
 
-        public async Task<WorkflowListResponse> Handle(GetAllWorkflowsQuery request, CancellationToken cancellationToken)
+        public async Task<WorkflowListGetResponse> Handle(GetAllWorkflowsQuery request, CancellationToken cancellationToken)
         {
             var (workflows, totalCount) = await _workflowRepository.GetPaginatedAsync(
                 request.PageNumber,
@@ -28,9 +28,9 @@ namespace WOMS.Application.Features.Workflow.Queries.GetAllWorkflows
                 request.SortDescending,
                 cancellationToken);
 
-            var workflowDtos = _mapper.Map<List<WorkflowDto>>(workflows);
+            var workflowDtos = _mapper.Map<List<WorkflowGetDto>>(workflows);
 
-            return new WorkflowListResponse
+            return new WorkflowListGetResponse
             {
                 Workflows = workflowDtos,
                 TotalCount = totalCount,

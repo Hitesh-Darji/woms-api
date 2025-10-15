@@ -12,6 +12,7 @@ using WOMS.Application.Features.Workflow.DTOs;
 using WOMS.Application.Features.Workflow.Queries.GetAllWorkflows;
 using WOMS.Application.Features.Workflow.Queries.GetNodeTypes;
 using WOMS.Application.Features.Workflow.Queries.GetWorkflowById;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Api.Controllers
 {
@@ -28,14 +29,14 @@ namespace WOMS.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(WorkflowListResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(WorkflowListGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<WorkflowListResponse>> GetAllWorkflows(
+        public async Task<ActionResult<WorkflowListGetResponse>> GetAllWorkflows(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
-            [FromQuery] string? category = null,
+            [FromQuery] WorkflowCategory? category = null,
             [FromQuery] bool? isActive = null,
             [FromQuery] string sortBy = "CreatedAt",
             [FromQuery] bool sortDescending = true)
@@ -61,10 +62,10 @@ namespace WOMS.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(WorkflowDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(WorkflowGetDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<WorkflowDto>> GetWorkflow(Guid id)
+        public async Task<ActionResult<WorkflowGetDto>> GetWorkflow(Guid id)
         {
             var query = new GetWorkflowByIdQuery { Id = id };
             var result = await _mediator.Send(query);

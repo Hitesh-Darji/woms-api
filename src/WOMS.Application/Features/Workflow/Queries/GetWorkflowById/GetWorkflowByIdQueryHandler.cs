@@ -5,7 +5,7 @@ using WOMS.Domain.Repositories;
 
 namespace WOMS.Application.Features.Workflow.Queries.GetWorkflowById
 {
-    public class GetWorkflowByIdQueryHandler : IRequestHandler<GetWorkflowByIdQuery, WorkflowDto?>
+    public class GetWorkflowByIdQueryHandler : IRequestHandler<GetWorkflowByIdQuery, WorkflowGetDto?>
     {
         private readonly IWorkflowRepository _workflowRepository;
         private readonly IMapper _mapper;
@@ -16,10 +16,10 @@ namespace WOMS.Application.Features.Workflow.Queries.GetWorkflowById
             _mapper = mapper;
         }
 
-        public async Task<WorkflowDto?> Handle(GetWorkflowByIdQuery request, CancellationToken cancellationToken)
+        public async Task<WorkflowGetDto?> Handle(GetWorkflowByIdQuery request, CancellationToken cancellationToken)
         {
             var workflow = await _workflowRepository.GetByIdWithNodesAsync(request.Id, cancellationToken);
-            return workflow != null ? _mapper.Map<WorkflowDto>(workflow) : null;
+            return workflow != null ? _mapper.Map<WorkflowGetDto>(workflow) : null;
         }
     }
 }
