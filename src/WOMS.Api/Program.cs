@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ using WOMS.Api.Extension;
 using WOMS.Api.Middleware;
 using WOMS.Application;
 using WOMS.Application.DTOs;
-using WOMS.Application.Profiles;
 using WOMS.Domain.Entities;
 using WOMS.Infrastructure;
 using WOMS.Infrastructure.Data;
@@ -28,18 +26,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();
 
-//Mapping
-var config = new MapperConfiguration(cfg =>
-{
-    cfg.AddProfile<WOMS.Application.Profiles.UserProfile>();
-    cfg.AddProfile<WOMS.Application.Profiles.RoleProfile>();
-    cfg.AddProfile<WOMS.Application.Profiles.ViewProfile>();
-    cfg.AddProfile<WOMS.Application.Profiles.BillingProfiles>();
-    cfg.AddProfile<WorkflowProfile>();
-});
-
-var mapper = config.CreateMapper();
-builder.Services.AddSingleton(mapper);
+// AutoMapper is configured in Application layer
 
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {

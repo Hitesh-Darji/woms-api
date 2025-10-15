@@ -14,3 +14,4 @@ namespace WOMS.Domain.Enums
         Failed = 2
     }
 }
+

@@ -17,3 +17,4 @@ namespace WOMS.Domain.Enums
         Quarterly = 3
     }
 }
+
