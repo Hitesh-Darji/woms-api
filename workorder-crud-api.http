@@ -1,0 +1,86 @@
+### WorkOrder CRUD API Tests
+
+@baseUrl = https://localhost:7000/api/WorkOrders
+@authToken = your-jwt-token-here
+
+### Get all work orders (with pagination and filters)
+GET {{baseUrl}}?pageNumber=1&pageSize=10&searchTerm=&status=&priority=&assignedTechnicianId=&workOrderTypeId=&scheduledDateFrom=&scheduledDateTo=&sortBy=CreatedAt&sortDescending=true
+Authorization: Bearer {{authToken}}
+
+### Get work order by ID
+GET {{baseUrl}}/123e4567-e89b-12d3-a456-426614174000
+Authorization: Bearer {{authToken}}
+
+### Create a new work order
+POST {{baseUrl}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "customer": "John Doe",
+  "customerContact": "john.doe@email.com",
+  "type": "MeterInstallation",
+  "priority": "High",
+  "assignee": "tech001",
+  "location": "Main Street",
+  "address": "123 Main Street, City, State 12345",
+  "description": "Install new water meter for residential property",
+  "dueDate": "2024-01-15T10:00:00Z",
+  "actualHours": 2.5,
+  "cost": 150.00,
+  "tags": "[\"residential\", \"water-meter\"]",
+  "equipment": "Water Meter Model WM-100",
+  "notes": "Customer prefers morning installation",
+  "utility": "City Water Department",
+  "make": "WaterMeter Co",
+  "model": "WM-100",
+  "size": "5/8 inch",
+  "managerTechnician": "manager001",
+  "workflowId": null,
+  "formTemplateId": null,
+  "billingTemplateId": null
+}
+
+### Update work order
+PUT {{baseUrl}}/123e4567-e89b-12d3-a456-426614174000
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "customer": "John Doe Updated",
+  "customerContact": "john.doe.updated@email.com",
+  "type": "MeterInstallation",
+  "priority": "Medium",
+  "status": "InProgress",
+  "assignee": "tech002",
+  "location": "Main Street",
+  "address": "123 Main Street, City, State 12345",
+  "description": "Install new water meter for residential property - Updated",
+  "dueDate": "2024-01-16T10:00:00Z",
+  "actualHours": 3.0,
+  "cost": 175.00,
+  "tags": "[\"residential\", \"water-meter\", \"updated\"]",
+  "equipment": "Water Meter Model WM-200",
+  "notes": "Customer prefers afternoon installation",
+  "utility": "City Water Department",
+  "make": "WaterMeter Co",
+  "model": "WM-200",
+  "size": "5/8 inch",
+  "managerTechnician": "manager002",
+  "workflowId": null,
+  "formTemplateId": null,
+  "billingTemplateId": null
+}
+
+### Delete work order
+DELETE {{baseUrl}}/123e4567-e89b-12d3-a456-426614174000
+Authorization: Bearer {{authToken}}
+
+### Get work order view list (optimized for UI)
+GET {{baseUrl}}/view?pageNumber=1&pageSize=20&searchTerm=&status=&priority=&assignedTechnicianId=&isOverdue=&isToday=&sortBy=CreatedOn&sortDescending=true&includeSummary=true
+Authorization: Bearer {{authToken}}
+
+### Get work order summary
+GET {{baseUrl}}/summary
+Authorization: Bearer {{authToken}}

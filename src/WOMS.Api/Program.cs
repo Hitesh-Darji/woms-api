@@ -37,6 +37,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile<BillingProfiles>();
     cfg.AddProfile<WorkflowProfile>();
     cfg.AddProfile<WorkflowStatusProfile>();
+    cfg.AddProfile<WorkOrderProfile>();
 });
 
 var mapper = config.CreateMapper();
