@@ -3607,6 +3607,7 @@ namespace WOMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("Type")
+                        .HasMaxLength(20)
                         .HasColumnType("int");
 
                     b.Property<Guid?>("UpdatedBy")

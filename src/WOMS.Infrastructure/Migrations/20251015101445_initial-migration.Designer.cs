@@ -12,8 +12,8 @@ using WOMS.Infrastructure.Data;
 namespace WOMS.Infrastructure.Migrations
 {
     [DbContext(typeof(WomsDbContext))]
-    [Migration("20251014104034_AddWorkflowStatusAndCategoryEnumWithDataMigration")]
-    partial class AddWorkflowStatusAndCategoryEnumWithDataMigration
+    [Migration("20251015101445_initial-migration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3609,10 +3609,9 @@ namespace WOMS.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<int>("Type")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -3865,11 +3864,16 @@ namespace WOMS.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FromStatusId");
 
                     b.HasIndex("ToStatusId");
+
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("WorkflowStatusTransition");
                 });
@@ -4704,7 +4708,7 @@ namespace WOMS.Infrastructure.Migrations
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowStatusTransition", b =>
                 {
                     b.HasOne("WOMS.Domain.Entities.WorkflowStatus", "FromStatus")
-                        .WithMany("AllowedTransitions")
+                        .WithMany()
                         .HasForeignKey("FromStatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4715,9 +4719,17 @@ namespace WOMS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("WOMS.Domain.Entities.Workflow", "Workflow")
+                        .WithMany()
+                        .HasForeignKey("WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("FromStatus");
 
                     b.Navigation("ToStatus");
+
+                    b.Navigation("Workflow");
                 });
 
             modelBuilder.Entity("WOMS.Domain.Entities.WorkflowVersion", b =>
@@ -4917,11 +4929,6 @@ namespace WOMS.Infrastructure.Migrations
                     b.Navigation("Conditions");
 
                     b.Navigation("ExecutionLogs");
-                });
-
-            modelBuilder.Entity("WOMS.Domain.Entities.WorkflowStatus", b =>
-                {
-                    b.Navigation("AllowedTransitions");
                 });
 #pragma warning restore 612, 618
         }

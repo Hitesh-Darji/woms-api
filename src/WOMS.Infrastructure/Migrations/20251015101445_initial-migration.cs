@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WOMS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -227,7 +227,7 @@ namespace WOMS.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Category = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Category = table.Column<int>(type: "int", maxLength: 100, nullable: false),
                     CurrentVersion = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
@@ -721,7 +721,7 @@ namespace WOMS.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Type = table.Column<int>(type: "int", maxLength: 20, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -790,14 +790,12 @@ namespace WOMS.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WorkflowId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StatusId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     Color = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
-                    IsInitial = table.Column<bool>(type: "bit", nullable: false),
-                    IsFinal = table.Column<bool>(type: "bit", nullable: false),
-                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    WorkflowId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -813,8 +811,7 @@ namespace WOMS.Infrastructure.Migrations
                         name: "FK_WorkflowStatus_Workflow_WorkflowId",
                         column: x => x.WorkflowId,
                         principalTable: "Workflow",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -943,6 +940,65 @@ namespace WOMS.Infrastructure.Migrations
                         name: "FK_Invoice_Customer_CustomerId1",
                         column: x => x.CustomerId1,
                         principalTable: "Customer",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkOrder",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Customer = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CustomerContact = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Type = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    Priority = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    Status = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    Assignee = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ActualHours = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    Cost = table.Column<decimal>(type: "decimal(15,2)", nullable: true),
+                    Tags = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Equipment = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Utility = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Make = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Model = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Size = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ManagerTechnician = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    WorkOrderNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    WorkflowId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FormTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    BillingTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 255, nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 255, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkOrder", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkOrder_BillingTemplate_BillingTemplateId",
+                        column: x => x.BillingTemplateId,
+                        principalTable: "BillingTemplate",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_WorkOrder_Customer_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customer",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_WorkOrder_FormTemplate_FormTemplateId",
+                        column: x => x.FormTemplateId,
+                        principalTable: "FormTemplate",
                         principalColumn: "Id");
                 });
 
@@ -1101,7 +1157,6 @@ namespace WOMS.Infrastructure.Migrations
                     AssigneeId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     AssigneeName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WorkflowStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1120,11 +1175,6 @@ namespace WOMS.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_WorkflowProgress_WorkflowStatus_WorkflowStatusId",
-                        column: x => x.WorkflowStatusId,
-                        principalTable: "WorkflowStatus",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_WorkflowProgress_Workflow_WorkflowId",
                         column: x => x.WorkflowId,
                         principalTable: "Workflow",
@@ -1133,17 +1183,15 @@ namespace WOMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkflowTransition",
+                name: "WorkflowStatusTransition",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TransitionId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     FromStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ToStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    RequiresValidation = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1154,90 +1202,25 @@ namespace WOMS.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkflowTransition", x => x.Id);
+                    table.PrimaryKey("PK_WorkflowStatusTransition", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WorkflowTransition_WorkflowStatus_FromStatusId",
+                        name: "FK_WorkflowStatusTransition_WorkflowStatus_FromStatusId",
                         column: x => x.FromStatusId,
                         principalTable: "WorkflowStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_WorkflowTransition_WorkflowStatus_ToStatusId",
+                        name: "FK_WorkflowStatusTransition_WorkflowStatus_ToStatusId",
                         column: x => x.ToStatusId,
                         principalTable: "WorkflowStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_WorkflowTransition_Workflow_WorkflowId",
+                        name: "FK_WorkflowStatusTransition_Workflow_WorkflowId",
                         column: x => x.WorkflowId,
                         principalTable: "Workflow",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WorkOrder",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Customer = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    CustomerContact = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Type = table.Column<int>(type: "int", maxLength: 100, nullable: false),
-                    Priority = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    Status = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    Assignee = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ActualHours = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    Cost = table.Column<decimal>(type: "decimal(15,2)", nullable: true),
-                    Tags = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Equipment = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Utility = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Make = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Model = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Size = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    ManagerTechnician = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    WorkOrderNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    WorkflowId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FormTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    BillingTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    WorkflowStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 255, nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 255, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkOrder", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WorkOrder_BillingTemplate_BillingTemplateId",
-                        column: x => x.BillingTemplateId,
-                        principalTable: "BillingTemplate",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WorkOrder_Customer_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customer",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WorkOrder_FormTemplate_FormTemplateId",
-                        column: x => x.FormTemplateId,
-                        principalTable: "FormTemplate",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WorkOrder_WorkflowStatus_WorkflowStatusId",
-                        column: x => x.WorkflowStatusId,
-                        principalTable: "WorkflowStatus",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1295,36 +1278,6 @@ namespace WOMS.Infrastructure.Migrations
                         name: "FK_DeliverySetting_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
                         principalTable: "Invoice",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ValidationRule",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FormFieldId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RuleType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    RuleValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ErrorMessage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    OrderIndex = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ValidationRule", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ValidationRule_FormField_FormFieldId",
-                        column: x => x.FormFieldId,
-                        principalTable: "FormField",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1659,6 +1612,36 @@ namespace WOMS.Infrastructure.Migrations
                         name: "FK_WorkOrderColumn_WorkOrder_WorkOrderId",
                         column: x => x.WorkOrderId,
                         principalTable: "WorkOrder",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ValidationRule",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FormFieldId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RuleType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    RuleValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ErrorMessage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    OrderIndex = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ValidationRule", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ValidationRule_FormField_FormFieldId",
+                        column: x => x.FormFieldId,
+                        principalTable: "FormField",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -2554,9 +2537,19 @@ namespace WOMS.Infrastructure.Migrations
                 column: "WorkflowId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkflowProgress_WorkflowStatusId",
-                table: "WorkflowProgress",
-                column: "WorkflowStatusId");
+                name: "IX_WorkflowStatus_IsActive",
+                table: "WorkflowStatus",
+                column: "IsActive");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkflowStatus_Name",
+                table: "WorkflowStatus",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkflowStatus_Order",
+                table: "WorkflowStatus",
+                column: "Order");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkflowStatus_WorkflowId",
@@ -2564,18 +2557,18 @@ namespace WOMS.Infrastructure.Migrations
                 column: "WorkflowId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkflowTransition_FromStatusId",
-                table: "WorkflowTransition",
+                name: "IX_WorkflowStatusTransition_FromStatusId",
+                table: "WorkflowStatusTransition",
                 column: "FromStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkflowTransition_ToStatusId",
-                table: "WorkflowTransition",
+                name: "IX_WorkflowStatusTransition_ToStatusId",
+                table: "WorkflowStatusTransition",
                 column: "ToStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkflowTransition_WorkflowId",
-                table: "WorkflowTransition",
+                name: "IX_WorkflowStatusTransition_WorkflowId",
+                table: "WorkflowStatusTransition",
                 column: "WorkflowId");
 
             migrationBuilder.CreateIndex(
@@ -2627,11 +2620,6 @@ namespace WOMS.Infrastructure.Migrations
                 name: "IX_WorkOrder_Status",
                 table: "WorkOrder",
                 column: "Status");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkOrder_WorkflowStatusId",
-                table: "WorkOrder",
-                column: "WorkflowStatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkOrderAssignment_WorkOrderId",
@@ -2788,10 +2776,10 @@ namespace WOMS.Infrastructure.Migrations
                 name: "WorkflowProgress");
 
             migrationBuilder.DropTable(
-                name: "WorkflowTemplate");
+                name: "WorkflowStatusTransition");
 
             migrationBuilder.DropTable(
-                name: "WorkflowTransition");
+                name: "WorkflowTemplate");
 
             migrationBuilder.DropTable(
                 name: "WorkflowVersion");
@@ -2839,6 +2827,9 @@ namespace WOMS.Infrastructure.Migrations
                 name: "WorkflowInstance");
 
             migrationBuilder.DropTable(
+                name: "WorkflowStatus");
+
+            migrationBuilder.DropTable(
                 name: "InventoryItem");
 
             migrationBuilder.DropTable(
@@ -2860,13 +2851,10 @@ namespace WOMS.Infrastructure.Migrations
                 name: "FormTemplate");
 
             migrationBuilder.DropTable(
-                name: "WorkflowStatus");
+                name: "Workflow");
 
             migrationBuilder.DropTable(
                 name: "Customer");
-
-            migrationBuilder.DropTable(
-                name: "Workflow");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
