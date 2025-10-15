@@ -433,43 +433,39 @@ namespace WOMS.Infrastructure.Data
             // Configure WorkflowStatus
             modelBuilder.Entity<WorkflowStatus>(entity =>
             {
-                entity.Property(ws => ws.StatusId).IsRequired().HasMaxLength(100);
                 entity.Property(ws => ws.Name).IsRequired().HasMaxLength(100);
-                entity.Property(ws => ws.Description).HasMaxLength(500);
+                entity.Property(ws => ws.Description).HasMaxLength(1000);
                 entity.Property(ws => ws.Color).IsRequired().HasMaxLength(7);
-                entity.Property(ws => ws.SortOrder).IsRequired();
+                entity.Property(ws => ws.Order).IsRequired();
 
-                entity.HasOne(ws => ws.Workflow)
-                      .WithMany(w => w.Statuses)
-                      .HasForeignKey(ws => ws.WorkflowId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                // Configure WorkflowTransition relationships
-                entity.HasMany(ws => ws.OutgoingTransitions)
-                      .WithOne(wt => wt.FromStatus)
-                      .HasForeignKey(wt => wt.FromStatusId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasMany(ws => ws.IncomingTransitions)
-                      .WithOne(wt => wt.ToStatus)
-                      .HasForeignKey(wt => wt.ToStatusId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                entity.HasIndex(ws => ws.Name);
+                entity.HasIndex(ws => ws.Order);
+                entity.HasIndex(ws => ws.IsActive);
             });
 
-            // Configure WorkflowTransition
-            modelBuilder.Entity<WorkflowTransition>(entity =>
+            // Configure WorkflowStatusTransition
+            modelBuilder.Entity<WorkflowStatusTransition>(entity =>
             {
-                entity.Property(wt => wt.TransitionId).IsRequired().HasMaxLength(100);
-                entity.Property(wt => wt.Name).IsRequired().HasMaxLength(200);
-                entity.Property(wt => wt.Description).HasMaxLength(500);
+                entity.Property(wst => wst.Description).HasMaxLength(500);
 
-                entity.HasOne(wt => wt.Workflow)
+                entity.HasOne(wst => wst.Workflow)
                       .WithMany()
-                      .HasForeignKey(wt => wt.WorkflowId)
+                      .HasForeignKey(wst => wst.WorkflowId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasIndex(wt => wt.FromStatusId);
-                entity.HasIndex(wt => wt.ToStatusId);
+                entity.HasOne(wst => wst.FromStatus)
+                      .WithMany()
+                      .HasForeignKey(wst => wst.FromStatusId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(wst => wst.ToStatus)
+                      .WithMany()
+                      .HasForeignKey(wst => wst.ToStatusId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(wst => wst.WorkflowId);
+                entity.HasIndex(wst => wst.FromStatusId);
+                entity.HasIndex(wst => wst.ToStatusId);
             });
 
             // Configure WorkflowNode

@@ -3,6 +3,7 @@ using WOMS.Application.Features.Workflow.DTOs;
 using WOMS.Application.Interfaces;
 using WOMS.Domain.Entities;
 using WOMS.Domain.Repositories;
+using WOMS.Domain.Enums;
 using System.Text.Json;
 
 namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
@@ -28,16 +29,310 @@ namespace WOMS.Application.Features.Workflow.Commands.UpdateWorkflow
                 throw new ArgumentException($"Workflow with ID {request.Id} not found.");
             }
 
+            // Update workflow properties
             workflow.Name = request.Name;
             workflow.Description = request.Description;
             workflow.Category = request.Category;
             workflow.IsActive = request.IsActive;
             workflow.UpdatedOn = DateTime.UtcNow;
 
+                // Update workflow nodes
+                if (request.Nodes != null)
+                {
+                    await UpdateWorkflowNodes(workflow, request.Nodes, cancellationToken);
+                }
+
             await _workflowRepository.UpdateAsync(workflow, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            
+            try
+            {
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+            {
+                // Handle concurrency conflict by reloading the workflow and retrying
+                var freshWorkflow = await _workflowRepository.GetByIdAsync(request.Id, cancellationToken);
+                if (freshWorkflow == null)
+                {
+                    throw new ArgumentException($"Workflow with ID {request.Id} not found.");
+                }
+                
+                // Update the fresh workflow with the same changes
+                freshWorkflow.Name = request.Name;
+                freshWorkflow.Description = request.Description;
+                freshWorkflow.Category = request.Category;
+                freshWorkflow.IsActive = request.IsActive;
+                freshWorkflow.UpdatedOn = DateTime.UtcNow;
+                
+                // Update workflow nodes if provided
+                if (request.Nodes != null)
+                {
+                    await UpdateWorkflowNodes(freshWorkflow, request.Nodes, cancellationToken);
+                }
+                
+                await _workflowRepository.UpdateAsync(freshWorkflow, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                
+                return _mapper.Map<WorkflowDto>(freshWorkflow);
+            }
 
             return _mapper.Map<WorkflowDto>(workflow);
+        }
+
+        private async Task UpdateWorkflowNodes(Domain.Entities.Workflow workflow, List<WorkflowNodeDto> nodeDtos, CancellationToken cancellationToken)
+        {
+            // Get existing nodes (including soft deleted ones for proper cleanup)
+            var existingNodes = await _workflowRepository.GetNodesByWorkflowIdAsync(workflow.Id, cancellationToken);
+            
+            // Create a dictionary for quick lookup of existing nodes
+            var existingNodesDict = existingNodes.ToDictionary(n => n.Id);
+            
+            // Process each node in the request
+            foreach (var nodeDto in nodeDtos)
+            {
+                // Check if this is an update (ID exists and matches existing node)
+                if (nodeDto.Id != Guid.Empty && existingNodesDict.TryGetValue(nodeDto.Id, out var existingNode))
+                {
+                    // Update existing node - reload from database to avoid concurrency issues
+                    var freshNode = await _workflowRepository.GetNodeByIdAsync(nodeDto.Id, cancellationToken);
+                    if (freshNode != null)
+                    {
+                        UpdateExistingNode(freshNode, nodeDto);
+                        _workflowRepository.UpdateNode(freshNode, cancellationToken);
+                    }
+                }
+                else
+                {
+                    // Create new node (ID is empty or doesn't exist)
+                    var newNode = CreateNewNode(workflow.Id, nodeDto);
+                    await _workflowRepository.AddNodeAsync(newNode, cancellationToken);
+                }
+            }
+            
+            // Soft delete nodes that are no longer in the request
+            var nodeIdsInRequest = nodeDtos.Select(n => n.Id).Where(id => id != Guid.Empty).ToHashSet();
+            var nodesToSoftDelete = existingNodes.Where(n => !nodeIdsInRequest.Contains(n.Id) && !n.IsDeleted).ToList();
+            
+            foreach (var nodeToSoftDelete in nodesToSoftDelete)
+            {
+                // Soft delete the node by setting IsDeleted flag
+                nodeToSoftDelete.IsDeleted = true;
+                nodeToSoftDelete.DeletedOn = DateTime.UtcNow;
+                nodeToSoftDelete.DeletedBy = workflow.UpdatedBy;
+                _workflowRepository.UpdateNode(nodeToSoftDelete, cancellationToken);
+            }
+        }
+
+        private void UpdateExistingNode(Domain.Entities.WorkflowNode existingNode, WorkflowNodeDto nodeDto)
+        {
+            existingNode.Type = nodeDto.Type;
+            existingNode.Title = nodeDto.Title;
+            existingNode.Description = nodeDto.Description;
+            existingNode.OrderIndex = nodeDto.OrderIndex;
+            existingNode.UpdatedOn = DateTime.UtcNow;
+
+            // Update position
+            if (nodeDto.Position != null)
+            {
+                existingNode.Position = JsonSerializer.Serialize(nodeDto.Position);
+            }
+
+            // Update connections
+            if (nodeDto.Connections != null)
+            {
+                existingNode.Connections = JsonSerializer.Serialize(nodeDto.Connections);
+            }
+
+            // Update node-specific data
+            var nodeData = new Dictionary<string, object>();
+            
+            // First, use the Data field if provided (from API payload)
+            if (nodeDto.Data != null)
+            {
+                foreach (var kvp in nodeDto.Data)
+                {
+                    nodeData[kvp.Key] = kvp.Value;
+                }
+            }
+            
+            // Then, override with specific config objects if provided
+            switch (nodeDto.Type.ToLower())
+            {
+                case "start":
+                    if (nodeDto.StartConfig != null)
+                    {
+                        nodeData["triggerType"] = nodeDto.StartConfig.TriggerType.ToString();
+                    }
+                    break;
+                    
+                case "status":
+                    if (nodeDto.StatusConfig != null)
+                    {
+                        nodeData["targetStatus"] = nodeDto.StatusConfig.TargetStatus;
+                        nodeData["autoAssignTo"] = nodeDto.StatusConfig.AutoAssignTo.ToString();
+                    }
+                    break;
+                    
+                case "condition":
+                    if (nodeDto.ConditionConfig != null)
+                    {
+                        nodeData["fieldToCheck"] = nodeDto.ConditionConfig.FieldToCheck.ToString();
+                        nodeData["operator"] = nodeDto.ConditionConfig.Operator.ToString();
+                        nodeData["value"] = nodeDto.ConditionConfig.Value;
+                        nodeData["logicalOperator"] = nodeDto.ConditionConfig.LogicalOperator;
+                    }
+                    break;
+                    
+                case "approval":
+                    if (nodeDto.ApprovalConfig != null)
+                    {
+                        nodeData["approvalName"] = nodeDto.ApprovalConfig.ApprovalName;
+                        nodeData["approverRoles"] = nodeDto.ApprovalConfig.ApproverRoles;
+                        nodeData["approvalType"] = nodeDto.ApprovalConfig.ApprovalType.ToString();
+                        nodeData["deadlineHours"] = nodeDto.ApprovalConfig.DeadlineHours;
+                    }
+                    break;
+                    
+                case "notification":
+                    if (nodeDto.NotificationConfig != null)
+                    {
+                        nodeData["notificationType"] = nodeDto.NotificationConfig.NotificationType.ToString();
+                        nodeData["recipient"] = nodeDto.NotificationConfig.Recipient.ToString();
+                        nodeData["messageTemplate"] = nodeDto.NotificationConfig.MessageTemplate.ToString();
+                    }
+                    break;
+                    
+                case "escalation":
+                    if (nodeDto.EscalationConfig != null)
+                    {
+                        nodeData["trigger"] = nodeDto.EscalationConfig.Trigger.ToString();
+                        nodeData["hoursToWait"] = nodeDto.EscalationConfig.HoursToWait;
+                        nodeData["action"] = nodeDto.EscalationConfig.Action.ToString();
+                    }
+                    break;
+                    
+                case "end":
+                    if (nodeDto.EndConfig != null)
+                    {
+                        nodeData["completionAction"] = nodeDto.EndConfig.CompletionAction.ToString();
+                    }
+                    break;
+            }
+
+            if (nodeData.Any())
+            {
+                existingNode.Data = JsonSerializer.Serialize(nodeData);
+            }
+        }
+
+        private Domain.Entities.WorkflowNode CreateNewNode(Guid workflowId, WorkflowNodeDto nodeDto)
+        {
+            var newNode = new Domain.Entities.WorkflowNode
+            {
+                Id = nodeDto.Id != Guid.Empty ? nodeDto.Id : Guid.NewGuid(),
+                WorkflowId = workflowId,
+                Type = nodeDto.Type,
+                Title = nodeDto.Title,
+                Description = nodeDto.Description,
+                OrderIndex = nodeDto.OrderIndex,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            // Set position
+            if (nodeDto.Position != null)
+            {
+                newNode.Position = JsonSerializer.Serialize(nodeDto.Position);
+            }
+
+            // Set connections
+            if (nodeDto.Connections != null)
+            {
+                newNode.Connections = JsonSerializer.Serialize(nodeDto.Connections);
+            }
+
+            // Set node-specific data (same logic as UpdateExistingNode)
+            var nodeData = new Dictionary<string, object>();
+            
+            // First, use the Data field if provided (from API payload)
+            if (nodeDto.Data != null)
+            {
+                foreach (var kvp in nodeDto.Data)
+                {
+                    nodeData[kvp.Key] = kvp.Value;
+                }
+            }
+            
+            // Then, override with specific config objects if provided
+            switch (nodeDto.Type.ToLower())
+            {
+                case "start":
+                    if (nodeDto.StartConfig != null)
+                    {
+                        nodeData["triggerType"] = nodeDto.StartConfig.TriggerType.ToString();
+                    }
+                    break;
+                    
+                case "status":
+                    if (nodeDto.StatusConfig != null)
+                    {
+                        nodeData["targetStatus"] = nodeDto.StatusConfig.TargetStatus;
+                        nodeData["autoAssignTo"] = nodeDto.StatusConfig.AutoAssignTo.ToString();
+                    }
+                    break;
+                    
+                case "condition":
+                    if (nodeDto.ConditionConfig != null)
+                    {
+                        nodeData["fieldToCheck"] = nodeDto.ConditionConfig.FieldToCheck.ToString();
+                        nodeData["operator"] = nodeDto.ConditionConfig.Operator.ToString();
+                        nodeData["value"] = nodeDto.ConditionConfig.Value;
+                        nodeData["logicalOperator"] = nodeDto.ConditionConfig.LogicalOperator;
+                    }
+                    break;
+                    
+                case "approval":
+                    if (nodeDto.ApprovalConfig != null)
+                    {
+                        nodeData["approvalName"] = nodeDto.ApprovalConfig.ApprovalName;
+                        nodeData["approverRoles"] = nodeDto.ApprovalConfig.ApproverRoles;
+                        nodeData["approvalType"] = nodeDto.ApprovalConfig.ApprovalType.ToString();
+                        nodeData["deadlineHours"] = nodeDto.ApprovalConfig.DeadlineHours;
+                    }
+                    break;
+                    
+                case "notification":
+                    if (nodeDto.NotificationConfig != null)
+                    {
+                        nodeData["notificationType"] = nodeDto.NotificationConfig.NotificationType.ToString();
+                        nodeData["recipient"] = nodeDto.NotificationConfig.Recipient.ToString();
+                        nodeData["messageTemplate"] = nodeDto.NotificationConfig.MessageTemplate.ToString();
+                    }
+                    break;
+                    
+                case "escalation":
+                    if (nodeDto.EscalationConfig != null)
+                    {
+                        nodeData["trigger"] = nodeDto.EscalationConfig.Trigger.ToString();
+                        nodeData["hoursToWait"] = nodeDto.EscalationConfig.HoursToWait;
+                        nodeData["action"] = nodeDto.EscalationConfig.Action.ToString();
+                    }
+                    break;
+                    
+                case "end":
+                    if (nodeDto.EndConfig != null)
+                    {
+                        nodeData["completionAction"] = nodeDto.EndConfig.CompletionAction.ToString();
+                    }
+                    break;
+            }
+
+            if (nodeData.Any())
+            {
+                newNode.Data = JsonSerializer.Serialize(nodeData);
+            }
+
+            return newNode;
         }
     }
 }

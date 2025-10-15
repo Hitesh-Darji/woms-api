@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WOMS.Domain.Entities;
 using WOMS.Domain.Repositories;
 using WOMS.Infrastructure.Data;
+using WOMS.Domain.Enums;
 using System.Text.Json;
 
 namespace WOMS.Infrastructure.Repositories
@@ -66,7 +67,7 @@ namespace WOMS.Infrastructure.Repositories
         {
             var workflows = await GetQueryable()
                 .AsNoTracking()
-                .Where(w => !w.IsDeleted && w.Category == category)
+                .Where(w => !w.IsDeleted && w.Category == Enum.Parse<WorkflowCategory>(category))
                 .OrderByDescending(w => w.CreatedOn)
                 .ToListAsync(cancellationToken);
 
@@ -149,7 +150,10 @@ namespace WOMS.Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(category))
             {
-                query = query.Where(w => w.Category == category);
+                if (Enum.TryParse<WorkflowCategory>(category, out var categoryEnum))
+                {
+                    query = query.Where(w => w.Category == categoryEnum);
+                }
             }
 
             if (isActive.HasValue)

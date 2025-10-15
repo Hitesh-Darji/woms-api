@@ -26,7 +26,19 @@ builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();
 
-// AutoMapper is configured in Application layer
+//Mapping
+var config = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<WOMS.Application.Profiles.UserProfile>();
+    cfg.AddProfile<WOMS.Application.Profiles.RoleProfile>();
+    cfg.AddProfile<WOMS.Application.Profiles.ViewProfile>();
+    cfg.AddProfile<WOMS.Application.Profiles.BillingProfiles>();
+    cfg.AddProfile<WorkflowProfile>();
+    cfg.AddProfile<WorkflowStatusProfile>();
+});
+
+var mapper = config.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
