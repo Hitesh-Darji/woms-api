@@ -1,17 +1,14 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Reflection;
 using System.Text;
 using WOMS.Api.Extension;
-using WOMS.Api.Middleware;
 using WOMS.Application;
-using WOMS.Application.DTOs;
-using WOMS.Domain.Entities;
+using WOMS.Application.Profiles;
 using WOMS.Infrastructure;
 using WOMS.Infrastructure.Data;
 
@@ -29,10 +26,10 @@ builder.Services.AddHttpContextAccessor();
 //Mapping
 var config = new MapperConfiguration(cfg =>
 {
-    cfg.AddProfile<WOMS.Application.Profiles.UserProfile>();
-    cfg.AddProfile<WOMS.Application.Profiles.RoleProfile>();
-    cfg.AddProfile<WOMS.Application.Profiles.ViewProfile>();
-    cfg.AddProfile<WOMS.Application.Profiles.BillingProfiles>();
+    cfg.AddProfile<UserProfile>();
+    cfg.AddProfile<RoleProfile>();
+    cfg.AddProfile<ViewProfile>();
+    cfg.AddProfile<BillingProfiles>();
     cfg.AddProfile<WorkflowProfile>();
     cfg.AddProfile<WorkflowStatusProfile>();
 });
