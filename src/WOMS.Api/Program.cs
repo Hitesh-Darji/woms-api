@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +10,8 @@ using System.Text;
 using WOMS.Api.Extension;
 using WOMS.Api.Middleware;
 using WOMS.Application;
+using WOMS.Application.Converters;
 using WOMS.Application.DTOs;
-using WOMS.Application.Profiles;
 using WOMS.Domain.Entities;
 using WOMS.Infrastructure;
 using WOMS.Infrastructure.Data;
@@ -24,24 +23,16 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new WOMS.Application.Converters.TimeSpanConverter());
+        options.JsonSerializerOptions.Converters.Add(new WOMS.Application.Converters.NullableGuidConverter());
+    });
 
 builder.Services.AddHttpContextAccessor();
 
-//Mapping
-var config = new MapperConfiguration(cfg =>
-{
-    cfg.AddProfile<UserProfile>();
-    cfg.AddProfile<RoleProfile>();
-    cfg.AddProfile<ViewProfile>();
-    cfg.AddProfile<BillingProfiles>();
-    cfg.AddProfile<WorkflowProfile>();
-    cfg.AddProfile<WorkflowStatusProfile>();
-    cfg.AddProfile<WorkOrderProfile>();
-});
-
-var mapper = config.CreateMapper();
-builder.Services.AddSingleton(mapper);
+// AutoMapper is configured in DependencyInjection.cs
 
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {

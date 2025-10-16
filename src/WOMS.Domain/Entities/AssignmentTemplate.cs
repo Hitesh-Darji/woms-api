@@ -1,47 +1,59 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WOMS.Domain.Common;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
-    [Table("AssignmentTemplate")]
     public class AssignmentTemplate : BaseEntity
     {
         [Required]
-        [MaxLength(200)]
+        [MaxLength(255)]
         public string Name { get; set; } = string.Empty;
 
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        [Required]
+        public AssignmentTemplateStatus Status { get; set; } = AssignmentTemplateStatus.Active;
 
-        public TimeSpan StartTime { get; set; } = new TimeSpan(9, 0, 0); // 09:00
+        [Required]
+        public TimeSpan StartTime { get; set; }
 
-        public TimeSpan EndTime { get; set; } = new TimeSpan(17, 0, 0); // 17:00
+        [Required]
+        public TimeSpan EndTime { get; set; }
 
+        [Required]
         [Column(TypeName = "nvarchar(max)")]
-        public string? DaysOfWeek { get; set; } // JSON array of selected days
+        public string DaysOfWeek { get; set; } = string.Empty; // JSON array of selected days
 
-        // Auto-Assignment Rules
-        public bool SkillMatchRequired { get; set; } = true;
+        [Required]
+        [Column(TypeName = "nvarchar(max)")]
+        public string WorkTypes { get; set; } = string.Empty; // JSON array of work types
 
-        public bool WorkloadBalance { get; set; } = true;
+        [Required]
+        [Column(TypeName = "nvarchar(max)")]
+        public string Zones { get; set; } = string.Empty; // JSON array of zones
 
-        public bool LocationProximity { get; set; } = true;
+        [Required]
+        [Column(TypeName = "nvarchar(max)")]
+        public string PreferredTechnicians { get; set; } = string.Empty; // JSON array of technician IDs
 
-        public bool AvailabilityCheck { get; set; } = true;
+        [Required]
+        [Column(TypeName = "nvarchar(max)")]
+        public string SkillsRequired { get; set; } = string.Empty; // JSON array of required skills
+
+        [Required]
+        [Column(TypeName = "nvarchar(max)")]
+        public string AutoAssignmentRules { get; set; } = string.Empty; // JSON array of rules
 
         public int UsageCount { get; set; } = 0;
 
-        public DateTime? LastUsedDate { get; set; }
+        public DateTime? LastUsed { get; set; }
 
-        [Column(TypeName = "nvarchar(max)")]
-        public string? Settings { get; set; } // JSON for additional template settings
+        public new string? CreatedBy { get; set; }
 
-        // Navigation properties
-        public virtual ICollection<AssignmentTemplateWorkType> AssignmentTemplateWorkTypes { get; set; } = new List<AssignmentTemplateWorkType>();
-        public virtual ICollection<AssignmentTemplateZone> AssignmentTemplateZones { get; set; } = new List<AssignmentTemplateZone>();
-        public virtual ICollection<AssignmentTemplateSkill> AssignmentTemplateSkills { get; set; } = new List<AssignmentTemplateSkill>();
-        public virtual ICollection<AssignmentTemplateTechnician> AssignmentTemplateTechnicians { get; set; } = new List<AssignmentTemplateTechnician>();
+        [ForeignKey(nameof(CreatedBy))]
+        public virtual ApplicationUser? CreatedByUser { get; set; }
     }
 }

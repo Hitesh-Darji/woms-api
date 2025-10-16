@@ -12,11 +12,11 @@ namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RolesController : BaseController
+    public class RoleController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public RolesController(IMediator mediator)
+        public RoleController(IMediator mediator)
         {
             _mediator = mediator;
         }

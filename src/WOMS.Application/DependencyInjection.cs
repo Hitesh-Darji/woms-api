@@ -18,9 +18,8 @@ namespace WOMS.Application
             // Add MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
-            // Add AutoMapper - register consolidated BillingProfiles and other profiles
-            services.AddAutoMapper(typeof(BillingProfiles).Assembly);
-            services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile), typeof(DepartmentProfile), typeof(WorkflowProfile), typeof(FormProfile));
+            // Add AutoMapper - register all profiles from the assembly
+            services.AddAutoMapper(assembly);
 
             // Add FluentValidation
             services.AddValidatorsFromAssembly(assembly);

@@ -10,11 +10,11 @@ namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ViewsController : ControllerBase
+    public class ViewController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ViewsController(IMediator mediator)
+        public ViewController(IMediator mediator)
         {
             _mediator = mediator;
         }

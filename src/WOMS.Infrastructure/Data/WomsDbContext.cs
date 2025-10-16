@@ -28,6 +28,9 @@ namespace WOMS.Infrastructure.Data
         public DbSet<ViewColumn> ViewColumns { get; set; }
         public DbSet<ViewFilter> ViewFilters { get; set; }
 
+        // Assignment Template entities
+        public DbSet<AssignmentTemplate> AssignmentTemplates { get; set; }
+
         // Customer entities
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> Addresses { get; set; }
@@ -554,6 +557,35 @@ namespace WOMS.Infrastructure.Data
 
                 entity.HasIndex(v => v.Name);
                 entity.HasIndex(v => v.CreatedBy);
+            });
+
+            // Configure AssignmentTemplate
+            modelBuilder.Entity<AssignmentTemplate>(entity =>
+            {
+                entity.Property(at => at.Name).IsRequired().HasMaxLength(255);
+                entity.Property(at => at.Description).HasMaxLength(1000);
+                entity.Property(at => at.Status).IsRequired().HasConversion<int>();
+                entity.Property(at => at.StartTime).IsRequired();
+                entity.Property(at => at.EndTime).IsRequired();
+                entity.Property(at => at.DaysOfWeek).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(at => at.WorkTypes).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(at => at.Zones).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(at => at.PreferredTechnicians).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(at => at.SkillsRequired).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(at => at.AutoAssignmentRules).IsRequired().HasColumnType("nvarchar(max)");
+                entity.Property(at => at.UsageCount).IsRequired().HasDefaultValue(0);
+                entity.Property(at => at.CreatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(at => at.UpdatedOn).IsRequired().HasDefaultValueSql("GETDATE()");
+                entity.Property(at => at.CreatedBy).HasMaxLength(450);
+
+                entity.HasOne(at => at.CreatedByUser)
+                      .WithMany()
+                      .HasForeignKey(at => at.CreatedBy)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(at => at.Name);
+                entity.HasIndex(at => at.Status);
+                entity.HasIndex(at => at.CreatedBy);
             });
         }
     }

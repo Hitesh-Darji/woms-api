@@ -19,7 +19,7 @@ namespace WOMS.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
@@ -28,7 +28,7 @@ namespace WOMS.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> Login([FromBody] LoginUserCommand command)
@@ -37,7 +37,7 @@ namespace WOMS.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("refresh-token")]
+        [HttpPost("Refresh-token")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(RefreshTokenResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -53,6 +53,8 @@ namespace WOMS.Application.Features.Workflow.DTOs
 
         [Required]
         public WorkflowCategory Category { get; set; } = WorkflowCategory.General;
+        
+        public List<WorkflowNodeDto>? Nodes { get; set; }
     }
 
     public class UpdateWorkflowRequest

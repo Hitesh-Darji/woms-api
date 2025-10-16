@@ -12,10 +12,10 @@ namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : BaseController
+    public class UserController : BaseController
     {
         private readonly IMediator _mediator;
-        public UsersController(IMediator mediator)
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
         }
