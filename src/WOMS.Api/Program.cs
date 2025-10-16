@@ -32,7 +32,21 @@ builder.Services.AddControllers()
 
 builder.Services.AddHttpContextAccessor();
 
-// AutoMapper is configured in DependencyInjection.cs
+//Mapping
+var config = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<UserProfile>();
+    cfg.AddProfile<RoleProfile>();
+    cfg.AddProfile<ViewProfile>();
+    cfg.AddProfile<BillingProfiles>();
+    cfg.AddProfile<WorkflowProfile>();
+    cfg.AddProfile<WorkflowStatusProfile>();
+    cfg.AddProfile<WorkOrderProfile>();
+    cfg.AddProfile<FormProfile>();
+});
+
+var mapper = config.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
