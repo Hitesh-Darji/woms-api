@@ -1,18 +1,14 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Reflection;
 using System.Text;
 using WOMS.Api.Extension;
-using WOMS.Api.Middleware;
 using WOMS.Application;
-using WOMS.Application.Converters;
-using WOMS.Application.DTOs;
-using WOMS.Domain.Entities;
+using WOMS.Application.Profiles;
 using WOMS.Infrastructure;
 using WOMS.Infrastructure.Data;
 
