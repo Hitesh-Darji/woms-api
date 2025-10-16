@@ -29,6 +29,7 @@ namespace WOMS.Application.Profiles
             CreateMap<CreateFormTemplateDto, FormTemplate>();
             CreateMap<CreateFormSectionDto, FormSection>();
             CreateMap<CreateFormFieldDto, FormField>();
+            CreateMap<FormTemplateDto, FormTemplate>().ReverseMap();
 
             // Update DTO mappings
             CreateMap<UpdateFormTemplateDto, FormTemplate>();

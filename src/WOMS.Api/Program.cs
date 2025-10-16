@@ -38,6 +38,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile<WorkflowProfile>();
     cfg.AddProfile<WorkflowStatusProfile>();
     cfg.AddProfile<WorkOrderProfile>();
+    cfg.AddProfile<FormProfile>();
 });
 
 var mapper = config.CreateMapper();

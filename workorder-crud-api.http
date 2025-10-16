@@ -84,3 +84,4 @@ Authorization: Bearer {{authToken}}
 ### Get work order summary
 GET {{baseUrl}}/summary
 Authorization: Bearer {{authToken}}
+
