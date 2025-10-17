@@ -9,5 +9,6 @@ namespace WOMS.Application.Features.Workflow.Commands.CreateWorkflow
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public WorkflowCategory Category { get; set; } = WorkflowCategory.General;
+        public List<WorkflowNodeDto>? Nodes { get; set; }
     }
 }

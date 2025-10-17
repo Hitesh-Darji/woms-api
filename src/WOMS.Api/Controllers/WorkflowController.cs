@@ -20,11 +20,11 @@ namespace WOMS.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class WorkflowsController : BaseController
+    public class WorkflowController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public WorkflowsController(IMediator mediator)
+        public WorkflowController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -91,7 +91,8 @@ namespace WOMS.Api.Controllers
             {
                 Name = request.Name,
                 Description = request.Description,
-                Category = request.Category
+                Category = request.Category,
+                Nodes = request.Nodes
             };
 
             var result = await _mediator.Send(command);

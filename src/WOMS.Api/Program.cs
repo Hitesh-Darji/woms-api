@@ -2,18 +2,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Reflection;
 using System.Text;
 using WOMS.Api.Extension;
-using WOMS.Api.Middleware;
 using WOMS.Application;
-using WOMS.Application.DTOs;
 using WOMS.Application.Profiles;
-using WOMS.Domain.Entities;
 using WOMS.Infrastructure;
 using WOMS.Infrastructure.Data;
 
@@ -24,7 +19,12 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new WOMS.Application.Converters.TimeSpanConverter());
+        options.JsonSerializerOptions.Converters.Add(new WOMS.Application.Converters.NullableGuidConverter());
+    });
 
 builder.Services.AddHttpContextAccessor();
 
