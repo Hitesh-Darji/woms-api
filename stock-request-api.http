@@ -1,0 +1,105 @@
+### Stock Request CRUD API Tests
+
+### Variables
+@baseUrl = https://localhost:7001
+@token = your-jwt-token-here
+
+### 1. Create Stock Request
+POST {{baseUrl}}/api/StockRequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fromLocationId": "00000000-0000-0000-0000-000000000001",
+  "toLocationId": "00000000-0000-0000-0000-000000000002",
+  "notes": "Urgent stock request for maintenance work",
+  "workOrderId": "00000000-0000-0000-0000-000000000003",
+  "requestItems": [
+    {
+      "itemId": "00000000-0000-0000-0000-000000000004",
+      "requestedQuantity": 5,
+      "notes": "Need 5 units for repair work",
+      "orderIndex": 0
+    },
+    {
+      "itemId": "00000000-0000-0000-0000-000000000005",
+      "requestedQuantity": 2,
+      "notes": "Backup units",
+      "orderIndex": 1
+    }
+  ]
+}
+
+### 2. Get All Stock Requests (with pagination and filters)
+GET {{baseUrl}}/api/StockRequest?pageNumber=1&pageSize=10&status=Pending&sortBy=RequestDate&sortDescending=true
+Authorization: Bearer {{token}}
+
+### 3. Get Stock Request by ID
+GET {{baseUrl}}/api/StockRequest/00000000-0000-0000-0000-000000000001
+Authorization: Bearer {{token}}
+
+### 4. Update Stock Request (only if status is Pending)
+PUT {{baseUrl}}/api/StockRequest/00000000-0000-0000-0000-000000000001
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "notes": "Updated notes - additional requirements",
+  "requestItems": [
+    {
+      "id": "00000000-0000-0000-0000-000000000006",
+      "itemId": "00000000-0000-0000-0000-000000000004",
+      "requestedQuantity": 7,
+      "notes": "Increased quantity needed",
+      "orderIndex": 0
+    },
+    {
+      "itemId": "00000000-0000-0000-0000-000000000007",
+      "requestedQuantity": 3,
+      "notes": "New item added",
+      "orderIndex": 1
+    }
+  ]
+}
+
+### 5. Approve Stock Request
+POST {{baseUrl}}/api/StockRequest/00000000-0000-0000-0000-000000000001/approve
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "approvalNotes": "Approved with modifications",
+  "requestItems": [
+    {
+      "id": "00000000-0000-0000-0000-000000000006",
+      "approvedQuantity": 5,
+      "notes": "Reduced quantity approved"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000008",
+      "approvedQuantity": 2,
+      "notes": "Partial approval"
+    }
+  ]
+}
+
+### 6. Delete Stock Request (only if status is Pending)
+DELETE {{baseUrl}}/api/StockRequest/00000000-0000-0000-0000-000000000001
+Authorization: Bearer {{token}}
+
+### 7. Get Stock Requests by Status
+GET {{baseUrl}}/api/StockRequest?status=Approved&pageNumber=1&pageSize=20
+Authorization: Bearer {{token}}
+
+### 8. Get Stock Requests by Location
+GET {{baseUrl}}/api/StockRequest?fromLocationId=00000000-0000-0000-0000-000000000001&pageNumber=1&pageSize=10
+Authorization: Bearer {{token}}
+
+### 9. Search Stock Requests
+GET {{baseUrl}}/api/StockRequest?searchTerm=urgent&pageNumber=1&pageSize=10
+Authorization: Bearer {{token}}
+
+### 10. Get Stock Requests by Requester
+GET {{baseUrl}}/api/StockRequest?requesterId=user123&pageNumber=1&pageSize=10
+Authorization: Bearer {{token}}
+

@@ -1,0 +1,12 @@
+{
+  "notes": "Updated stock request - urgent maintenance work",
+  "requestItems": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "itemId": "0AC65261-FF0A-43B2-B1A8-378F11C0D746",
+      "requestedQuantity": 10,
+      "notes": "Updated quantity for maintenance",
+      "orderIndex": 0
+    }
+  ]
+}

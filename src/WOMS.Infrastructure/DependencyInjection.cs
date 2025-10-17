@@ -44,6 +44,7 @@ namespace WOMS.Infrastructure
             services.AddScoped<IFormTemplateRepository, FormTemplateRepository>();
             services.AddScoped<IFormSectionRepository, FormSectionRepository>();
             services.AddScoped<IFormFieldRepository, FormFieldRepository>();
+            services.AddScoped<IStockRequestRepository, StockRequestRepository>();
 
             // Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

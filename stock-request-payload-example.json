@@ -1,0 +1,27 @@
+{
+  "fromLocationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "toLocationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "notes": "Urgent stock request for maintenance work on HVAC system. Need replacement parts for emergency repair.",
+  "workOrderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "requestItems": [
+    {
+      "itemId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "requestedQuantity": 5,
+      "notes": "HVAC filter replacement - need 5 units for complete system maintenance",
+      "orderIndex": 0
+    },
+    {
+      "itemId": "7fb85f64-5717-4562-b3fc-2c963f66afa7",
+      "requestedQuantity": 2,
+      "notes": "Backup thermostats for emergency replacement",
+      "orderIndex": 1
+    },
+    {
+      "itemId": "8fc85f64-5717-4562-b3fc-2c963f66afa8",
+      "requestedQuantity": 10,
+      "notes": "Electrical wiring components for system upgrade",
+      "orderIndex": 2
+    }
+  ]
+}
+

@@ -1,0 +1,14 @@
+{
+  "fromLocationId": "B7125870-F209-490E-8815-541F8D20F21B",
+  "toLocationId": "B7125870-F209-490E-8815-541F8D20F21B",
+  "notes": "test note - urgent stock request for maintenance work",
+  "workOrderId": "391EE205-5C39-4A6F-A3D3-71BA00C43BF2",
+  "requestItems": [
+    {
+      "itemId": "B7125870-F209-490E-8815-541F8D20F21C",
+      "requestedQuantity": 5,
+      "notes": "Need 5 units for repair work",
+      "orderIndex": 0
+    }
+  ]
+}
