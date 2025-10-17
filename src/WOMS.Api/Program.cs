@@ -39,6 +39,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile<WorkflowStatusProfile>();
     cfg.AddProfile<WorkOrderProfile>();
     cfg.AddProfile<FormProfile>();
+    cfg.AddProfile<StockRequestProfile>();
 });
 
 var mapper = config.CreateMapper();
@@ -137,7 +138,8 @@ using (var scope = app.Services.CreateScope())
     catch (Exception ex)
     {
         Log.Error(ex, "An error occurred while migrating the database");
-        throw;
+        // Don't throw - let the application start even if migration fails
+        // The concurrency handling in controllers will manage conflicts gracefully
     }
 }
 

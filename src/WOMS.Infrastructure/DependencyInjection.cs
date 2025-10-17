@@ -52,6 +52,7 @@ namespace WOMS.Infrastructure
 
             // Services
             services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
+            services.AddScoped<IStockRequestRepository, StockRequestRepository>();
 
             // Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
