@@ -36,6 +36,7 @@ namespace WOMS.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
+            services.AddScoped<IWorkOrderAssignmentRepository, WorkOrderAssignmentRepository>();
             services.AddScoped<IWorkflowRepository, WorkflowRepository>();
             services.AddScoped<IWorkflowStatusRepository, WorkflowStatusRepository>();
             services.AddScoped<IBillingTemplateRepository, BillingTemplateRepository>();
@@ -44,6 +45,13 @@ namespace WOMS.Infrastructure
             services.AddScoped<IFormTemplateRepository, FormTemplateRepository>();
             services.AddScoped<IFormSectionRepository, FormSectionRepository>();
             services.AddScoped<IFormFieldRepository, FormFieldRepository>();
+            services.AddScoped<IRouteRepository, RouteRepository>();
+            services.AddScoped<IOptimizationSettingsRepository, OptimizationSettingsRepository>();
+            services.AddScoped<ITechnicianEquipmentRepository, TechnicianEquipmentRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+
+            // Services
+            services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
 
             // Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
@@ -24,8 +25,7 @@ namespace WOMS.Domain.Entities
         public string AssignedBy { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(20)]
-        public string Status { get; set; } = "assigned"; // assigned, accepted, rejected, completed
+        public AssignmentStatus Status { get; set; } = AssignmentStatus.Assigned;
 
         [Column(TypeName = "nvarchar(max)")]
         public string? Notes { get; set; }

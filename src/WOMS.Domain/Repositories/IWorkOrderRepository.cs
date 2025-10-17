@@ -21,5 +21,6 @@ namespace WOMS.Domain.Repositories
             CancellationToken cancellationToken = default);
         Task<WorkOrder?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
         Task SoftDeleteAsync(Guid id, string deletedBy, CancellationToken cancellationToken = default);
+        Task<IEnumerable<WorkOrder>> GetUnassignedWorkOrdersAsync(string? priority = null, string? workType = null, string? location = null, CancellationToken cancellationToken = default);
     }
 }

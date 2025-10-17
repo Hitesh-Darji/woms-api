@@ -7,7 +7,8 @@ namespace WOMS.Domain.Entities
     public class TechnicianEquipment : BaseEntity
     {
         [Required]
-        public Guid TechnicianId { get; set; }
+        [MaxLength(450)]
+        public string TechnicianId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(TechnicianId))]
         public virtual ApplicationUser Technician { get; set; } = null!;

@@ -88,6 +88,15 @@ namespace WOMS.Infrastructure.Data
         public DbSet<WorkflowExecutionLog> WorkflowExecutionLogs { get; set; }
         public DbSet<WorkflowProgress> WorkflowProgresses { get; set; }
 
+        // Route Optimization entities
+        public DbSet<Route> Routes { get; set; }
+        public DbSet<RouteStop> RouteStops { get; set; }
+        public DbSet<OptimizationSettings> OptimizationSettings { get; set; }
+
+        // Equipment entities
+        public DbSet<Equipment> Equipment { get; set; }
+        public DbSet<TechnicianEquipment> TechnicianEquipment { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

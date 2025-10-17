@@ -122,5 +122,38 @@ namespace WOMS.Infrastructure.Repositories
                 await UpdateAsync(workOrder, cancellationToken);
             }
         }
+
+        public async Task<IEnumerable<WorkOrder>> GetUnassignedWorkOrdersAsync(string? priority = null, string? workType = null, string? location = null, CancellationToken cancellationToken = default)
+        {
+            var query = GetQueryable()
+                .AsNoTracking()
+                .Where(wo => (wo.Assignee == null || wo.Assignee == "") && !wo.IsDeleted);
+
+            if (!string.IsNullOrEmpty(priority))
+            {
+                if (Enum.TryParse<WorkOrderPriority>(priority, true, out var priorityEnum))
+                {
+                    query = query.Where(wo => wo.Priority == priorityEnum);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(workType))
+            {
+                if (Enum.TryParse<Domain.Enums.WorkOrderType>(workType, true, out var workTypeEnum))
+                {
+                    query = query.Where(wo => wo.Type == workTypeEnum);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                query = query.Where(wo => wo.Location != null && wo.Location.Contains(location));
+            }
+
+            return await query
+                .OrderByDescending(wo => wo.Priority)
+                .ThenBy(wo => wo.CreatedDate)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

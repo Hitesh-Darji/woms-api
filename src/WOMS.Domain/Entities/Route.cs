@@ -7,7 +7,8 @@ namespace WOMS.Domain.Entities
     public class Route : BaseEntity
     {
         [Required]
-        public Guid DriverId { get; set; }
+        [MaxLength(450)]
+        public string DriverId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(DriverId))]
         public virtual ApplicationUser Driver { get; set; } = null!;

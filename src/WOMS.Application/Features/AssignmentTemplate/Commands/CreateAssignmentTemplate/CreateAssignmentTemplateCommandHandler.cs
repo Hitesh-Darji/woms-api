@@ -1,25 +1,22 @@
 using MediatR;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using System.Text.Json;
 using WOMS.Application.Features.AssignmentTemplate.DTOs;
 using WOMS.Application.Interfaces;
-using WOMS.Domain.Entities;
 using WOMS.Domain.Repositories;
-using Microsoft.AspNetCore.Http;
-using AutoMapper;
 
 namespace WOMS.Application.Features.AssignmentTemplate.Commands.CreateAssignmentTemplate
 {
     public class CreateAssignmentTemplateCommandHandler : IRequestHandler<CreateAssignmentTemplateCommand, AssignmentTemplateDto>
     {
-        private readonly IRepository<WOMS.Domain.Entities.AssignmentTemplate> _assignmentTemplateRepository;
+        private readonly IRepository<Domain.Entities.AssignmentTemplate> _assignmentTemplateRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly AutoMapper.IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CreateAssignmentTemplateCommandHandler(
-            IRepository<WOMS.Domain.Entities.AssignmentTemplate> assignmentTemplateRepository,
+            IRepository<Domain.Entities.AssignmentTemplate> assignmentTemplateRepository,
             IUnitOfWork unitOfWork,
             AutoMapper.IMapper mapper,
             IHttpContextAccessor httpContextAccessor)
@@ -34,7 +31,7 @@ namespace WOMS.Application.Features.AssignmentTemplate.Commands.CreateAssignment
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var assignmentTemplate = new WOMS.Domain.Entities.AssignmentTemplate
+            var assignmentTemplate = new Domain.Entities.AssignmentTemplate
             {
                 Name = request.Name,
                 Description = request.Description,

@@ -1,6 +1,4 @@
-using AutoMapper;
 using MediatR;
-using WOMS.Application.Features.Departments.Commands.CreateDepartment;
 using WOMS.Application.Features.Departments.DTOs;
 using WOMS.Application.Interfaces;
 using WOMS.Domain.Entities;

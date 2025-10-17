@@ -43,5 +43,25 @@ namespace WOMS.Infrastructure.Repositories
                 await UpdateAsync(user, cancellationToken);
             }
         }
+
+        public async Task<IEnumerable<ApplicationUser>> GetTechniciansAsync(string? status = null, string? location = null, CancellationToken cancellationToken = default)
+        {
+            var query = GetQueryable()
+                .AsNoTracking()
+                .Where(u => !u.IsDeleted && u.IsActive);
+
+            // In a real implementation, you would filter by role (Technician)
+            // For now, we'll return all active users as potential technicians
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                query = query.Where(u => u.City != null && u.City.Contains(location));
+            }
+
+            return await query
+                .OrderBy(u => u.FirstName)
+                .ThenBy(u => u.LastName)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

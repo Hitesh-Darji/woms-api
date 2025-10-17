@@ -146,13 +146,10 @@ app.UseSwaggerUI();
 app.UseExceptionHandlerMiddleware();
 
 app.UseCors("AllowLocalhost");
-//app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
-
-// Make Program class accessible for testing
 public partial class Program { }
