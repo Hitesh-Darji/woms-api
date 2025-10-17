@@ -11,7 +11,7 @@ namespace WOMS.Application.Features.StockRequest.Commands.CreateStockRequest
     public class CreateStockRequestCommandHandler : IRequestHandler<CreateStockRequestCommand, StockRequestDto>
     {
         private readonly IStockRequestRepository _stockRequestRepository;
-        private readonly IRepository<Location> _locationRepository;
+        private readonly IRepository<WOMS.Domain.Entities.Location> _locationRepository;
         private readonly IRepository<InventoryItem> _inventoryItemRepository;
         private readonly IRepository<WOMS.Domain.Entities.WorkOrder> _workOrderRepository;
         private readonly AutoMapper.IMapper _mapper;
@@ -19,7 +19,7 @@ namespace WOMS.Application.Features.StockRequest.Commands.CreateStockRequest
 
         public CreateStockRequestCommandHandler(
             IStockRequestRepository stockRequestRepository,
-            IRepository<Location> locationRepository,
+            IRepository<WOMS.Domain.Entities.Location> locationRepository,
             IRepository<InventoryItem> inventoryItemRepository,
             IRepository<WOMS.Domain.Entities.WorkOrder> workOrderRepository,
             AutoMapper.IMapper mapper,

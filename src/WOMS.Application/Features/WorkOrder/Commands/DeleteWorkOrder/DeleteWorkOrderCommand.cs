@@ -7,3 +7,4 @@ namespace WOMS.Application.Features.WorkOrder.Commands.DeleteWorkOrder
         public Guid Id { get; set; }
     }
 }
+

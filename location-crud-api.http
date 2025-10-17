@@ -1,0 +1,100 @@
+### Location CRUD API Tests
+### Base URL: https://localhost:7001/api
+
+### 1. Get All Locations
+GET {{baseUrl}}/Location
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### 2. Get All Locations (including inactive)
+GET {{baseUrl}}/Location?includeInactive=true
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### 3. Get Location by ID
+GET {{baseUrl}}/Location/{{locationId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### 4. Create New Location
+POST {{baseUrl}}/Location
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Central Warehouse",
+  "type": 0,
+  "address": "123 Main St, City, State 12345",
+  "manager": "John Smith"
+}
+
+### 5. Create Sub-Location
+POST {{baseUrl}}/Location
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "North Depot",
+  "type": 1,
+  "address": "456 North Ave, City, State 12345",
+  "manager": "Jane Doe",
+  "parentLocationId": "{{parentLocationId}}"
+}
+
+### 6. Create Vehicle Location
+POST {{baseUrl}}/Location
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Truck #001",
+  "type": 3,
+  "address": "Mobile Unit",
+  "manager": "Bob Johnson",
+  "parentLocationId": "{{parentLocationId}}"
+}
+
+### 7. Update Location
+PUT {{baseUrl}}/Location/{{locationId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "{{locationId}}",
+  "name": "Updated Central Warehouse",
+  "type": 0,
+  "address": "123 Updated Main St, City, State 12345",
+  "manager": "John Smith Updated",
+  "parentLocationId": null,
+  "isActive": true
+}
+
+### 8. Deactivate Location (Soft Delete)
+PUT {{baseUrl}}/Location/{{locationId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "{{locationId}}",
+  "name": "Central Warehouse",
+  "type": 0,
+  "address": "123 Main St, City, State 12345",
+  "manager": "John Smith",
+  "parentLocationId": null,
+  "isActive": false
+}
+
+### 9. Delete Location (Soft Delete)
+DELETE {{baseUrl}}/Location/{{locationId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### Location Types Reference:
+### 0 = Warehouse
+### 1 = Office  
+### 2 = Field
+### 3 = Vehicle
+### 4 = Customer Site
+### 5 = Supplier
+### 6 = Other
+

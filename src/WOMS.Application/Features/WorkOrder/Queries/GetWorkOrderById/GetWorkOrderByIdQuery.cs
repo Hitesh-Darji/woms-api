@@ -8,3 +8,4 @@ namespace WOMS.Application.Features.WorkOrder.Queries.GetWorkOrderById
         public Guid Id { get; set; }
     }
 }
+
