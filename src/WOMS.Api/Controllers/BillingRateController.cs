@@ -12,11 +12,11 @@ namespace WOMS.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BillingRatesController : ControllerBase
+    public class BillingRateController : ControllerBase
     {
         private readonly IMediator _mediator;
         
-        public BillingRatesController(IMediator mediator)
+        public BillingRateController(IMediator mediator)
         {
             _mediator = mediator;
         }

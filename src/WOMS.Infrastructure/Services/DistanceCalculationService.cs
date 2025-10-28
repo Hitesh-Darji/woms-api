@@ -59,20 +59,13 @@ namespace WOMS.Infrastructure.Services
 
             if (addressWithCoords?.Coordinates != null)
             {
-                try
+
+                var coords = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, double>>(addressWithCoords.Coordinates);
+                if (coords != null && coords.ContainsKey("lat") && coords.ContainsKey("lng"))
                 {
-                    var coords = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, double>>(addressWithCoords.Coordinates);
-                    if (coords != null && coords.ContainsKey("lat") && coords.ContainsKey("lng"))
-                    {
-                        return (coords["lat"], coords["lng"]);
-                    }
-                }
-                catch
-                {
-                    // Ignore JSON parsing errors
+                    return (coords["lat"], coords["lng"]);
                 }
             }
-
             return null;
         }
 
@@ -92,7 +85,7 @@ namespace WOMS.Infrastructure.Services
                 ["Airport"] = new() { ["Downtown"] = 12.8m, ["Uptown"] = 18.3m, ["Suburbs"] = 25.1m }
             };
 
-            if (cityDistances.ContainsKey(fromLocation) && 
+            if (cityDistances.ContainsKey(fromLocation) &&
                 cityDistances[fromLocation].ContainsKey(toLocation))
             {
                 return cityDistances[fromLocation][toLocation];

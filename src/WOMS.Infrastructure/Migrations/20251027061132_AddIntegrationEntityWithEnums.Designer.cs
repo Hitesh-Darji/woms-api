@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WOMS.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using WOMS.Infrastructure.Data;
 namespace WOMS.Infrastructure.Migrations
 {
     [DbContext(typeof(WomsDbContext))]
-    partial class WomsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027061132_AddIntegrationEntityWithEnums")]
+    partial class AddIntegrationEntityWithEnums
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

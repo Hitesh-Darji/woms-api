@@ -15,11 +15,11 @@ namespace WOMS.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class WorkOrdersController : BaseController
+    public class WorkOrderController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public WorkOrdersController(IMediator mediator)
+        public WorkOrderController(IMediator mediator)
         {
             _mediator = mediator;
         }

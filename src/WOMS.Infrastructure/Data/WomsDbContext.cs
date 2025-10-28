@@ -93,6 +93,9 @@ namespace WOMS.Infrastructure.Data
         public DbSet<RouteStop> RouteStops { get; set; }
         public DbSet<OptimizationSettings> OptimizationSettings { get; set; }
 
+        // Integration entities
+        public DbSet<Integration> Integrations { get; set; }
+
         // Equipment entities
         public DbSet<Equipment> Equipment { get; set; }
         public DbSet<TechnicianEquipment> TechnicianEquipment { get; set; }

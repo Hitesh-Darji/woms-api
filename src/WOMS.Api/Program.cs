@@ -40,6 +40,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile<WorkOrderProfile>();
     cfg.AddProfile<FormProfile>();
     cfg.AddProfile<StockRequestProfile>();
+    cfg.AddProfile<IntegrationProfile>();
 });
 
 var mapper = config.CreateMapper();

@@ -20,7 +20,7 @@ namespace WOMS.Application
 
             // Add AutoMapper - register consolidated BillingProfiles and other profiles
             services.AddAutoMapper(typeof(BillingProfiles).Assembly);
-            services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile), typeof(DepartmentProfile), typeof(WorkflowProfile), typeof(FormProfile), typeof(StockRequestProfile), typeof(LocationProfile));
+            services.AddAutoMapper(typeof(UserProfile), typeof(RoleProfile), typeof(DepartmentProfile), typeof(WorkflowProfile), typeof(FormProfile), typeof(StockRequestProfile), typeof(LocationProfile), typeof(IntegrationProfile));
 
             // Add FluentValidation
             services.AddValidatorsFromAssembly(assembly);
@@ -30,6 +30,10 @@ namespace WOMS.Application
 
             // Add custom mapper
             services.AddScoped<WOMS.Application.Interfaces.IMapper, AutoMapperAdapter>();
+
+            // Add Integration Services
+            services.AddHttpClient<Features.Integrations.Services.IIntegrationConnectionService, Features.Integrations.Services.IntegrationConnectionService>();
+            services.AddHttpClient<Features.Integrations.Services.IIntegrationSyncService, Features.Integrations.Services.IntegrationSyncService>();
 
             return services;
         }
