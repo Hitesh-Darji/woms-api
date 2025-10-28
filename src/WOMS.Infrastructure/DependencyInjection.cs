@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using WOMS.Application.Interfaces;
 using WOMS.Application.Features.Auth.Services;
+using WOMS.Application.Services;
 using WOMS.Domain.Entities;
 using WOMS.Domain.Repositories;
 using WOMS.Infrastructure.Data;
@@ -54,6 +55,7 @@ namespace WOMS.Infrastructure
             services.AddScoped<IDistanceCalculationService, DistanceCalculationService>();
             services.AddScoped<IStockRequestRepository, StockRequestRepository>();
             services.AddScoped<IIntegrationRepository, IntegrationRepository>();
+            services.AddScoped<IEmailService, EmailService>();
 
             // Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

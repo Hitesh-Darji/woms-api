@@ -234,4 +234,130 @@ namespace WOMS.Application.Features.Workflow.DTOs
     {
         public WorkflowCompletionAction CompletionAction { get; set; } = WorkflowCompletionAction.NoAdditionalAction;
     }
+
+    // Workflow Execution DTOs
+    public class WorkflowInstanceDto
+    {
+        public Guid Id { get; set; }
+        public Guid WorkflowId { get; set; }
+        public string WorkflowName { get; set; } = string.Empty;
+        public Guid? WorkOrderId { get; set; }
+        public Guid? CurrentNodeId { get; set; }
+        public WorkflowInstanceStatus Status { get; set; }
+        public DateTime StartedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public Dictionary<string, object>? Data { get; set; }
+        public List<WorkflowExecutionLogDto> ExecutionLogs { get; set; } = new List<WorkflowExecutionLogDto>();
+    }
+
+    public class WorkflowExecutionLogDto
+    {
+        public Guid Id { get; set; }
+        public Guid InstanceId { get; set; }
+        public Guid? NodeId { get; set; }
+        public string Action { get; set; } = string.Empty;
+        public string Result { get; set; } = string.Empty;
+        public string? Message { get; set; }
+        public Dictionary<string, object>? Data { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string? UserId { get; set; }
+    }
+
+    public class StartWorkflowRequest
+    {
+        public Guid WorkflowId { get; set; }
+        public Guid? WorkOrderId { get; set; }
+        public Dictionary<string, object>? InputData { get; set; }
+    }
+
+    public class StartWorkflowResponse
+    {
+        public Guid InstanceId { get; set; }
+        public WorkflowInstanceStatus Status { get; set; }
+        public string Message { get; set; } = string.Empty;
+    }
+
+    public class UpdateWorkflowInstanceStatusRequest
+    {
+        public Guid InstanceId { get; set; }
+        public WorkflowInstanceStatus Status { get; set; }
+        public Dictionary<string, object>? Data { get; set; }
+    }
+
+    public class TestWorkflowResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public List<WorkflowExecutionStep> Steps { get; set; } = new List<WorkflowExecutionStep>();
+        public Dictionary<string, object>? ResultData { get; set; }
+    }
+
+    public class WorkflowExecutionStep
+    {
+        public Guid NodeId { get; set; }
+        public string NodeTitle { get; set; } = string.Empty;
+        public WorkflowNodeType NodeType { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public string? Message { get; set; }
+        public DateTime ExecutedAt { get; set; }
+    }
+
+    // Workflow Execution Control
+    public class WorkflowExecutionResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public Guid InstanceId { get; set; }
+        public WorkflowInstanceStatus Status { get; set; }
+    }
+
+    // Node Execution Status
+    public class NodeExecutionStatusDto
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public Guid InstanceId { get; set; }
+        public Guid NodeId { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public WorkflowExecutionLogDto? CurrentLog { get; set; }
+        public List<WorkflowExecutionLogDto> ExecutionHistory { get; set; } = new List<WorkflowExecutionLogDto>();
+    }
+
+    // Workflow Notification
+    public class WorkflowNotificationDto
+    {
+        public Guid Id { get; set; }
+        public Guid WorkflowId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public WorkflowNotificationType Type { get; set; }
+        public List<string> Recipients { get; set; } = new List<string>();
+        public string Template { get; set; } = string.Empty;
+        public List<string> Triggers { get; set; } = new List<string>();
+        public bool IsActive { get; set; }
+        public int OrderIndex { get; set; }
+    }
+
+    public class CreateWorkflowNotificationRequest
+    {
+        [Required]
+        public Guid WorkflowId { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        public WorkflowNotificationType Type { get; set; } = WorkflowNotificationType.Email;
+
+        public List<string> Recipients { get; set; } = new List<string>();
+
+        [Required]
+        public string Template { get; set; } = string.Empty;
+
+        public List<string> Triggers { get; set; } = new List<string>();
+
+        public bool IsActive { get; set; } = true;
+
+        public int OrderIndex { get; set; }
+    }
 }

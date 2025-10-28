@@ -3,8 +3,7 @@ namespace WOMS.Domain.Enums
     public enum WorkflowEscalationTrigger
     {
         TimeElapsed = 0,
-        NoResponse = 1,
-        MissedDeadline = 2,
-        ConditionMet = 3
+        StatusNotChanged = 1,
+        PriorityUpgrade = 2
     }
 }

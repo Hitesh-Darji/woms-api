@@ -9,10 +9,12 @@ using WOMS.Application.Features.Workflow.Commands.DisconnectNodes;
 using WOMS.Application.Features.Workflow.Commands.UpdateNode;
 using WOMS.Application.Features.Workflow.Commands.ToggleWorkflowStatus;
 using WOMS.Application.Features.Workflow.Commands.UpdateWorkflow;
+using WOMS.Application.Features.Workflow.Commands.CreateWorkflowNotification;
 using WOMS.Application.Features.Workflow.DTOs;
 using WOMS.Application.Features.Workflow.Queries.GetAllWorkflows;
 using WOMS.Application.Features.Workflow.Queries.GetNodeTypes;
 using WOMS.Application.Features.Workflow.Queries.GetWorkflowById;
+using WOMS.Application.Features.Workflow.Queries.TestWorkflow;
 using WOMS.Domain.Enums;
 
 namespace WOMS.Api.Controllers
@@ -96,7 +98,7 @@ namespace WOMS.Api.Controllers
             };
 
             var result = await _mediator.Send(command);
-            return HandleResponse(StatusCodes.Status201Created, "Workflow created successfully",true,result,null);
+            return HandleResponse(StatusCodes.Status201Created, "Workflow created successfully", true, result, null);
         }
 
 
@@ -240,21 +242,60 @@ namespace WOMS.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            try
+            var command = new ToggleWorkflowStatusCommand
             {
-                var command = new ToggleWorkflowStatusCommand
-                {
-                    WorkflowId = id,
-                    IsActive = request.IsActive
-                };
+                WorkflowId = id,
+                IsActive = request.IsActive
+            };
 
-                var result = await _mediator.Send(command);
-                return HandleResponse(StatusCodes.Status200OK, result.Message, true, result, null);
-            }
-            catch (ArgumentException ex)
+            var result = await _mediator.Send(command);
+            return HandleResponse(StatusCodes.Status200OK, result.Message, true, result, null);
+
+        }
+
+        [HttpPost("test")]
+        [ProducesResponseType(typeof(TestWorkflowResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<TestWorkflowResponse>> TestWorkflow([FromBody] TestWorkflowRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var query = new TestWorkflowQuery
             {
-                return NotFound(ex.Message);
-            }
+                WorkflowId = request.WorkflowId,
+                TestData = request.TestData
+            };
+
+            var result = await _mediator.Send(query);
+            return HandleResponse(StatusCodes.Status200OK, "Workflow test completed", true, result, null);
+        }
+
+        [HttpPost("notifications")]
+        [ProducesResponseType(typeof(WorkflowNotificationDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<WorkflowNotificationDto>> CreateWorkflowNotification([FromBody] CreateWorkflowNotificationRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new CreateWorkflowNotificationCommand
+            {
+                WorkflowId = request.WorkflowId,
+                Name = request.Name,
+                Type = request.Type,
+                Recipients = request.Recipients,
+                Template = request.Template,
+                Triggers = request.Triggers,
+                IsActive = request.IsActive,
+                OrderIndex = request.OrderIndex
+            };
+
+            var result = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetWorkflow), new { id = request.WorkflowId }, result);
         }
     }
 }

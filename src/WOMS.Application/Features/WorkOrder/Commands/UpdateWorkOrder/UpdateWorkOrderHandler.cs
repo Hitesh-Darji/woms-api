@@ -1,10 +1,10 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using WOMS.Application.Features.Workflow.Commands.SendWorkflowNotification;
 using WOMS.Application.Features.WorkOrder.DTOs;
 using WOMS.Application.Interfaces;
-using WOMS.Domain.Entities;
+using WOMS.Domain.Enums;
 using WOMS.Domain.Repositories;
 
 namespace WOMS.Application.Features.WorkOrder.Commands.UpdateWorkOrder
@@ -18,6 +18,7 @@ namespace WOMS.Application.Features.WorkOrder.Commands.UpdateWorkOrder
         private readonly AutoMapper.IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMediator _mediator;
 
         public UpdateWorkOrderHandler(
             IWorkOrderRepository workOrderRepository, 
@@ -26,7 +27,8 @@ namespace WOMS.Application.Features.WorkOrder.Commands.UpdateWorkOrder
             IWorkflowRepository workflowRepository,
             AutoMapper.IMapper mapper, 
             IUnitOfWork unitOfWork, 
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IMediator mediator)
         {
             _workOrderRepository = workOrderRepository;
             _billingTemplateRepository = billingTemplateRepository;
@@ -35,6 +37,7 @@ namespace WOMS.Application.Features.WorkOrder.Commands.UpdateWorkOrder
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
+            _mediator = mediator;
         }
 
         public async Task<WorkOrderDto> Handle(UpdateWorkOrderCommand request, CancellationToken cancellationToken)
@@ -53,7 +56,10 @@ namespace WOMS.Application.Features.WorkOrder.Commands.UpdateWorkOrder
                 throw new KeyNotFoundException($"WorkOrder with ID {request.Id} not found.");
             }
 
-            // Validate foreign key references
+            // Store old status for notification triggers
+            var oldStatus = workOrder.Status;
+            var oldWorkflowId = workOrder.WorkflowId;
+
             if (request.BillingTemplateId.HasValue)
             {
                 var billingTemplateExists = await _billingTemplateRepository.GetByIdAsync(request.BillingTemplateId.Value, cancellationToken);
@@ -111,6 +117,49 @@ namespace WOMS.Application.Features.WorkOrder.Commands.UpdateWorkOrder
             await _workOrderRepository.UpdateAsync(workOrder, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            // Send workflow notifications if status changed and workflow is assigned
+            if (workOrder.WorkflowId.HasValue && oldStatus != request.Status)
+            {
+                var notificationData = new Dictionary<string, object>
+                {
+                    { "OrderId", workOrder.Id.ToString() },
+                    { "OrderNumber", workOrder.WorkOrderNumber },
+                    { "OldStatus", oldStatus.ToString() },
+                    { "NewStatus", request.Status.ToString() },
+                    { "StatusChangedAt", DateTime.UtcNow.ToString() }
+                };
+
+                // Always send status_changed notification
+                await _mediator.Send(new SendWorkflowNotificationCommand
+                {
+                    WorkflowId = workOrder.WorkflowId.Value,
+                    Trigger = "status_changed",
+                    TemplateData = notificationData
+                }, cancellationToken);
+
+                // Send specific event notifications
+                if (request.Status == WorkOrderStatus.Completed)
+                {
+                    notificationData["CompletedBy"] = workOrder.Assignee ?? "Unknown";
+                    notificationData["CompletionTime"] = DateTime.UtcNow.ToString();
+                    
+                    await _mediator.Send(new SendWorkflowNotificationCommand
+                    {
+                        WorkflowId = workOrder.WorkflowId.Value,
+                        Trigger = "work_order_completed",
+                        TemplateData = notificationData
+                    }, cancellationToken);
+                }
+                else if (request.Status == WorkOrderStatus.Cancelled)
+                {
+                    await _mediator.Send(new SendWorkflowNotificationCommand
+                    {
+                        WorkflowId = workOrder.WorkflowId.Value,
+                        Trigger = "work_order_cancelled",
+                        TemplateData = notificationData
+                    }, cancellationToken);
+                }
+            }
             return _mapper.Map<WorkOrderDto>(workOrder);
         }
     }

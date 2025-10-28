@@ -1,10 +1,9 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using WOMS.Application.Features.Workflow.Commands.SendWorkflowNotification;
 using WOMS.Application.Features.WorkOrder.DTOs;
 using WOMS.Application.Interfaces;
-using WOMS.Domain.Entities;
 using WOMS.Domain.Enums;
 using WOMS.Domain.Repositories;
 
@@ -19,6 +18,7 @@ namespace WOMS.Application.Features.WorkOrder.Commands.CreateWorkOrder
         private readonly AutoMapper.IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMediator _mediator;
 
         public CreateWorkOrderHandler(
             IWorkOrderRepository workOrderRepository, 
@@ -27,7 +27,8 @@ namespace WOMS.Application.Features.WorkOrder.Commands.CreateWorkOrder
             IWorkflowRepository workflowRepository,
             AutoMapper.IMapper mapper, 
             IUnitOfWork unitOfWork, 
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IMediator mediator)
         {
             _workOrderRepository = workOrderRepository;
             _billingTemplateRepository = billingTemplateRepository;
@@ -36,6 +37,7 @@ namespace WOMS.Application.Features.WorkOrder.Commands.CreateWorkOrder
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
+            _mediator = mediator;
         }
 
         public async Task<WorkOrderDto> Handle(CreateWorkOrderCommand request, CancellationToken cancellationToken)
@@ -112,6 +114,25 @@ namespace WOMS.Application.Features.WorkOrder.Commands.CreateWorkOrder
 
             await _workOrderRepository.AddAsync(workOrder, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Send workflow notifications if workflow is assigned
+            if (workOrder.WorkflowId.HasValue)
+            {
+                await _mediator.Send(new SendWorkflowNotificationCommand
+                {
+                    WorkflowId = workOrder.WorkflowId.Value,
+                    Trigger = "work_order_created",
+                    TemplateData = new Dictionary<string, object>
+                    {
+                        { "OrderId", workOrder.Id.ToString() },
+                        { "OrderNumber", workOrder.WorkOrderNumber },
+                        { "Customer", workOrder.Customer },
+                        { "Priority", workOrder.Priority.ToString() },
+                        { "Status", workOrder.Status.ToString() },
+                        { "CreatedAt", workOrder.CreatedDate.ToString()! }
+                    }
+                }, cancellationToken);
+            }
 
             return _mapper.Map<WorkOrderDto>(workOrder);
         }

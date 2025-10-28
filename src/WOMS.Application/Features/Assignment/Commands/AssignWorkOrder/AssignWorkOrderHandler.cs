@@ -1,4 +1,5 @@
 using MediatR;
+using WOMS.Application.Features.Workflow.Commands.SendWorkflowNotification;
 using WOMS.Domain.Entities;
 using WOMS.Domain.Enums;
 using WOMS.Domain.Repositories;
@@ -13,13 +14,20 @@ namespace WOMS.Application.Features.Assignment.Commands.AssignWorkOrder
         private readonly IUserRepository _userRepository;
         private readonly IWorkOrderAssignmentRepository _workOrderAssignmentRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMediator _mediator;
 
-        public AssignWorkOrderHandler(IWorkOrderRepository workOrderRepository, IUserRepository userRepository, IWorkOrderAssignmentRepository workOrderAssignmentRepository, IHttpContextAccessor httpContextAccessor)
+        public AssignWorkOrderHandler(
+            IWorkOrderRepository workOrderRepository, 
+            IUserRepository userRepository, 
+            IWorkOrderAssignmentRepository workOrderAssignmentRepository, 
+            IHttpContextAccessor httpContextAccessor,
+            IMediator mediator)
         {
             _workOrderRepository = workOrderRepository;
             _userRepository = userRepository;
             _workOrderAssignmentRepository = workOrderAssignmentRepository;
             _httpContextAccessor = httpContextAccessor;
+            _mediator = mediator;
         }
 
         public async Task<bool> Handle(AssignWorkOrderCommand request, CancellationToken cancellationToken)
@@ -74,6 +82,26 @@ namespace WOMS.Application.Features.Assignment.Commands.AssignWorkOrder
             // Save changes
             await _workOrderAssignmentRepository.AddAsync(assignment, cancellationToken);
             await _workOrderRepository.UpdateAsync(workOrder, cancellationToken);
+
+            // Send workflow notifications if workflow is assigned
+            if (workOrder.WorkflowId.HasValue)
+            {
+                await _mediator.Send(new SendWorkflowNotificationCommand
+                {
+                    WorkflowId = workOrder.WorkflowId.Value,
+                    Trigger = "work_order_assigned",
+                    TemplateData = new Dictionary<string, object>
+                    {
+                        { "OrderId", workOrder.Id.ToString() },
+                        { "OrderNumber", workOrder.WorkOrderNumber },
+                        { "Technician", technician.UserName ?? "Unknown" },
+                        { "TechnicianName", technician.FullName ?? "Unknown" },
+                        { "AssignedAt", assignment.AssignedAt.ToString() },
+                        { "Priority", workOrder.Priority.ToString() }
+                    }
+                }, cancellationToken);
+            }
+
             return true;
         }
     }

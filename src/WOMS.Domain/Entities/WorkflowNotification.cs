@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WOMS.Domain.Enums;
 
 namespace WOMS.Domain.Entities
 {
@@ -17,8 +18,7 @@ namespace WOMS.Domain.Entities
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(10)]
-        public string Type { get; set; } = "email"; // email, sms, in_app
+        public WorkflowNotificationType Type { get; set; } = WorkflowNotificationType.Email;
 
         [Column(TypeName = "nvarchar(max)")]
         public string? Recipients { get; set; } // JSON array as string

@@ -24,5 +24,15 @@ namespace WOMS.Domain.Repositories
         Task AddNodeAsync(WorkflowNode node, CancellationToken cancellationToken = default);
         void UpdateNode(WorkflowNode node, CancellationToken cancellationToken = default);
         Task DeleteNodeAsync(WorkflowNode node, CancellationToken cancellationToken = default);
+
+        // Workflow Instance methods
+        Task<WorkflowInstance?> GetInstanceByIdAsync(Guid instanceId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<WorkflowInstance>> GetInstancesByWorkflowIdAsync(Guid workflowId, CancellationToken cancellationToken = default);
+        Task AddInstanceAsync(WorkflowInstance instance, CancellationToken cancellationToken = default);
+        Task UpdateInstanceAsync(WorkflowInstance instance, CancellationToken cancellationToken = default);
+        
+        // Workflow Execution Log methods
+        Task AddExecutionLogAsync(WorkflowExecutionLog log, CancellationToken cancellationToken = default);
+        Task<IEnumerable<WorkflowExecutionLog>> GetExecutionLogsByInstanceIdAsync(Guid instanceId, CancellationToken cancellationToken = default);
     }
 }

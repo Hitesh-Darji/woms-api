@@ -256,5 +256,49 @@ namespace WOMS.Infrastructure.Repositories
             _context.Set<WorkflowNode>().Update(node);
             await Task.CompletedTask;
         }
+
+        // Workflow Instance methods
+        public async Task<WorkflowInstance?> GetInstanceByIdAsync(Guid instanceId, CancellationToken cancellationToken = default)
+        {
+            return await _context.WorkflowInstances
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Id == instanceId && !i.IsDeleted, cancellationToken);
+        }
+
+        public async Task<IEnumerable<WorkflowInstance>> GetInstancesByWorkflowIdAsync(Guid workflowId, CancellationToken cancellationToken = default)
+        {
+            return await _context.WorkflowInstances
+                .AsNoTracking()
+                .Where(i => i.WorkflowId == workflowId && !i.IsDeleted)
+                .OrderByDescending(i => i.StartedAt)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task AddInstanceAsync(WorkflowInstance instance, CancellationToken cancellationToken = default)
+        {
+            await _context.WorkflowInstances.AddAsync(instance, cancellationToken);
+        }
+
+        public async Task UpdateInstanceAsync(WorkflowInstance instance, CancellationToken cancellationToken = default)
+        {
+            instance.UpdatedAt = DateTime.UtcNow;
+            _context.WorkflowInstances.Update(instance);
+            await Task.CompletedTask;
+        }
+
+        // Workflow Execution Log methods
+        public async Task AddExecutionLogAsync(WorkflowExecutionLog log, CancellationToken cancellationToken = default)
+        {
+            await _context.WorkflowExecutionLogs.AddAsync(log, cancellationToken);
+        }
+
+        public async Task<IEnumerable<WorkflowExecutionLog>> GetExecutionLogsByInstanceIdAsync(Guid instanceId, CancellationToken cancellationToken = default)
+        {
+            return await _context.WorkflowExecutionLogs
+                .AsNoTracking()
+                .Where(log => log.InstanceId == instanceId && !log.IsDeleted)
+                .OrderBy(log => log.Timestamp)
+                .ToListAsync(cancellationToken);
+        }
     }
 }
